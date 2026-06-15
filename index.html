@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSYNC — Tu psicólogo o psicóloga, diseñado para ti</title>
+<meta name="description" content="PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la Sesión de Arquitectura: una conversación real de 30 minutos donde diseñamos a mano tu match terapéutico.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+      <ul class="nav-links">
+        <li><a href="#proceso">Cómo funciona</a></li>
+        <li><a href="#psicologos">Para psicólogos/as</a></li>
+        <li><a href="#faq">Preguntas frecuentes</a></li>
+      </ul>
+      <a href="formulario.html" class="btn btn--solid">Reservar sesión</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="mono eyebrow">Psicología · diseñada a medida, no al azar</span>
+      <h1>Un match terapéutico <em>diseñado para ti</em>, no elegido al azar.</h1>
+      <p>PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la <strong>Sesión de Arquitectura</strong>: una conversación real de 30 minutos con nuestro equipo, donde diseñamos a mano las 2 o 3 opciones que mejor calzan contigo.</p>
+      <div class="hero-ctas">
+        <a href="formulario.html" class="btn btn--solid">Agendar mi sesión de arquitectura →</a>
+        <a href="#proceso" class="btn btn--ghost">Ver cómo funciona</a>
+      </div>
+    </div>
+    <div>
+      <svg class="blueprint" viewBox="0 0 640 360" role="img" aria-label="Plano del proceso PSYNC: de ti, a través de la sesión de arquitectura, hacia tu match ideal">
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--line)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="640" height="360" fill="url(#grid)" opacity="0.6"/>
+
+        <!-- Room A: TÚ -->
+        <rect class="bp-room" x="30" y="105" width="150" height="150"/>
+        <text class="bp-label" x="105" y="190" text-anchor="middle">TÚ</text>
+        <text class="bp-mono" x="105" y="280" text-anchor="middle">01 · PUNTO DE PARTIDA</text>
+
+        <!-- Corridor: SESIÓN DE ARQUITECTURA -->
+        <rect class="bp-room bp-room--dashed" x="230" y="135" width="180" height="90"/>
+        <text class="bp-mono" x="320" y="158" text-anchor="middle">SESIÓN DE ARQUITECTURA</text>
+        <text class="bp-mono bp-badge" x="320" y="205" text-anchor="middle">02 · 30 MIN, CON UN HUMANO</text>
+
+        <!-- Room B: MATCH -->
+        <rect class="bp-room" x="460" y="55" width="150" height="240"/>
+        <text class="bp-label" x="535" y="90" text-anchor="middle">TU MATCH</text>
+
+        <rect class="bp-option" x="475" y="115" width="120" height="48"/>
+        <circle class="bp-dot" cx="487" cy="139" r="3"/>
+        <text class="bp-mono" x="535" y="143" text-anchor="middle">OPCIÓN 1</text>
+
+        <rect class="bp-option" x="475" y="173" width="120" height="48"/>
+        <circle class="bp-dot" cx="487" cy="197" r="3"/>
+        <text class="bp-mono" x="535" y="201" text-anchor="middle">OPCIÓN 2</text>
+
+        <rect class="bp-option" x="475" y="231" width="120" height="48"/>
+        <circle class="bp-dot" cx="487" cy="255" r="3"/>
+        <text class="bp-mono" x="535" y="259" text-anchor="middle">OPCIÓN 3</text>
+
+        <!-- connecting path -->
+        <path class="bp-path" d="M180 180 H230 M410 180 H460"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="proceso">
+  <div class="container">
+    <div class="section-head">
+      <span class="mono">El plano del proceso</span>
+      <h2>Cinco etapas, pensadas como se piensa un proyecto.</h2>
+      <p>Primero se escucha, después se diseña. Cada etapa existe para que tu match no dependa de la suerte ni de un cuestionario automático.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <span class="step-time">~5 min</span>
+        <h3>Formulario inicial</h3>
+        <p>Nos cuentas quién eres, qué te trae a terapia y qué necesitas en este momento.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <span class="step-time">30 min</span>
+        <h3>Sesión de arquitectura</h3>
+        <p>Una conversación real con nuestro equipo. Profundizamos en lo que el formulario no alcanza a mostrar.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <span class="step-time">interno</span>
+        <h3>Diseño del match</h3>
+        <p>Cruzamos tus respuestas con el perfil clínico de cada profesional de la red: enfoque, experiencia, estilo y disponibilidad.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <span class="step-time">~20 min</span>
+        <h3>Sesión de devolución</h3>
+        <p>Te presentamos entre 2 y 3 profesionales pensados específicamente para ti, y te explicamos por qué.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">05</span>
+        <span class="step-time">tarifa preferencial</span>
+        <h3>Primera sesión</h3>
+        <p>Agendas directo con la persona que elijas, a una tarifa preferencial por venir desde PSYNC.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="mono">Por qué PSYNC</span>
+      <h2>No es una app de citas para terapia.</h2>
+      <p>Los algoritmos de match son un punto de partida, no el resultado. Lo que hace la diferencia es la conversación.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="mono">Personas, no solo formularios</span>
+        <h3>Te escucha alguien, no un cuestionario</h3>
+        <p>La Sesión de Arquitectura existe porque hay matices que ningún formulario capta. Hay una persona del equipo al otro lado.</p>
+      </div>
+      <div class="card">
+        <span class="mono">Red curada</span>
+        <h3>Cada psicólogo/a pasa por un proceso</h3>
+        <p>Validamos título, experiencia, enfoque terapéutico, supervisión y disponibilidad antes de incorporar a alguien a la red.</p>
+      </div>
+      <div class="card">
+        <span class="mono">Variables clínicas reales</span>
+        <h3>El match mira más que "especialidad"</h3>
+        <p>Consideramos estilo terapéutico, manejo de crisis, calidez, modalidad, presupuesto y más — no solo la etiqueta del problema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="psico" id="psicologos">
+  <div class="container">
+    <div class="section-head">
+      <span class="mono">Para profesionales</span>
+      <h2>¿Eres psicólogo/a y quieres formar parte de la red?</h2>
+      <p>Buscamos profesionales con enfoque claro, experiencia específica y compromiso con la calidad de atención. PSYNC se encarga de acercarte pacientes ya preparados para empezar un proceso contigo.</p>
+    </div>
+    <a href="mailto:hola@psync.cl?subject=Postulación%20Red%20PSYNC" class="btn">Postular a la red →</a>
+    <div class="psico-reqs">
+      <div><span>·</span> Título validado</div>
+      <div><span>·</span> Enfoque terapéutico definido</div>
+      <div><span>·</span> Experiencia clínica</div>
+      <div><span>·</span> Espacio en supervisión</div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <span class="mono">Preguntas frecuentes</span>
+      <h2>Antes de empezar</h2>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>¿Mis respuestas son confidenciales?</summary>
+        <p>Sí. La información que compartes en el formulario y en la Sesión de Arquitectura se usa exclusivamente para diseñar tu match y se trata de forma confidencial dentro del equipo PSYNC.</p>
+      </details>
+      <details>
+        <summary>¿Qué pasa si ninguna de las opciones recomendadas me convence?</summary>
+        <p>La Sesión de Devolución es una conversación, no una asignación. Si ninguna opción calza, lo conversamos y ajustamos el match.</p>
+      </details>
+      <details>
+        <summary>¿El proceso es online o presencial?</summary>
+        <p>Ambos. En el formulario nos cuentas tu preferencia y la consideramos al momento de diseñar tu match.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto demora todo el proceso, desde el formulario hasta la primera sesión?</summary>
+        <p>Depende de la disponibilidad de cada etapa, pero está diseñado para ser rápido: formulario, sesión de arquitectura, devolución y primera sesión se coordinan en el menor tiempo posible.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <span class="mono">El primer paso</span>
+    <h2>Cuéntanos qué te trae a terapia. Lo demás lo diseñamos nosotros.</h2>
+    <a href="formulario.html" class="btn btn--solid">Agendar mi sesión de arquitectura →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+      <span class="mono">Santiago, Chile</span>
+    </div>
+    <div class="mono">hola@psync.cl · © 2026 PSYNC</div>
+  </div>
+</footer>
+
+</body>
+</html>

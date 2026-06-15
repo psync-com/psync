@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de ingreso — PSYNC</title>
+<meta name="description" content="Cuéntanos qué te trae a terapia. Es el primer paso antes de tu Sesión de Arquitectura con el equipo PSYNC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <a href="index.html" class="logo" style="text-decoration:none;"><span class="logo-mark"></span>PSYNC</a>
+      <span class="mono" id="step-indicator">Paso 1 de 8</span>
+    </nav>
+  </div>
+</header>
+<div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+
+<main id="formulario">
+  <div class="form-shell">
+    <div class="form-header">
+      <span class="mono eyebrow">Antes de tu sesión de arquitectura</span>
+      <h1>Cuéntanos qué te trae por aquí.</h1>
+      <p>Esto nos toma a ambos unos 5 minutos. Con esta información, más la conversación de tu Sesión de Arquitectura, diseñamos tu match. Puedes responder con total libertad — lo que compartas aquí es confidencial.</p>
+    </div>
+  </div>
+
+  <form id="psync-form" novalidate>
+
+    <!-- 01 — DATOS DE CONTACTO -->
+    <section class="form-section" data-step="1">
+      <div class="form-shell">
+        <span class="step-label">01 / 08 — Datos de contacto</span>
+        <h2>Empecemos por lo básico</h2>
+        <p class="section-desc">Así podemos contactarte para coordinar tu Sesión de Arquitectura.</p>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="edad">Edad</label>
+            <input type="number" id="edad" name="edad" min="1" max="110" inputmode="numeric">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+56 9 ...">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — FILTRO DE SEGURIDAD -->
+    <section class="form-section" data-step="2">
+      <div class="form-shell">
+        <span class="step-label">02 / 08 — Un paso importante</span>
+        <h2>Antes de seguir, una pregunta de seguridad</h2>
+        <p class="section-desc">Esto nos ayuda a darle la prioridad adecuada a tu proceso. Tu respuesta es confidencial y no afecta tu acceso a PSYNC.</p>
+
+        <div class="field">
+          <label>En las últimas dos semanas, ¿has tenido pensamientos de hacerte daño a ti mismo/a, o de que no vale la pena seguir viviendo?</label>
+          <div class="choice-group" id="riesgo-group">
+            <label class="choice"><input type="radio" name="riesgo_raw" value="no">No</label>
+            <label class="choice"><input type="radio" name="riesgo_raw" value="a_veces">Sí, a veces</label>
+            <label class="choice"><input type="radio" name="riesgo_raw" value="frecuente">Sí, frecuentemente o con intensidad</label>
+          </div>
+
+          <div class="alert-box" id="riesgo-alert" hidden>
+            <h4>Gracias por contarnos. Esto es importante.</h4>
+            <p>Vamos a darle prioridad a tu proceso. Y si en este momento sientes que necesitas hablar con alguien ahora mismo, no esperes nuestra respuesta:</p>
+            <p>📞 <strong>Salud Responde (MINSAL):</strong> <a href="tel:600 360 7777">600 360 7777</a>, opción 2 (salud mental) — disponible 24/7.</p>
+            <p>📞 <strong>Línea *4141:</strong> gratuita desde cualquier celular, los 7 días.</p>
+            <p>Si sientes que el riesgo es inmediato, acude al servicio de urgencia más cercano.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — MOTIVO DE CONSULTA -->
+    <section class="form-section" data-step="3">
+      <div class="form-shell">
+        <span class="step-label">03 / 08 — Motivo de consulta</span>
+        <h2>¿Qué te trae a terapia?</h2>
+        <p class="section-desc">No hace falta que tengas un diagnóstico ni una palabra exacta para esto — solo cuéntanos lo que sientes que necesitas trabajar.</p>
+
+        <div class="field">
+          <label>Área principal</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="area" value="ansiedad">Ansiedad</label>
+            <label class="choice"><input type="radio" name="area" value="animo_bajo">Ánimo bajo / depresión</label>
+            <label class="choice"><input type="radio" name="area" value="estres">Estrés</label>
+            <label class="choice"><input type="radio" name="area" value="duelo">Duelo o pérdida</label>
+            <label class="choice"><input type="radio" name="area" value="pareja">Relaciones de pareja</label>
+            <label class="choice"><input type="radio" name="area" value="familia">Familia</label>
+            <label class="choice"><input type="radio" name="area" value="autoestima">Autoestima</label>
+            <label class="choice"><input type="radio" name="area" value="trauma">Trauma</label>
+            <label class="choice"><input type="radio" name="area" value="otro">Otro</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="motivo">Cuéntanos con tus palabras</label>
+          <p class="hint">¿Qué está pasando? ¿Qué te gustaría que fuera distinto?</p>
+          <textarea id="motivo" name="motivo" rows="4"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — HISTORIAL -->
+    <section class="form-section" data-step="4">
+      <div class="form-shell">
+        <span class="step-label">04 / 08 — Tu historial</span>
+        <h2>Un poco de contexto</h2>
+        <p class="section-desc">Todas las preguntas de esta sección son opcionales, pero nos ayudan mucho a diseñar tu match.</p>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="diagnostico">¿Tienes algún diagnóstico de salud mental?</label>
+            <p class="hint">Opcional</p>
+            <input type="text" id="diagnostico" name="diagnostico" placeholder="Ej: ninguno, TDAH, trastorno de ansiedad...">
+          </div>
+          <div class="field">
+            <label for="medicacion">¿Tomas algún medicamento relacionado?</label>
+            <p class="hint">Opcional</p>
+            <input type="text" id="medicacion" name="medicacion" placeholder="Ej: ninguno, antidepresivo...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>¿Has ido a terapia antes?</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="historial_terapia" value="si">Sí</label>
+            <label class="choice"><input type="radio" name="historial_terapia" value="no">No</label>
+          </div>
+        </div>
+
+        <div class="field" id="exp_terapia_wrap" hidden data-conditional>
+          <label for="exp_terapia">Cuéntanos brevemente cómo fue esa experiencia</label>
+          <p class="hint">¿Qué funcionó y qué no? Esto nos ayuda a no repetir lo que no te sirvió.</p>
+          <textarea id="exp_terapia" name="exp_terapia" rows="3"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — PREFERENCIAS DEL TERAPEUTA -->
+    <section class="form-section" data-step="5">
+      <div class="form-shell">
+        <span class="step-label">05 / 08 — Tu terapeuta ideal</span>
+        <h2>¿Cómo te gustaría que fuera tu terapeuta?</h2>
+        <p class="section-desc">No tienes que tener todo claro — "sin preferencia" es una respuesta perfectamente válida.</p>
+
+        <div class="field">
+          <label>Género</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="gen_pref" value="mujer">Mujer</label>
+            <label class="choice"><input type="radio" name="gen_pref" value="hombre">Hombre</label>
+            <label class="choice"><input type="radio" name="gen_pref" value="sin_preferencia">Sin preferencia</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Rango de edad</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="edad_terapeuta" value="25-35">25–35 años</label>
+            <label class="choice"><input type="radio" name="edad_terapeuta" value="35-45">35–45 años</label>
+            <label class="choice"><input type="radio" name="edad_terapeuta" value="45-55">45–55 años</label>
+            <label class="choice"><input type="radio" name="edad_terapeuta" value="55+">55+ años</label>
+            <label class="choice"><input type="radio" name="edad_terapeuta" value="sin_preferencia">Sin preferencia</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Enfoque terapéutico</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="estilo_pref" value="cognitivo_conductual">Cognitivo-conductual — herramientas concretas</label>
+            <label class="choice"><input type="radio" name="estilo_pref" value="psicodinamico">Psicodinámico — explorar el origen de los patrones</label>
+            <label class="choice"><input type="radio" name="estilo_pref" value="humanista">Humanista — acompañamiento centrado en la persona</label>
+            <label class="choice"><input type="radio" name="estilo_pref" value="sistemico">Sistémico — mirar el contexto y las relaciones</label>
+            <label class="choice"><input type="radio" name="estilo_pref" value="sin_preferencia" checked>No lo sé / que el equipo decida</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="calidez">¿Qué tan importante es la calidez en la relación terapéutica?</label>
+          <div class="slider-wrap">
+            <input type="range" id="calidez" name="necesidad_calidez" min="1" max="5" value="3" step="1">
+            <div class="slider-labels">
+              <span>Prefiero estructura y dirección</span>
+              <span>Prefiero calidez y acompañamiento</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — LOGÍSTICA -->
+    <section class="form-section" data-step="6">
+      <div class="form-shell">
+        <span class="step-label">06 / 08 — Logística</span>
+        <h2>Modalidad, horario y presupuesto</h2>
+
+        <div class="field">
+          <label>Modalidad</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="modalidad" value="online">Online</label>
+            <label class="choice"><input type="radio" name="modalidad" value="presencial">Presencial</label>
+            <label class="choice"><input type="radio" name="modalidad" value="cualquiera">Cualquiera de las dos</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>¿Qué horarios te acomodan? <span style="font-weight:400; color:var(--ink-soft);">(puedes elegir más de uno)</span></label>
+          <div class="choice-group">
+            <label class="choice"><input type="checkbox" name="horario" value="mañana">Mañana</label>
+            <label class="choice"><input type="checkbox" name="horario" value="tarde">Tarde</label>
+            <label class="choice"><input type="checkbox" name="horario" value="noche">Noche</label>
+            <label class="choice"><input type="checkbox" name="horario" value="fin_de_semana">Fines de semana</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="presupuesto">Presupuesto aproximado por sesión (CLP)</label>
+          <p class="hint">Esto nos ayuda a recomendarte opciones que realmente puedas sostener en el tiempo.</p>
+          <input type="number" id="presupuesto" name="presupuesto" min="0" step="1000" placeholder="Ej: 30000">
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 — SOBRE TI -->
+    <section class="form-section" data-step="7">
+      <div class="form-shell">
+        <span class="step-label">07 / 08 — Sobre ti</span>
+        <h2>Para quién es esta terapia</h2>
+
+        <div class="field">
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="poblacion" value="adulto">Soy adulto/a</label>
+            <label class="choice"><input type="radio" name="poblacion" value="adolescente">Soy adolescente (13–17 años)</label>
+            <label class="choice"><input type="radio" name="poblacion" value="nino">Es para un niño/a — completo este formulario como madre/padre/tutor</label>
+            <label class="choice"><input type="radio" name="poblacion" value="pareja">Buscamos terapia de pareja</label>
+            <label class="choice"><input type="radio" name="poblacion" value="familia">Buscamos terapia familiar</label>
+            <label class="choice"><input type="radio" name="poblacion" value="adulto_mayor">Soy adulto/a mayor</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 — CÓMO NOS ENCONTRASTE -->
+    <section class="form-section" data-step="8">
+      <div class="form-shell">
+        <span class="step-label">08 / 08 — Último paso</span>
+        <h2>¿Cómo nos encontraste?</h2>
+
+        <div class="field">
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="como" value="instagram">Instagram</label>
+            <label class="choice"><input type="radio" name="como" value="recomendacion_personal">Recomendación de alguien</label>
+            <label class="choice"><input type="radio" name="como" value="google">Búsqueda en Google</label>
+            <label class="choice"><input type="radio" name="como" value="recomendacion_profesional">Recomendación de un profesional de salud</label>
+            <label class="choice"><input type="radio" name="como" value="otro">Otro</label>
+          </div>
+        </div>
+
+        <div class="submit-section">
+          <p class="hint">Al enviar, nuestro equipo revisará tu información y te escribirá para coordinar tu Sesión de Arquitectura (30 min).</p>
+          <button type="submit" class="btn btn--solid" id="submit-btn">Enviar formulario</button>
+          <p class="submit-error" id="submit-error"></p>
+        </div>
+      </div>
+    </section>
+  </form>
+</main>
+
+<section class="success-screen" id="success" hidden>
+  <div class="form-shell">
+    <span class="mono">Listo</span>
+    <h1>Recibimos tu información.</h1>
+    <p>Nuestro equipo la va a revisar y te va a escribir para coordinar tu Sesión de Arquitectura: una conversación de 30 minutos donde profundizamos en lo que nos contaste y empezamos a diseñar tu match.</p>
+    <a href="index.html" class="btn btn--ghost">Volver al inicio</a>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+  // ----- Progreso -----
+  const sections = document.querySelectorAll('.form-section');
+  const fill = document.getElementById('progress-fill');
+  const stepIndicator = document.getElementById('step-indicator');
+  const total = sections.length;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const step = parseInt(entry.target.dataset.step, 10);
+        fill.style.width = ((step / total) * 100) + '%';
+        stepIndicator.textContent = `Paso ${step} de ${total}`;
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach((s) => observer.observe(s));
+
+  // ----- Campos condicionales -----
+  function syncExpTerapia() {
+    const si = document.querySelector('input[name="historial_terapia"][value="si"]');
+    document.getElementById('exp_terapia_wrap').hidden = !(si && si.checked);
+  }
+  document.querySelectorAll('input[name="historial_terapia"]').forEach((r) => r.addEventListener('change', syncExpTerapia));
+
+  function syncRiesgoAlert() {
+    const checked = document.querySelector('input[name="riesgo_raw"]:checked');
+    document.getElementById('riesgo-alert').hidden = !(checked && checked.value !== 'no');
+  }
+  document.querySelectorAll('input[name="riesgo_raw"]').forEach((r) => r.addEventListener('change', syncRiesgoAlert));
+
+  // ----- Envío -----
+  const form = document.getElementById('psync-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitError = document.getElementById('submit-error');
+
+  const getVal = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const v = el.value.trim();
+    return v === '' ? null : v;
+  };
+  const getRadio = (name) => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+  };
+  const getCheckboxes = (name) => {
+    return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map((el) => el.value);
+  };
+
+  const riesgoMap = { no: 'bajo', a_veces: 'medio', frecuente: 'alto' };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitError.textContent = '';
+
+    const nombre = getVal('nombre');
+    const email = getVal('email');
+
+    if (!nombre || !email) {
+      submitError.textContent = 'Por favor completa al menos tu nombre y correo electrónico (sección 1).';
+      document.querySelector('.form-section[data-step="1"]').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    const edadVal = getVal('edad');
+    const presupuestoVal = getVal('presupuesto');
+
+    const formData = {
+      nombre,
+      email,
+      telefono: getVal('telefono'),
+      edad: edadVal ? parseInt(edadVal, 10) : null,
+      poblacion: getRadio('poblacion'),
+      motivo: getVal('motivo'),
+      area: getRadio('area'),
+      historial_terapia: getRadio('historial_terapia') === 'si',
+      exp_terapia: getVal('exp_terapia'),
+      estilo_pref: getRadio('estilo_pref'),
+      necesidad_calidez: parseInt(document.getElementById('calidez').value, 10),
+      modalidad: getRadio('modalidad'),
+      horario: getCheckboxes('horario').join(', ') || null,
+      presupuesto: presupuestoVal ? parseInt(presupuestoVal, 10) : null,
+      riesgo: riesgoMap[getRadio('riesgo_raw')] || null,
+      diagnostico: getVal('diagnostico'),
+      medicacion: getVal('medicacion'),
+      gen_pref: getRadio('gen_pref'),
+      edad_terapeuta: getRadio('edad_terapeuta'),
+      como: getRadio('como'),
+      estado: 'formulario',
+    };
+
+    try {
+      const { data: paciente, error: errPaciente } = await psyncDB
+        .from('pacientes')
+        .insert(formData)
+        .select()
+        .single();
+
+      if (errPaciente) throw errPaciente;
+
+      const { error: errRespuesta } = await psyncDB
+        .from('respuestas_formulario')
+        .insert({
+          paciente_id: paciente.id,
+          fuente: 'formulario_web',
+          respuestas_raw: formData,
+          procesado: false,
+        });
+
+      if (errRespuesta) throw errRespuesta;
+
+      document.getElementById('formulario').hidden = true;
+      document.querySelector('.progress-bar').hidden = true;
+      document.getElementById('success').hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      console.error(err);
+      submitError.textContent = 'Hubo un problema al enviar el formulario. Intenta de nuevo en un momento. Detalle: ' + (err.message || 'error desconocido');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar formulario';
+    }
+  });
+</script>
+
+</body>
+</html>
