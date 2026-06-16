@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel interno — PSYNC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ① LOGIN -->
+<div id="login-screen">
+  <div class="panel-login">
+    <div class="login-card">
+      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+      <h2>Panel interno</h2>
+      <p class="login-subtitle">Acceso exclusivo para el equipo PSYNC.</p>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn--solid" id="login-btn" style="width:100%; justify-content:center;">Ingresar</button>
+        <p class="login-error" id="login-error"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ② PANEL SHELL -->
+<div id="panel-shell" hidden>
+
+  <!-- Sidebar -->
+  <aside class="panel-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+    </div>
+    <span class="sidebar-section-label">Vistas</span>
+    <ul class="sidebar-nav">
+      <li>
+        <button class="sidebar-nav-btn active" id="nav-pacientes" onclick="navigateTo('lista')">
+          Pacientes
+        </button>
+      </li>
+    </ul>
+    <div class="sidebar-user">
+      <div class="sidebar-user-email" id="sidebar-email">—</div>
+      <button class="sidebar-logout" onclick="handleLogout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="panel-main">
+
+    <!-- ── VISTA: Lista de pacientes ── -->
+    <div id="view-lista" class="panel-view">
+
+      <div class="panel-header">
+        <h1>Pacientes</h1>
+        <div class="stats-row">
+          <div class="stat-pill">
+            <span class="stat-value" id="stat-total">—</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-value" id="stat-nuevos">—</span>
+            <span class="stat-label">Formularios nuevos</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-value" id="stat-proceso">—</span>
+            <span class="stat-label">En proceso</span>
+          </div>
+          <div class="stat-pill stat-pill--alert">
+            <span class="stat-value" id="stat-riesgo">—</span>
+            <span class="stat-label">Riesgo alto/medio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-filters">
+        <span class="filter-label">Filtrar:</span>
+        <button class="filter-btn active" data-filtro="todos"                  onclick="setFiltro(this)">Todos</button>
+        <button class="filter-btn"        data-filtro="formulario"              onclick="setFiltro(this)">Formulario</button>
+        <button class="filter-btn"        data-filtro="sesion_coordinada"       onclick="setFiltro(this)">Sesión coordinada</button>
+        <button class="filter-btn"        data-filtro="en_diseno"               onclick="setFiltro(this)">En diseño</button>
+        <button class="filter-btn"        data-filtro="match_propuesto"         onclick="setFiltro(this)">Match propuesto</button>
+        <button class="filter-btn"        data-filtro="devolucion_coordinada"   onclick="setFiltro(this)">Devolución</button>
+        <button class="filter-btn"        data-filtro="activo"                  onclick="setFiltro(this)">Activos</button>
+        <button class="filter-btn"        data-filtro="riesgo"                  onclick="setFiltro(this)">⚠ Riesgo</button>
+      </div>
+
+      <div class="panel-table-wrap">
+        <table class="panel-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Área</th>
+              <th>Estado</th>
+              <th>Riesgo</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="pacientes-tbody">
+            <tr><td colspan="6" class="panel-table-empty">Cargando pacientes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── VISTA: Detalle paciente ── -->
+    <div id="view-detalle" class="panel-view" hidden>
+
+      <div class="detalle-topbar">
+        <button class="back-btn" onclick="volverALista()">← Volver</button>
+        <div class="detalle-header-info">
+          <div class="detalle-nombre" id="detalle-nombre">—</div>
+          <div class="detalle-sub" id="detalle-sub">—</div>
+          <div class="detalle-badges" id="detalle-badges"></div>
+        </div>
+      </div>
+
+      <div id="detalle-riesgo-alert" class="riesgo-alert-panel" hidden>
+        <div class="alert-title">⚠ Alerta de riesgo</div>
+        <p id="detalle-riesgo-msg"></p>
+      </div>
+
+      <div class="detalle-body">
+
+        <!-- 01 — Contacto -->
+        <div class="panel-card">
+          <span class="panel-card-title">01 — Contacto</span>
+          <div class="field-grid">
+            <div class="field-group">
+              <span class="field-lbl">Email</span>
+              <span class="field-val" id="d-email">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Teléfono</span>
+              <span class="field-val" id="d-tel">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Edad</span>
+              <span class="field-val" id="d-edad">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Población</span>
+              <span class="field-val" id="d-poblacion">—</span>
+            </div>
+            <div class="field-group span-2">
+              <span class="field-lbl">¿Cómo encontró PSYNC?</span>
+              <span class="field-val" id="d-como">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 — Consulta -->
+        <div class="panel-card">
+          <span class="panel-card-title">02 — Motivo de consulta</span>
+          <div class="field-grid">
+            <div class="field-group">
+              <span class="field-lbl">Área principal</span>
+              <span class="field-val" id="d-area">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Riesgo declarado</span>
+              <span class="field-val" id="d-riesgo">—</span>
+            </div>
+            <div class="field-group span-2">
+              <span class="field-lbl">En sus palabras</span>
+              <span class="field-val italic" id="d-motivo">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Diagnóstico previo</span>
+              <span class="field-val" id="d-diagnostico">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Medicación</span>
+              <span class="field-val" id="d-medicacion">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">¿Fue a terapia antes?</span>
+              <span class="field-val" id="d-historial">—</span>
+            </div>
+            <div class="field-group span-2">
+              <span class="field-lbl">Experiencia terapéutica previa</span>
+              <span class="field-val italic" id="d-exp-terapia">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 — Preferencias -->
+        <div class="panel-card">
+          <span class="panel-card-title">03 — Preferencias del terapeuta</span>
+          <div class="field-grid">
+            <div class="field-group">
+              <span class="field-lbl">Género</span>
+              <span class="field-val" id="d-gen-pref">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Edad terapeuta</span>
+              <span class="field-val" id="d-edad-terapeuta">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Enfoque preferido</span>
+              <span class="field-val" id="d-estilo-pref">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Necesidad de calidez</span>
+              <span class="field-val" id="d-calidez">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 — Logística -->
+        <div class="panel-card">
+          <span class="panel-card-title">04 — Logística</span>
+          <div class="field-grid">
+            <div class="field-group">
+              <span class="field-lbl">Modalidad</span>
+              <span class="field-val" id="d-modalidad">—</span>
+            </div>
+            <div class="field-group">
+              <span class="field-lbl">Horario preferido</span>
+              <span class="field-val" id="d-horario">—</span>
+            </div>
+            <div class="field-group span-2">
+              <span class="field-lbl">Presupuesto por sesión</span>
+              <span class="field-val" id="d-presupuesto">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado del proceso -->
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Estado del proceso</span>
+          <div class="estado-row">
+            <select class="estado-select" id="estado-select">
+              <option value="formulario">Formulario recibido</option>
+              <option value="sesion_coordinada">Sesión de arquitectura coordinada</option>
+              <option value="en_diseno">En diseño de match</option>
+              <option value="match_propuesto">Match propuesto al paciente</option>
+              <option value="devolucion_coordinada">Sesión de devolución coordinada</option>
+              <option value="activo">Activo en terapia</option>
+              <option value="cerrado">Cerrado</option>
+            </select>
+            <button class="panel-save-btn" onclick="guardarEstado()">Actualizar estado</button>
+          </div>
+          <p class="panel-feedback" id="estado-feedback"></p>
+        </div>
+
+        <!-- Match -->
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Match de psicólogos/as</span>
+
+          <div id="matches-existentes">
+            <p class="match-empty">Cargando...</p>
+          </div>
+
+          <hr class="match-divider">
+          <span class="match-form-label">Crear / reemplazar match</span>
+          <p class="match-replace-note">Guardar reemplaza el match completo del paciente.</p>
+          <div id="match-form-slots"></div>
+
+          <button class="panel-save-btn" id="match-save-btn" onclick="guardarMatch()">Guardar match</button>
+          <p class="panel-feedback" id="match-feedback"></p>
+        </div>
+
+        <!-- Notas internas -->
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Notas internas</span>
+          <textarea class="notas-input" id="notas-textarea" placeholder="Notas sobre el proceso de vinculación, observaciones de la sesión de arquitectura, coordinaciones, etc."></textarea>
+          <button class="panel-save-btn" id="notas-save-btn" onclick="guardarNotas()">Guardar notas</button>
+          <p class="panel-feedback" id="notas-feedback"></p>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+// ================================================================
+// STATE
+// ================================================================
+let currentUser = null;
+let pacientesList = [];
+let psicologosList = [];
+let currentPaciente = null;
+let matchesActuales = [];
+let filtroActivo = 'todos';
+
+// ================================================================
+// INIT
+// ================================================================
+async function init() {
+  const { data: { session } } = await psyncDB.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    await activarPanel();
+  } else {
+    mostrarLogin();
+  }
+
+  psyncDB.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+      currentUser = session.user;
+      await activarPanel();
+    } else {
+      currentUser = null;
+      mostrarLogin();
+    }
+  });
+}
+
+// ================================================================
+// AUTH
+// ================================================================
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  errorEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Ingresando...';
+
+  const { error } = await psyncDB.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errorEl.textContent = 'Credenciales incorrectas. Verifica tu email y contraseña.';
+    btn.disabled = false;
+    btn.textContent = 'Ingresar';
+  }
+  // Éxito: onAuthStateChange activa el panel
+});
+
+async function handleLogout() {
+  await psyncDB.auth.signOut();
+}
+
+// ================================================================
+// VIEWS
+// ================================================================
+function mostrarLogin() {
+  document.getElementById('login-screen').hidden = false;
+  document.getElementById('panel-shell').hidden = true;
+}
+
+async function activarPanel() {
+  document.getElementById('login-screen').hidden = true;
+  document.getElementById('panel-shell').hidden = false;
+  document.getElementById('sidebar-email').textContent = currentUser.email;
+  await Promise.all([cargarPacientes(), cargarPsicologos()]);
+}
+
+function navigateTo(vista) {
+  document.querySelectorAll('.panel-view').forEach(v => { v.hidden = true; });
+  document.getElementById('view-' + vista).hidden = false;
+}
+
+function volverALista() {
+  currentPaciente = null;
+  matchesActuales = [];
+  navigateTo('lista');
+}
+
+// ================================================================
+// DATA LOADING
+// ================================================================
+async function cargarPacientes() {
+  const { data, error } = await psyncDB
+    .from('pacientes')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error al cargar pacientes:', error);
+    document.getElementById('pacientes-tbody').innerHTML =
+      '<tr><td colspan="6" class="panel-table-empty">Error al cargar datos.</td></tr>';
+    return;
+  }
+
+  pacientesList = data || [];
+  renderEstadisticas();
+  renderListaPacientes();
+}
+
+async function cargarPsicologos() {
+  const { data, error } = await psyncDB
+    .from('psicologos')
+    .select('id, nombre, enfoque, especializacion, precio_primera, precio_normal, modalidad, calidez, estado')
+    .order('nombre');
+
+  if (error) {
+    console.error('Error al cargar psicólogos:', error);
+    return;
+  }
+
+  psicologosList = data || [];
+}
+
+// ================================================================
+// STATS
+// ================================================================
+function renderEstadisticas() {
+  const total = pacientesList.length;
+  const nuevos = pacientesList.filter(p => p.estado === 'formulario').length;
+  const EN_PROCESO = ['sesion_coordinada', 'en_diseno', 'match_propuesto', 'devolucion_coordinada'];
+  const proceso = pacientesList.filter(p => EN_PROCESO.includes(p.estado)).length;
+  const riesgo = pacientesList.filter(p => p.riesgo === 'alto' || p.riesgo === 'medio').length;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-nuevos').textContent = nuevos;
+  document.getElementById('stat-proceso').textContent = proceso;
+  document.getElementById('stat-riesgo').textContent = riesgo;
+}
+
+// ================================================================
+// PATIENT LIST
+// ================================================================
+function setFiltro(btn) {
+  filtroActivo = btn.dataset.filtro;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderListaPacientes();
+}
+
+function renderListaPacientes() {
+  const filtrados = filtroActivo === 'todos'
+    ? pacientesList
+    : filtroActivo === 'riesgo'
+      ? pacientesList.filter(p => p.riesgo === 'alto' || p.riesgo === 'medio')
+      : pacientesList.filter(p => p.estado === filtroActivo);
+
+  const tbody = document.getElementById('pacientes-tbody');
+
+  if (filtrados.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="panel-table-empty">Sin resultados para este filtro.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtrados.map(p => {
+    const fecha = new Date(p.created_at).toLocaleDateString('es-CL', {
+      day: '2-digit', month: '2-digit', year: '2-digit'
+    });
+    return `<tr onclick="abrirDetalle('${esc(p.id)}')">
+      <td class="td-nombre">${esc(p.nombre)}</td>
+      <td class="td-mono">${esc(p.email || '—')}</td>
+      <td>${esc(p.area || '—')}</td>
+      <td>${badgeEstado(p.estado)}</td>
+      <td>${badgeRiesgo(p.riesgo)}</td>
+      <td class="td-mono">${fecha}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ================================================================
+// PATIENT DETAIL
+// ================================================================
+async function abrirDetalle(id) {
+  currentPaciente = pacientesList.find(p => p.id === id) || null;
+  if (!currentPaciente) return;
+
+  const { data: matches } = await psyncDB
+    .from('matches')
+    .select('*, psicologos(id, nombre, enfoque)')
+    .eq('paciente_id', id)
+    .order('ranking');
+
+  matchesActuales = matches || [];
+
+  renderDetalle();
+  navigateTo('detalle');
+  window.scrollTo({ top: 0 });
+}
+
+function renderDetalle() {
+  const p = currentPaciente;
+
+  // Header
+  document.getElementById('detalle-nombre').textContent = p.nombre;
+  document.getElementById('detalle-sub').textContent = p.email || '';
+  document.getElementById('detalle-badges').innerHTML = badgeEstado(p.estado) + ' ' + badgeRiesgo(p.riesgo);
+
+  // Riesgo alert
+  const alertEl = document.getElementById('detalle-riesgo-alert');
+  const msgEl = document.getElementById('detalle-riesgo-msg');
+  if (p.riesgo === 'alto') {
+    alertEl.hidden = false;
+    msgEl.textContent = 'Reportó pensamientos de daño con frecuencia o intensidad. Priorizar contacto inmediato.';
+  } else if (p.riesgo === 'medio') {
+    alertEl.hidden = false;
+    msgEl.textContent = 'Reportó pensamientos de daño ocasionales. Tener en cuenta al coordinar la sesión.';
+  } else {
+    alertEl.hidden = true;
+  }
+
+  // 01 Contacto
+  setText('d-email',    p.email    || '—');
+  setText('d-tel',      p.telefono || '—');
+  setText('d-edad',     p.edad ? p.edad + ' años' : '—');
+  setText('d-poblacion', fmt(p.poblacion, POBLACION_MAP));
+  setText('d-como',     fmt(p.como, COMO_MAP));
+
+  // 02 Consulta
+  setText('d-area',       p.area || '—');
+  setText('d-riesgo',     fmt(p.riesgo, RIESGO_MAP));
+  setText('d-motivo',     p.motivo || '—');
+  setText('d-diagnostico', p.diagnostico || '—');
+  setText('d-medicacion',  p.medicacion  || '—');
+  setText('d-historial',  p.historial_terapia === true ? 'Sí' : p.historial_terapia === false ? 'No' : '—');
+  setText('d-exp-terapia', p.exp_terapia || '—');
+
+  // 03 Preferencias
+  setText('d-gen-pref',       fmt(p.gen_pref, GEN_MAP));
+  setText('d-edad-terapeuta', p.edad_terapeuta || '—');
+  setText('d-estilo-pref',    fmt(p.estilo_pref, ESTILO_MAP));
+  setText('d-calidez',        p.necesidad_calidez ? p.necesidad_calidez + ' / 5' : '—');
+
+  // 04 Logística
+  setText('d-modalidad',  p.modalidad  || '—');
+  setText('d-horario',    p.horario    || '—');
+  setText('d-presupuesto', p.presupuesto ? '$' + Number(p.presupuesto).toLocaleString('es-CL') : '—');
+
+  // Estado
+  document.getElementById('estado-select').value = p.estado || 'formulario';
+  document.getElementById('estado-feedback').textContent = '';
+
+  // Notas
+  document.getElementById('notas-textarea').value = p.notas_vinculacion || '';
+  document.getElementById('notas-feedback').textContent = '';
+
+  // Matches
+  renderMatchesExistentes();
+  renderMatchForm();
+}
+
+// ================================================================
+// MATCHES — display
+// ================================================================
+function renderMatchesExistentes() {
+  const container = document.getElementById('matches-existentes');
+
+  if (matchesActuales.length === 0) {
+    container.innerHTML = '<p class="match-empty">Sin matches registrados aún.</p>';
+    return;
+  }
+
+  const items = matchesActuales.map(m => {
+    const psico = m.psicologos;
+    const nombre = psico ? psico.nombre : m.psicologo_id;
+    const enfoque = psico && psico.enfoque ? psico.enfoque : '';
+    const razones = (m.razones && m.razones.length) ? m.razones.join(', ') : '';
+
+    return `<div class="match-item">
+      <div class="match-rank">${m.ranking || '—'}</div>
+      <div class="match-info">
+        <div class="match-psico-name">${esc(nombre)}</div>
+        ${enfoque ? `<div class="match-psico-meta">${esc(enfoque)}</div>` : ''}
+        ${razones ? `<div class="match-razones-text">"${esc(razones)}"</div>` : ''}
+      </div>
+      <div>${badgeMatchEstado(m.estado)}</div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = '<div class="match-list">' + items + '</div>';
+}
+
+// ================================================================
+// MATCHES — form
+// ================================================================
+function renderMatchForm() {
+  const options = psicologosList.length === 0
+    ? '<option value="">— Sin psicólogos cargados —</option>'
+    : '<option value="">— Sin asignar —</option>' +
+      psicologosList.map(p => {
+        const precio = p.precio_primera ? ' · $' + Number(p.precio_primera).toLocaleString('es-CL') : '';
+        const enfoque = p.enfoque ? ' — ' + p.enfoque : '';
+        return `<option value="${esc(p.id)}">${esc(p.nombre)}${esc(enfoque)}${esc(precio)}</option>`;
+      }).join('');
+
+  const slots = [1, 2, 3].map(n => `
+    <div class="match-slot">
+      <span class="match-slot-num">Opción ${n}</span>
+      <div class="slot-field">
+        <label class="slot-label" for="match-psico-${n}">Psicólogo/a</label>
+        <select id="match-psico-${n}">${options}</select>
+      </div>
+      <div class="slot-field">
+        <label class="slot-label" for="match-razon-${n}">Razón del match</label>
+        <textarea id="match-razon-${n}" rows="2" placeholder="Por qué esta persona calza con el paciente..."></textarea>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('match-form-slots').innerHTML = slots;
+  document.getElementById('match-feedback').textContent = '';
+
+  // Pre-fill con matches existentes
+  matchesActuales.forEach(m => {
+    const sel = document.getElementById(`match-psico-${m.ranking}`);
+    const raz = document.getElementById(`match-razon-${m.ranking}`);
+    if (sel) sel.value = m.psicologo_id;
+    if (raz && m.razones) raz.value = m.razones.join(', ');
+  });
+}
+
+async function guardarMatch() {
+  const btn = document.getElementById('match-save-btn');
+  const feedback = document.getElementById('match-feedback');
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  feedback.textContent = '';
+  feedback.className = 'panel-feedback';
+
+  try {
+    // Borrar matches existentes del paciente
+    const { error: delErr } = await psyncDB
+      .from('matches')
+      .delete()
+      .eq('paciente_id', currentPaciente.id);
+
+    if (delErr) throw delErr;
+
+    const nuevos = [];
+    for (let n = 1; n <= 3; n++) {
+      const psicoId = document.getElementById(`match-psico-${n}`).value;
+      const razon   = document.getElementById(`match-razon-${n}`).value.trim();
+      if (psicoId) {
+        nuevos.push({
+          paciente_id: currentPaciente.id,
+          psicologo_id: psicoId,
+          ranking: n,
+          razones: razon ? [razon] : [],
+          estado: 'propuesto',
+        });
+      }
+    }
+
+    if (nuevos.length > 0) {
+      const { error: insErr } = await psyncDB.from('matches').insert(nuevos);
+      if (insErr) throw insErr;
+
+      // Auto-avanzar estado si sigue en 'formulario'
+      if (currentPaciente.estado === 'formulario') {
+        await _actualizarEstado('en_diseno');
+        document.getElementById('estado-select').value = 'en_diseno';
+      }
+    }
+
+    // Recargar matches
+    const { data: refreshed } = await psyncDB
+      .from('matches')
+      .select('*, psicologos(id, nombre, enfoque)')
+      .eq('paciente_id', currentPaciente.id)
+      .order('ranking');
+
+    matchesActuales = refreshed || [];
+    renderMatchesExistentes();
+
+    feedback.textContent = nuevos.length > 0
+      ? '✓ Match guardado (' + nuevos.length + ' opción' + (nuevos.length > 1 ? 'es' : '') + ').'
+      : '✓ Match eliminado.';
+    feedback.className = 'panel-feedback ok';
+
+  } catch (err) {
+    console.error(err);
+    feedback.textContent = 'Error al guardar: ' + (err.message || 'error desconocido');
+    feedback.className = 'panel-feedback err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar match';
+  }
+}
+
+// ================================================================
+// ESTADO
+// ================================================================
+async function guardarEstado() {
+  const nuevoEstado = document.getElementById('estado-select').value;
+  const feedback = document.getElementById('estado-feedback');
+  feedback.textContent = '';
+  feedback.className = 'panel-feedback';
+
+  const ok = await _actualizarEstado(nuevoEstado);
+  if (ok) {
+    feedback.textContent = '✓ Estado actualizado.';
+    feedback.className = 'panel-feedback ok';
+  } else {
+    feedback.textContent = 'Error al actualizar estado.';
+    feedback.className = 'panel-feedback err';
+  }
+}
+
+async function _actualizarEstado(nuevoEstado) {
+  const { error } = await psyncDB
+    .from('pacientes')
+    .update({ estado: nuevoEstado, updated_at: new Date().toISOString() })
+    .eq('id', currentPaciente.id);
+
+  if (error) { console.error(error); return false; }
+
+  currentPaciente.estado = nuevoEstado;
+  const idx = pacientesList.findIndex(p => p.id === currentPaciente.id);
+  if (idx >= 0) pacientesList[idx].estado = nuevoEstado;
+  document.getElementById('detalle-badges').innerHTML =
+    badgeEstado(nuevoEstado) + ' ' + badgeRiesgo(currentPaciente.riesgo);
+  return true;
+}
+
+// ================================================================
+// NOTAS
+// ================================================================
+async function guardarNotas() {
+  const btn = document.getElementById('notas-save-btn');
+  const feedback = document.getElementById('notas-feedback');
+  const notas = document.getElementById('notas-textarea').value;
+
+  btn.disabled = true;
+  feedback.textContent = '';
+  feedback.className = 'panel-feedback';
+
+  const { error } = await psyncDB
+    .from('pacientes')
+    .update({ notas_vinculacion: notas })
+    .eq('id', currentPaciente.id);
+
+  if (error) {
+    feedback.textContent = 'Error: ' + error.message;
+    feedback.className = 'panel-feedback err';
+  } else {
+    currentPaciente.notas_vinculacion = notas;
+    const idx = pacientesList.findIndex(p => p.id === currentPaciente.id);
+    if (idx >= 0) pacientesList[idx].notas_vinculacion = notas;
+    feedback.textContent = '✓ Notas guardadas.';
+    feedback.className = 'panel-feedback ok';
+  }
+
+  btn.disabled = false;
+}
+
+// ================================================================
+// HELPERS
+// ================================================================
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function fmt(val, map) {
+  return map[val] || val || '—';
+}
+
+// Estado
+const ESTADO_MAP = {
+  formulario:             { label: 'Formulario recibido',          cls: 'badge--formulario' },
+  sesion_coordinada:      { label: 'Sesión coordinada',            cls: 'badge--sesion_coordinada' },
+  en_diseno:              { label: 'En diseño de match',           cls: 'badge--en_diseno' },
+  match_propuesto:        { label: 'Match propuesto',              cls: 'badge--match_propuesto' },
+  devolucion_coordinada:  { label: 'Devolución coordinada',        cls: 'badge--devolucion_coordinada' },
+  activo:                 { label: 'Activo',                       cls: 'badge--activo' },
+  cerrado:                { label: 'Cerrado',                      cls: 'badge--cerrado' },
+};
+
+function badgeEstado(estado) {
+  const e = ESTADO_MAP[estado] || { label: estado || '—', cls: 'badge--formulario' };
+  return `<span class="badge ${e.cls}">${esc(e.label)}</span>`;
+}
+
+const RIESGO_MAP = { bajo: 'Bajo', medio: 'Medio', alto: 'Alto', no: 'Sin riesgo declarado' };
+
+function badgeRiesgo(riesgo) {
+  const clsMap = { alto: 'badge--riesgo-alto', medio: 'badge--riesgo-medio', bajo: 'badge--riesgo-bajo', no: 'badge--riesgo-no' };
+  const labelMap = { alto: 'Riesgo alto', medio: 'Riesgo medio', bajo: 'Sin riesgo', no: 'Sin riesgo' };
+  const cls = clsMap[riesgo] || 'badge--riesgo-no';
+  const label = labelMap[riesgo] || 'Sin riesgo';
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function badgeMatchEstado(estado) {
+  const map = {
+    propuesto: { label: 'Propuesto', cls: 'badge--match-propuesto' },
+    aceptado:  { label: 'Aceptado',  cls: 'badge--match-aceptado' },
+    rechazado: { label: 'Rechazado', cls: 'badge--match-rechazado' },
+  };
+  const s = map[estado] || { label: estado || '—', cls: 'badge--formulario' };
+  return `<span class="badge ${s.cls}">${esc(s.label)}</span>`;
+}
+
+// Format maps
+const POBLACION_MAP = {
+  adulto: 'Adulto/a', adolescente: 'Adolescente (13–17)', nino: 'Niño/a (padre/madre completa)',
+  pareja: 'Pareja', familia: 'Familia', adulto_mayor: 'Adulto/a mayor',
+};
+const COMO_MAP = {
+  instagram: 'Instagram', recomendacion_personal: 'Recomendación personal',
+  google: 'Google', recomendacion_profesional: 'Recomendación profesional', otro: 'Otro',
+};
+const GEN_MAP = { mujer: 'Mujer', hombre: 'Hombre', sin_preferencia: 'Sin preferencia', indiferente: 'Sin preferencia' };
+const ESTILO_MAP = {
+  cognitivo_conductual: 'Cognitivo-conductual', psicodinamico: 'Psicodinámico',
+  humanista: 'Humanista', sistemico: 'Sistémico', sin_preferencia: 'Sin preferencia',
+};
+
+// ================================================================
+// START
+// ================================================================
+init();
+</script>
+
+</body>
+</html>
