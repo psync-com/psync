@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda tu entrevista — PSYNC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  :root {
+    --bg: #EBDFDB;
+    --surface: #FDFAF7;
+    --ink: #3D2212;
+    --ink-soft: #7A5840;
+    --accent: #4B1E23;
+    --accent-deep: #35161A;
+    --teal: #4D7A68;
+    --line: #DDD4C8;
+    --line-strong: #C8BDB0;
+    --font-display: 'Libre Caslon Text', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <a href="index.html" class="logo" style="text-decoration:none;"><img src="logo.png" class="site-logo" alt="PSYNC"><span class="logo-wordmark">PSYNC</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="terminos.html" target="_blank">Términos y Condiciones</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="booking-main">
+  <div class="booking-shell">
+
+    <!-- Estado: cargando -->
+    <div id="state-loading" class="booking-state">
+      <div class="booking-spinner"></div>
+      <p class="booking-loading-text">Verificando link...</p>
+    </div>
+
+    <!-- Estado: link inválido -->
+    <div id="state-invalid" class="booking-state" hidden>
+      <div class="booking-success" style="text-align:center;">
+        <div class="booking-success-icon" style="background:var(--line); color:var(--ink-soft);">✕</div>
+        <h1>Link inválido</h1>
+        <p>Este link no existe, ya fue utilizado, o expiró. Si crees que es un error, escríbenos a <a href="mailto:contacto@psync.cl" style="color:var(--accent);">contacto@psync.cl</a></p>
+      </div>
+    </div>
+
+    <!-- Estado: error -->
+    <div id="state-error" class="booking-state" hidden>
+      <p class="booking-error-msg" id="error-msg">Ocurrió un error.</p>
+      <button class="btn btn--ghost" onclick="location.reload()">Reintentar</button>
+    </div>
+
+    <!-- Estado: booking -->
+    <div id="state-booking" class="booking-state" hidden>
+      <div class="booking-hero">
+        <span class="mono eyebrow">Red de psicólogos/as PSYNC</span>
+        <h1>Agenda tu entrevista<br>con nuestro equipo</h1>
+        <p class="booking-subtitle">Una conversación de <strong>1 hora</strong> por videollamada (Google Meet) para conocerte y explorar si eres parte de la red PSYNC.</p>
+      </div>
+
+      <!-- Selector de fecha -->
+      <div class="booking-card" id="card-fecha">
+        <span class="booking-card-label">Elige una fecha</span>
+        <div class="dates-grid" id="dates-grid"></div>
+      </div>
+
+      <!-- Selector de hora -->
+      <div class="booking-card" id="card-hora" hidden>
+        <span class="booking-card-label" id="hora-label">Elige una hora</span>
+        <div class="times-grid" id="times-grid"></div>
+      </div>
+
+      <!-- Formulario de confirmación -->
+      <div class="booking-card" id="card-form" hidden>
+        <span class="booking-card-label">Confirma tus datos</span>
+        <div class="booking-resumen" id="booking-resumen"></div>
+        <div class="field">
+          <label for="booking-nombre">Nombre completo</label>
+          <input type="text" id="booking-nombre" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="booking-email">Correo electrónico</label>
+          <input type="email" id="booking-email" autocomplete="email" required>
+        </div>
+        <button class="btn btn--solid booking-confirm-btn" id="confirm-btn" onclick="confirmarReserva()">
+          Confirmar entrevista →
+        </button>
+        <p class="booking-feedback" id="booking-feedback"></p>
+      </div>
+    </div>
+
+    <!-- Estado: confirmado -->
+    <div id="state-confirmed" class="booking-state" hidden>
+      <div class="booking-success">
+        <div class="booking-success-icon">✓</div>
+        <span class="mono eyebrow">Confirmado</span>
+        <h1>¡Tu entrevista está agendada!</h1>
+        <p>Te enviamos un correo de confirmación con el link de videollamada. Revisa tu bandeja de entrada (y spam, por si acaso).</p>
+        <div class="booking-meet-box" id="confirm-meet-box" hidden>
+          <span class="mono" style="font-size:0.7rem; color:var(--ink-soft);">Link de videollamada</span>
+          <a id="confirm-meet-link" href="#" target="_blank" rel="noopener" class="meet-link">Abrir Google Meet</a>
+        </div>
+        <div class="booking-resumen" id="confirm-resumen"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+// Header: transparente arriba del todo, sólido al hacer scroll
+(function () {
+  const h = document.querySelector('header');
+  if (!h) return;
+  const sync = () => h.classList.toggle('scrolled', window.scrollY > 10);
+  sync();
+  window.addEventListener('scroll', sync, { passive: true });
+})();
+
+const token = new URLSearchParams(location.search).get('token');
+
+let allSlots     = [];
+let selectedDate = null;
+let selectedSlot = null;
+
+const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function showState(id) {
+  ['state-loading','state-invalid','state-error','state-booking','state-confirmed'].forEach(s => {
+    document.getElementById(s).hidden = s !== id;
+  });
+}
+
+function showError(msg) {
+  document.getElementById('error-msg').textContent = msg;
+  showState('state-error');
+}
+
+async function init() {
+  if (!token) { showState('state-invalid'); return; }
+
+  // Validate token
+  try {
+    const { data, error } = await psyncDB
+      .from('sesiones')
+      .select('estado, nombre, email')
+      .eq('token', token)
+      .single();
+
+    if (error || !data)         { showState('state-invalid'); return; }
+    if (data.estado !== 'pendiente') { showState('state-invalid'); return; }
+
+    if (data.nombre) document.getElementById('booking-nombre').value = data.nombre;
+    if (data.email)  document.getElementById('booking-email').value  = data.email;
+  } catch (_) {
+    showState('state-invalid');
+    return;
+  }
+
+  // Load slots
+  try {
+    const res  = await fetch('/.netlify/functions/calendar-slots');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    allSlots = data.slots || [];
+    if (allSlots.length === 0) {
+      showError('No hay disponibilidad en los próximos días. Escríbenos a contacto@psync.cl.');
+      return;
+    }
+    renderDates();
+    showState('state-booking');
+  } catch (err) {
+    showError('No pudimos cargar la disponibilidad. Intenta de nuevo.');
+  }
+}
+
+function renderDates() {
+  document.getElementById('dates-grid').innerHTML = [...new Set(allSlots.map(s => s.date))].map(d => {
+    const [y, mo, day] = d.split('-').map(Number);
+    const dow = new Date(y, mo - 1, day).getDay();
+    return `<button class="date-btn" onclick="selectDate('${d}', this)">
+      <span class="date-btn-day">${DIAS[dow].slice(0,3)}</span>
+      <span class="date-btn-num">${day}</span>
+      <span class="date-btn-mes">${MESES[mo-1].slice(0,3)}</span>
+    </button>`;
+  }).join('');
+}
+
+function selectDate(dateStr, btn) {
+  selectedDate = dateStr;
+  selectedSlot = null;
+  document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const daySlots = allSlots.filter(s => s.date === dateStr);
+  const [y, mo, d] = dateStr.split('-').map(Number);
+  const dow = new Date(y, mo - 1, d).getDay();
+
+  document.getElementById('hora-label').textContent = `Horarios para el ${DIAS[dow]} ${d} de ${MESES[mo-1]}`;
+  document.getElementById('times-grid').innerHTML = daySlots.map(s =>
+    `<button class="time-btn" onclick="selectTime('${s.date}', '${s.hora}', this)">${s.hora}</button>`
+  ).join('');
+
+  document.getElementById('card-hora').hidden = false;
+  document.getElementById('card-form').hidden = true;
+  document.getElementById('card-hora').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function selectTime(date, hora, btn) {
+  selectedSlot = { date, hora };
+  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const [y, mo, d] = date.split('-').map(Number);
+  const dow = new Date(y, mo - 1, d).getDay();
+  document.getElementById('booking-resumen').innerHTML =
+    `<div class="resumen-item"><strong>${DIAS[dow]} ${d} de ${MESES[mo-1]} de ${y}</strong> · ${hora} hrs</div>`;
+
+  document.getElementById('card-form').hidden = false;
+  document.getElementById('booking-feedback').textContent = '';
+  document.getElementById('card-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function confirmarReserva() {
+  const nombre   = document.getElementById('booking-nombre').value.trim();
+  const email    = document.getElementById('booking-email').value.trim();
+  const feedback = document.getElementById('booking-feedback');
+  const btn      = document.getElementById('confirm-btn');
+
+  if (!nombre || !email) {
+    feedback.textContent = 'Por favor completa tu nombre y correo.';
+    feedback.className = 'booking-feedback err';
+    return;
+  }
+  if (!selectedSlot) {
+    feedback.textContent = 'Por favor selecciona una fecha y hora.';
+    feedback.className = 'booking-feedback err';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Confirmando...';
+  feedback.textContent = '';
+
+  try {
+    const res = await fetch('/.netlify/functions/calendar-book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'entrevista',
+        nombre,
+        email,
+        fecha: selectedSlot.date,
+        hora_inicio: selectedSlot.hora,
+        token,
+      }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Error desconocido');
+
+    const [y, mo, d] = selectedSlot.date.split('-').map(Number);
+    const dow = new Date(y, mo - 1, d).getDay();
+    document.getElementById('confirm-resumen').innerHTML =
+      `<div class="resumen-item"><strong>${DIAS[dow]} ${d} de ${MESES[mo-1]} de ${y}</strong> · ${selectedSlot.hora} hrs</div>`;
+
+    if (data.meet_link) {
+      document.getElementById('confirm-meet-link').href = data.meet_link;
+      document.getElementById('confirm-meet-box').hidden = false;
+    }
+
+    showState('state-confirmed');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    feedback.textContent = err.message || 'Hubo un error. Intenta de nuevo.';
+    feedback.className = 'booking-feedback err';
+    btn.disabled = false;
+    btn.textContent = 'Confirmar entrevista →';
+  }
+}
+
+init();
+</script>
+
+<footer class="site-footer">
+  <div class="site-footer-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="site-footer-wordmark">PSYNC</span>
+  </div>
+  <ul class="site-footer-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#quienes">Quiénes somos</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+    <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
+  </ul>
+  <span class="site-footer-copy">© 2026 PSYNC</span>
+</footer>
+
+</body>
+</html>

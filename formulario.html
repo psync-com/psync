@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -7,22 +7,75 @@
 <meta name="description" content="Cuéntanos qué te trae a terapia. Es el primer paso antes de tu Sesión de Arquitectura con el equipo PSYNC.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>
+  :root {
+    --bg: #EBDFDB;
+    --surface: #FDFAF7;
+    --ink: #3D2212;
+    --ink-soft: #7A5840;
+    --accent: #4B1E23;
+    --accent-deep: #35161A;
+    --teal: #4D7A68;
+    --line: #DDD4C8;
+    --line-strong: #C8BDB0;
+    --font-display: 'Libre Caslon Text', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+  }
+</style>
 </head>
 <body>
 
 <header>
   <div class="container">
     <nav>
-      <a href="index.html" class="logo" style="text-decoration:none;"><span class="logo-mark"></span>PSYNC</a>
-      <span class="mono" id="step-indicator">Paso 1 de 8</span>
+      <a href="index.html" class="logo" style="text-decoration:none;"><img src="logo.png" class="site-logo" alt="PSYNC"><span class="logo-wordmark">PSYNC</span></a>
+      <span class="mono" id="step-indicator" hidden>Paso 1 de 6</span>
+      <a href="terminos.html" target="_blank" class="nav-tc-link">Términos y Condiciones</a>
     </nav>
   </div>
 </header>
-<div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+<div class="progress-bar" id="progress-bar" hidden><div class="progress-bar-fill" id="progress-fill"></div></div>
 
-<main id="formulario">
+<!-- Pantalla inicial: ¿para quién es la terapia? -->
+<section id="pre-form">
+  <div class="form-shell">
+    <div class="form-header">
+      <span class="mono eyebrow">Primer paso</span>
+      <h1>¿Para quién es esta terapia?</h1>
+      <p>Esto nos ayuda a orientar las preguntas que siguen.</p>
+    </div>
+    <div class="poblacion-grid">
+      <button class="poblacion-btn" onclick="elegirPoblacion('adulto')">
+        <span class="pob-label">Para mí</span>
+        <span class="pob-hint">Soy adulto/a</span>
+      </button>
+      <button class="poblacion-btn" onclick="elegirPoblacion('adulto_mayor')">
+        <span class="pob-label">Para mí</span>
+        <span class="pob-hint">Soy adulto/a mayor</span>
+      </button>
+      <button class="poblacion-btn" onclick="elegirPoblacion('adolescente')">
+        <span class="pob-label">Para mí</span>
+        <span class="pob-hint">Soy adolescente (13–17 años)</span>
+      </button>
+      <button class="poblacion-btn" onclick="elegirPoblacion('nino')">
+        <span class="pob-label">Para mi hijo/a</span>
+        <span class="pob-hint">Lo completo como madre, padre o tutor/a</span>
+      </button>
+      <button class="poblacion-btn" onclick="elegirPoblacion('pareja')">
+        <span class="pob-label">Para nosotros</span>
+        <span class="pob-hint">Buscamos terapia de pareja</span>
+      </button>
+      <button class="poblacion-btn" onclick="elegirPoblacion('familia')">
+        <span class="pob-label">Para nuestra familia</span>
+        <span class="pob-hint">Buscamos terapia familiar</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<main id="formulario" hidden>
   <div class="form-shell">
     <div class="form-header">
       <span class="mono eyebrow">Antes de tu sesión de arquitectura</span>
@@ -36,7 +89,7 @@
     <!-- 01 — DATOS DE CONTACTO -->
     <section class="form-section" data-step="1">
       <div class="form-shell">
-        <span class="step-label">01 / 08 — Datos de contacto</span>
+        <span class="step-label">01 / 07 — Datos de contacto</span>
         <h2>Empecemos por lo básico</h2>
         <p class="section-desc">Así podemos contactarte para coordinar tu Sesión de Arquitectura.</p>
 
@@ -63,36 +116,10 @@
       </div>
     </section>
 
-    <!-- 02 — FILTRO DE SEGURIDAD -->
+    <!-- 02 — MOTIVO DE CONSULTA -->
     <section class="form-section" data-step="2">
       <div class="form-shell">
-        <span class="step-label">02 / 08 — Un paso importante</span>
-        <h2>Antes de seguir, una pregunta de seguridad</h2>
-        <p class="section-desc">Esto nos ayuda a darle la prioridad adecuada a tu proceso. Tu respuesta es confidencial y no afecta tu acceso a PSYNC.</p>
-
-        <div class="field">
-          <label>En las últimas dos semanas, ¿has tenido pensamientos de hacerte daño a ti mismo/a, o de que no vale la pena seguir viviendo?</label>
-          <div class="choice-group" id="riesgo-group">
-            <label class="choice"><input type="radio" name="riesgo_raw" value="no">No</label>
-            <label class="choice"><input type="radio" name="riesgo_raw" value="a_veces">Sí, a veces</label>
-            <label class="choice"><input type="radio" name="riesgo_raw" value="frecuente">Sí, frecuentemente o con intensidad</label>
-          </div>
-
-          <div class="alert-box" id="riesgo-alert" hidden>
-            <h4>Gracias por contarnos. Esto es importante.</h4>
-            <p>Vamos a darle prioridad a tu proceso. Y si en este momento sientes que necesitas hablar con alguien ahora mismo, no esperes nuestra respuesta:</p>
-            <p>📞 <strong>Salud Responde (MINSAL):</strong> <a href="tel:600 360 7777">600 360 7777</a>, opción 2 (salud mental) — disponible 24/7.</p>
-            <p>📞 <strong>Línea *4141:</strong> gratuita desde cualquier celular, los 7 días.</p>
-            <p>Si sientes que el riesgo es inmediato, acude al servicio de urgencia más cercano.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 03 — MOTIVO DE CONSULTA -->
-    <section class="form-section" data-step="3">
-      <div class="form-shell">
-        <span class="step-label">03 / 08 — Motivo de consulta</span>
+        <span class="step-label">02 / 07 — Motivo de consulta</span>
         <h2>¿Qué te trae a terapia?</h2>
         <p class="section-desc">No hace falta que tengas un diagnóstico ni una palabra exacta para esto — solo cuéntanos lo que sientes que necesitas trabajar.</p>
 
@@ -119,10 +146,10 @@
       </div>
     </section>
 
-    <!-- 04 — HISTORIAL -->
-    <section class="form-section" data-step="4">
+    <!-- 03 — HISTORIAL -->
+    <section class="form-section" data-step="3">
       <div class="form-shell">
-        <span class="step-label">04 / 08 — Tu historial</span>
+        <span class="step-label">03 / 07 — Tu historial</span>
         <h2>Un poco de contexto</h2>
         <p class="section-desc">Todas las preguntas de esta sección son opcionales, pero nos ayudan mucho a diseñar tu match.</p>
 
@@ -155,10 +182,10 @@
       </div>
     </section>
 
-    <!-- 05 — PREFERENCIAS DEL TERAPEUTA -->
-    <section class="form-section" data-step="5">
+    <!-- 04 — PREFERENCIAS DEL TERAPEUTA -->
+    <section class="form-section" data-step="4">
       <div class="form-shell">
-        <span class="step-label">05 / 08 — Tu terapeuta ideal</span>
+        <span class="step-label">04 / 07 — Tu terapeuta ideal</span>
         <h2>¿Cómo te gustaría que fuera tu terapeuta?</h2>
         <p class="section-desc">No tienes que tener todo claro — "sin preferencia" es una respuesta perfectamente válida.</p>
 
@@ -206,10 +233,10 @@
       </div>
     </section>
 
-    <!-- 06 — LOGÍSTICA -->
-    <section class="form-section" data-step="6">
+    <!-- 05 — LOGÍSTICA -->
+    <section class="form-section" data-step="5">
       <div class="form-shell">
-        <span class="step-label">06 / 08 — Logística</span>
+        <span class="step-label">05 / 07 — Logística</span>
         <h2>Modalidad, horario y presupuesto</h2>
 
         <div class="field">
@@ -239,29 +266,10 @@
       </div>
     </section>
 
-    <!-- 07 — SOBRE TI -->
-    <section class="form-section" data-step="7">
+    <!-- 06 — CÓMO NOS ENCONTRASTE -->
+    <section class="form-section" data-step="6">
       <div class="form-shell">
-        <span class="step-label">07 / 08 — Sobre ti</span>
-        <h2>Para quién es esta terapia</h2>
-
-        <div class="field">
-          <div class="choice-group">
-            <label class="choice"><input type="radio" name="poblacion" value="adulto">Soy adulto/a</label>
-            <label class="choice"><input type="radio" name="poblacion" value="adolescente">Soy adolescente (13–17 años)</label>
-            <label class="choice"><input type="radio" name="poblacion" value="nino">Es para un niño/a — completo este formulario como madre/padre/tutor</label>
-            <label class="choice"><input type="radio" name="poblacion" value="pareja">Buscamos terapia de pareja</label>
-            <label class="choice"><input type="radio" name="poblacion" value="familia">Buscamos terapia familiar</label>
-            <label class="choice"><input type="radio" name="poblacion" value="adulto_mayor">Soy adulto/a mayor</label>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 08 — CÓMO NOS ENCONTRASTE -->
-    <section class="form-section" data-step="8">
-      <div class="form-shell">
-        <span class="step-label">08 / 08 — Último paso</span>
+        <span class="step-label">06 / 06 — Último paso</span>
         <h2>¿Cómo nos encontraste?</h2>
 
         <div class="field">
@@ -275,7 +283,7 @@
         </div>
 
         <div class="submit-section">
-          <p class="hint">Al enviar, nuestro equipo revisará tu información y te escribirá para coordinar tu Sesión de Arquitectura (30 min).</p>
+          <p class="hint">Al enviar, nuestro equipo revisará tu información y te escribirá para coordinar tu Sesión de Arquitectura (1 hora).</p>
           <button type="submit" class="btn btn--solid" id="submit-btn">Enviar formulario</button>
           <p class="submit-error" id="submit-error"></p>
         </div>
@@ -286,16 +294,38 @@
 
 <section class="success-screen" id="success" hidden>
   <div class="form-shell">
-    <span class="mono">Listo</span>
+    <span class="mono eyebrow">Paso 1 completo</span>
     <h1>Recibimos tu información.</h1>
-    <p>Nuestro equipo la va a revisar y te va a escribir para coordinar tu Sesión de Arquitectura: una conversación de 30 minutos donde profundizamos en lo que nos contaste y empezamos a diseñar tu match.</p>
-    <a href="index.html" class="btn btn--ghost">Volver al inicio</a>
+    <p>El siguiente paso es agendar tu <strong>Sesión de Arquitectura</strong>: una conversación de 1 hora con nuestro equipo donde profundizamos en lo que nos contaste y empezamos a diseñar tu match terapéutico.</p>
+    <a id="link-agenda" href="agenda.html" class="btn btn--solid" style="margin-top:8px;">Agendar Sesión de Arquitectura →</a>
+    <a href="index.html" class="btn btn--ghost" style="margin-top:12px;">Volver al inicio</a>
   </div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script>
+  // Header: transparente arriba del todo, sólido al hacer scroll
+  (function () {
+    const h = document.querySelector('header');
+    if (!h) return;
+    const sync = () => h.classList.toggle('scrolled', window.scrollY > 10);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+  })();
+
+  // ----- Pantalla inicial -----
+  let selectedPoblacion = null;
+
+  function elegirPoblacion(valor) {
+    selectedPoblacion = valor;
+    document.getElementById('pre-form').hidden = true;
+    document.getElementById('formulario').hidden = false;
+    document.getElementById('progress-bar').hidden = false;
+    document.getElementById('step-indicator').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // ----- Progreso -----
   const sections = document.querySelectorAll('.form-section');
   const fill = document.getElementById('progress-fill');
@@ -320,12 +350,6 @@
   }
   document.querySelectorAll('input[name="historial_terapia"]').forEach((r) => r.addEventListener('change', syncExpTerapia));
 
-  function syncRiesgoAlert() {
-    const checked = document.querySelector('input[name="riesgo_raw"]:checked');
-    document.getElementById('riesgo-alert').hidden = !(checked && checked.value !== 'no');
-  }
-  document.querySelectorAll('input[name="riesgo_raw"]').forEach((r) => r.addEventListener('change', syncRiesgoAlert));
-
   // ----- Envío -----
   const form = document.getElementById('psync-form');
   const submitBtn = document.getElementById('submit-btn');
@@ -344,8 +368,6 @@
   const getCheckboxes = (name) => {
     return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map((el) => el.value);
   };
-
-  const riesgoMap = { no: 'bajo', a_veces: 'medio', frecuente: 'alto' };
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -371,17 +393,16 @@
       email,
       telefono: getVal('telefono'),
       edad: edadVal ? parseInt(edadVal, 10) : null,
-      poblacion: getRadio('poblacion'),
+      poblacion: selectedPoblacion,
       motivo: getVal('motivo'),
       area: getRadio('area'),
-      historial_terapia: getRadio('historial_terapia') === 'si',
+      historial_terapia: getRadio('historial_terapia') === 'si' ? true : getRadio('historial_terapia') === 'no' ? false : null,
       exp_terapia: getVal('exp_terapia'),
       estilo_pref: getRadio('estilo_pref'),
       necesidad_calidez: parseInt(document.getElementById('calidez').value, 10),
       modalidad: getRadio('modalidad'),
       horario: getCheckboxes('horario').join(', ') || null,
       presupuesto: presupuestoVal ? parseInt(presupuestoVal, 10) : null,
-      riesgo: riesgoMap[getRadio('riesgo_raw')] || null,
       diagnostico: getVal('diagnostico'),
       medicacion: getVal('medicacion'),
       gen_pref: getRadio('gen_pref'),
@@ -399,20 +420,19 @@
 
       if (errPaciente) throw errPaciente;
 
-      const { error: errRespuesta } = await psyncDB
-        .from('respuestas_formulario')
-        .insert({
-          paciente_id: paciente.id,
-          fuente: 'formulario_web',
-          respuestas_raw: formData,
-          procesado: false,
-        });
-
-      if (errRespuesta) throw errRespuesta;
+      // Guardado secundario — no bloquea si la tabla no existe
+      await psyncDB.from('respuestas_formulario').insert({
+        paciente_id: paciente.id,
+        fuente: 'formulario_web',
+        respuestas_raw: formData,
+        procesado: false,
+      });
 
       document.getElementById('formulario').hidden = true;
       document.querySelector('.progress-bar').hidden = true;
       document.getElementById('success').hidden = false;
+      document.getElementById('link-agenda').href =
+        `agenda.html?paciente_id=${paciente.id}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}`;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       console.error(err);
@@ -422,6 +442,20 @@
     }
   });
 </script>
+
+<footer class="site-footer">
+  <div class="site-footer-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="site-footer-wordmark">PSYNC</span>
+  </div>
+  <ul class="site-footer-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#quienes">Quiénes somos</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+    <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
+  </ul>
+  <span class="site-footer-copy">© 2026 PSYNC</span>
+</footer>
 
 </body>
 </html>

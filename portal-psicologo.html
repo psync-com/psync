@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal del psicólogo — PSYNC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:       #EBDFDB;
+  --bg-mid:   #E4D5C7;
+  --hero:     #4B1E23;
+  --dark:     #3D2212;
+  --text:     #7A5840;
+  --muted:    #A88F72;
+  --border:   #DDD4C8;
+  --surface:  #FDFAF7;
+  --accent:   #4B1E23;
+  --teal:     #4D7A68;
+  --font-display: 'Libre Caslon Text', serif;
+  --font-body: 'Libre Franklin', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ─── Nav ────────────────────────────────────────────── */
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { height: 40px; width: auto; object-fit: contain; content: url(logo-burdeos.png); }
+.nav-wordmark {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+.nav-right { display: flex; align-items: center; gap: 18px; }
+.nav-user { font-size: 12px; letter-spacing: 0.04em; color: var(--text); }
+.nav-logout {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-logout:hover { color: var(--dark); border-color: var(--dark); }
+
+/* ─── Auth ───────────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 40px 24px;
+}
+.auth-box { width: 100%; max-width: 400px; }
+.auth-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 52px; }
+.auth-brand img { height: 32px; width: auto; object-fit: contain; }
+.auth-brand-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+.auth-heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+.auth-sub {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.form-field label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.form-field input {
+  width: 100%;
+  padding: 11px 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-field input:focus { border-bottom-color: var(--dark); }
+.form-field input::placeholder { color: var(--muted); }
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 28px; }
+.pw-toggle {
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  padding: 4px; color: var(--muted);
+  display: flex; align-items: center;
+  transition: color 0.2s;
+}
+.pw-toggle:hover { color: var(--dark); }
+.btn-primary {
+  display: block;
+  width: 100%;
+  margin-top: 28px;
+  padding: 13px 24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-align: center;
+}
+.btn-primary:hover { opacity: 0.82; }
+.btn-primary:disabled { opacity: 0.4; cursor: default; }
+.btn-ghost {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--dark); border-color: var(--dark); }
+.auth-switch {
+  margin-top: 28px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+}
+.auth-switch button {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.auth-notice {
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.6;
+  display: none;
+}
+.auth-notice.ok  { color: var(--text); display: block; }
+.auth-notice.err { color: #7A3C2D; display: block; }
+
+/* ─── App shell ──────────────────────────────────────── */
+.app-wrap { min-height: 100vh; display: flex; flex-direction: column; }
+.app-body {
+  flex: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 48px 80px;
+  width: 100%;
+}
+.app-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 32px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+.app-intro {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  margin-bottom: 34px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 34px;
+}
+.tab {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 4px;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--dark); border-bottom-color: var(--accent); }
+
+/* Section heads */
+.sec-head {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 34px 0 16px;
+}
+.sec-head:first-child { margin-top: 0; }
+
+/* Session card */
+.ses-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.ses-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.ses-when {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 300;
+  color: var(--dark);
+  line-height: 1.2;
+}
+.ses-meta {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  margin-top: 4px;
+}
+.ses-pac {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-top: 10px;
+  letter-spacing: 0.01em;
+}
+.badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge.agendada, .badge.confirmada { background: rgba(75,30,35,0.09); color: var(--accent); }
+.badge.realizada { background: rgba(77,122,104,0.15); color: var(--teal); }
+.badge.cancelada, .badge.reagendamiento_solicitado { background: rgba(168,143,114,0.18); color: var(--muted); }
+
+.ses-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+.link-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(75,30,35,0.4);
+  transition: opacity 0.2s;
+}
+.link-btn:hover { opacity: 0.6; }
+
+.empty {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  padding: 8px 0 20px;
+}
+.loading {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 12px;
+}
+
+/* Patient card */
+.pac-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.pac-card:hover { border-color: var(--line-strong, #C8BDB0); box-shadow: 0 2px 12px rgba(61,34,18,0.07); }
+.pac-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--dark);
+  line-height: 1.15;
+}
+.pac-line {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  margin-top: 6px;
+}
+.pac-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(75,30,35,0.06);
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+
+/* Detail */
+.back-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0 0 20px;
+}
+.back-btn:hover { color: var(--dark); }
+.detail-head { margin-bottom: 28px; }
+.detail-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 30px;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  line-height: 1.1;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px 24px;
+  margin-top: 16px;
+}
+.detail-cell .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 3px;
+}
+.detail-cell .v { font-size: 13px; font-weight: 300; color: var(--dark); line-height: 1.5; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px 28px;
+  margin-bottom: 16px;
+}
+.card-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 22px;
+  display: block;
+}
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.field:last-of-type { margin-bottom: 0; }
+.field label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.field textarea {
+  width: 100%;
+  min-height: 68px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dark);
+  line-height: 1.6;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.field textarea:focus { border-color: var(--accent); }
+
+.save-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 999px;
+  padding: 11px 26px;
+  cursor: pointer;
+  margin-top: 22px;
+  transition: opacity 0.2s;
+}
+.save-btn:hover { opacity: 0.85; }
+.save-btn:disabled { opacity: 0.4; cursor: default; }
+.save-msg {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  margin-top: 12px;
+  display: inline-block;
+  margin-left: 14px;
+}
+.save-msg.ok  { color: var(--teal); }
+.save-msg.err { color: #7A3C2D; }
+
+/* Nota de evolución dentro de la sesión */
+.nota-block {
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding-top: 16px;
+}
+.nota-soap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.nota-soap .field { margin-bottom: 0; }
+@media (max-width: 620px) {
+  .app-body { padding: 32px 22px 70px; }
+  .nota-soap { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH ═══════════════════════════════════════════════════ -->
+<div id="auth-screen" class="auth-page">
+  <div class="auth-box">
+    <div class="auth-brand">
+      <img src="logo.png" alt="PSYNC">
+      <span class="auth-brand-text">PSYNC</span>
+    </div>
+
+    <!-- Ingresar -->
+    <div id="view-login">
+      <h1 class="auth-heading">Portal del psicólogo</h1>
+      <p class="auth-sub">Ingresa con tu email y contraseña de la red PSYNC.</p>
+      <form id="form-login" novalidate>
+        <div class="form-field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <div class="form-field">
+          <label for="login-password">Contraseña</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)" tabindex="-1" aria-label="Mostrar contraseña">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-login">Ingresar</button>
+        <div class="auth-notice" id="login-msg"></div>
+      </form>
+      <div class="auth-switch">
+        <button type="button" onclick="showReset()">Olvidé mi contraseña</button>
+      </div>
+    </div>
+
+    <!-- Restablecer contraseña -->
+    <div id="view-reset" style="display:none">
+      <h1 class="auth-heading">Restablecer contraseña</h1>
+      <p class="auth-sub">Ingresa tu email y te enviaremos un enlace para crear una nueva contraseña.</p>
+      <form id="form-reset" novalidate>
+        <div class="form-field">
+          <label for="reset-email">Email</label>
+          <input type="email" id="reset-email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-reset">Enviar enlace</button>
+        <div class="auth-notice" id="reset-msg"></div>
+      </form>
+      <div class="auth-switch">
+        <button type="button" onclick="showLogin()">Volver al ingreso</button>
+      </div>
+    </div>
+
+    <!-- Nueva contraseña (desde link de email) -->
+    <div id="view-new-password" style="display:none">
+      <h1 class="auth-heading">Nueva contraseña</h1>
+      <p class="auth-sub">Elige una contraseña para tu cuenta.</p>
+      <form id="form-new-password" novalidate>
+        <div class="form-field">
+          <label for="new-password">Nueva contraseña</label>
+          <div class="pw-wrap">
+            <input type="password" id="new-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" onclick="togglePw('new-password',this)" tabindex="-1" aria-label="Mostrar contraseña">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-new-password">Guardar contraseña</button>
+        <div class="auth-notice" id="new-password-msg"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═════════════════════════════════════════════════════ -->
+<div id="app-screen" style="display:none" class="app-wrap">
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="PSYNC">
+      <span class="nav-wordmark">PSYNC</span>
+    </a>
+    <div class="nav-right">
+      <span class="nav-user" id="app-email"></span>
+      <button class="nav-logout" onclick="handleLogout()">Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <div class="app-body">
+    <h1 class="app-title" id="app-title">Hola</h1>
+    <p class="app-intro">Tu espacio clínico en PSYNC.</p>
+
+    <!-- Vistas de lista -->
+    <div id="view-main">
+      <div class="tabs">
+        <button class="tab active" id="tab-agenda" onclick="switchTab('agenda')">Agenda</button>
+        <button class="tab" id="tab-pacientes" onclick="switchTab('pacientes')">Pacientes</button>
+      </div>
+      <div id="pane-agenda"><p class="loading">Cargando…</p></div>
+      <div id="pane-pacientes" style="display:none"><p class="loading">Cargando…</p></div>
+    </div>
+
+    <!-- Vista detalle de paciente -->
+    <div id="view-detalle" style="display:none"></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ─── Cliente Supabase (sesión aislada del portal de pacientes) ──
+const SB_URL = 'https://ngtkghhjkdrwcxavktxu.supabase.co';
+const SB_KEY = 'sb_publishable_tVKD6R5zvq4mk-vFTgFgCQ_wdQF66nz';
+const db = supabase.createClient(SB_URL, SB_KEY, {
+  auth: {
+    storageKey: 'psync-psico-auth',
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
+const REDIRECT = location.origin + '/portal-psicologo.html';
+
+// ─── Constantes ────────────────────────────────────────────────
+const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const PROX_ESTADOS = ['agendada','confirmada','reagendamiento_solicitado'];
+const TIPO_LABELS = {
+  primera:      'Primera sesión',
+  seguimiento:  'Sesión de seguimiento',
+  terapia:      'Sesión de terapia',
+  arquitectura: 'Sesión de Arquitectura',
+  devolucion:   'Sesión de Devolución',
+};
+const FICHA_CAMPOS = [
+  ['motivo_consulta',        'Motivo de consulta'],
+  ['anamnesis_proxima',      'Anamnesis próxima'],
+  ['anamnesis_remota',       'Anamnesis remota'],
+  ['antecedentes_morbidos',  'Antecedentes mórbidos'],
+  ['antecedentes_familiares','Antecedentes familiares'],
+  ['examen_mental',          'Examen mental'],
+  ['hipotesis_diagnostica',  'Hipótesis diagnóstica'],
+  ['plan_terapeutico',       'Plan terapéutico'],
+];
+const SOAP_CAMPOS = [
+  ['subjetivo', 'Subjetivo'],
+  ['objetivo',  'Objetivo'],
+  ['analisis',  'Análisis'],
+  ['plan',      'Plan'],
+];
+
+// ─── Estado ────────────────────────────────────────────────────
+let ME       = null;   // { id, nombre }
+let SESIONES = [];      // todas mis sesiones
+let PACIENTES = [];     // todos mis pacientes
+const FICHA_CACHE = {}; // paciente_id -> ficha (o null)
+const NOTA_CACHE  = {}; // sesion_id  -> nota  (o null)
+
+// ─── Auth ──────────────────────────────────────────────────────
+db.auth.onAuthStateChange(async (event, session) => {
+  console.log('[PSYNC-PSICO] auth event:', event, session?.user?.email);
+  if (event === 'PASSWORD_RECOVERY') {
+    showView('view-new-password');
+    document.getElementById('auth-screen').style.display = '';
+    document.getElementById('app-screen').style.display = 'none';
+    return;
+  }
+  if (session) {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = '';
+    document.getElementById('app-email').textContent = session.user.email;
+    await loadAll();
+  } else {
+    document.getElementById('auth-screen').style.display = '';
+    document.getElementById('app-screen').style.display = 'none';
+    showLogin();
+  }
+});
+
+function showView(id) {
+  ['view-login','view-reset','view-new-password']
+    .forEach(v => { document.getElementById(v).style.display = (v === id) ? '' : 'none'; });
+}
+function showLogin() { showView('view-login'); }
+function showReset() { showView('view-reset'); }
+function setMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'auth-notice ' + type;
+}
+
+document.getElementById('form-login').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.textContent = 'Ingresando…';
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+
+  btn.disabled = false; btn.textContent = 'Ingresar';
+  if (error) {
+    const raw = error.message || '';
+    const msg =
+      raw.includes('Invalid login credentials') ? 'Email o contraseña incorrectos.' :
+      raw.includes('Email not confirmed')       ? 'Tu cuenta aún no está confirmada. Escríbenos a contacto@psync.cl.' :
+      (raw === '' || raw === '{}' || error.status >= 500) ? 'Error de conexión. Intenta de nuevo en un momento.' :
+      raw;
+    setMsg('login-msg', msg, 'err');
+  }
+});
+
+document.getElementById('form-reset').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('reset-email').value.trim();
+  const btn = document.getElementById('btn-reset');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: REDIRECT });
+
+  btn.disabled = false; btn.textContent = 'Enviar enlace';
+  if (error) setMsg('reset-msg', error.message, 'err');
+  else setMsg('reset-msg', 'Te enviamos un enlace a ' + email + '. Revisa tu bandeja de entrada.', 'ok');
+});
+
+document.getElementById('form-new-password').addEventListener('submit', async e => {
+  e.preventDefault();
+  const password = document.getElementById('new-password').value;
+  const btn = document.getElementById('btn-new-password');
+  if (password.length < 6) { setMsg('new-password-msg', 'La contraseña debe tener al menos 6 caracteres.', 'err'); return; }
+  btn.disabled = true; btn.textContent = 'Guardando…';
+
+  const { error } = await db.auth.updateUser({ password });
+
+  btn.disabled = false; btn.textContent = 'Guardar contraseña';
+  if (error) { setMsg('new-password-msg', error.message, 'err'); return; }
+  setMsg('new-password-msg', 'Contraseña actualizada. Ingresando…', 'ok');
+  setTimeout(() => location.href = REDIRECT, 1400);
+});
+
+async function handleLogout() { await db.auth.signOut(); location.reload(); }
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.innerHTML = show
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+
+// ─── Carga de datos ────────────────────────────────────────────
+async function loadAll() {
+  // Id del psicólogo asociado al usuario autenticado (función SECURITY DEFINER del backend)
+  const { data: pid, error: epid } = await db.rpc('current_psicologo_id');
+  if (epid || !pid) {
+    document.getElementById('view-main').innerHTML =
+      `<p class="empty">Tu cuenta no está asociada a un perfil de psicólogo/a en la red PSYNC.
+       Escríbenos a <a href="mailto:contacto@psync.cl">contacto@psync.cl</a>.</p>`;
+    return;
+  }
+  // Nombre para el saludo (acotado por id: nunca dependemos de "la única fila que devuelve RLS")
+  const { data: perfil } = await db.from('psicologos').select('nombre').eq('id', pid).maybeSingle();
+  ME = { id: pid, nombre: perfil?.nombre || '' };
+  const primer = (ME.nombre || '').split(' ')[0];
+  document.getElementById('app-title').textContent = primer ? `Hola, ${primer}.` : 'Hola.';
+
+  // Sesiones y pacientes (RLS filtra automáticamente por current_psicologo_id())
+  const [{ data: ses }, { data: pac }] = await Promise.all([
+    db.from('sesiones').select('*').order('fecha', { ascending: true }),
+    db.from('pacientes').select('*').order('nombre', { ascending: true }),
+  ]);
+  SESIONES  = ses ?? [];
+  PACIENTES = pac ?? [];
+
+  renderAgenda();
+  renderPacientes();
+}
+
+// ─── Tabs / navegación ─────────────────────────────────────────
+function switchTab(name) {
+  document.getElementById('tab-agenda').classList.toggle('active', name === 'agenda');
+  document.getElementById('tab-pacientes').classList.toggle('active', name === 'pacientes');
+  document.getElementById('pane-agenda').style.display    = name === 'agenda'    ? '' : 'none';
+  document.getElementById('pane-pacientes').style.display = name === 'pacientes' ? '' : 'none';
+}
+function showMain() {
+  document.getElementById('view-main').style.display = '';
+  document.getElementById('view-detalle').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ─── Helpers ───────────────────────────────────────────────────
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fechaLarga(f) {
+  const d = new Date(f + 'T12:00:00');
+  return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+}
+function tipoLabel(t) { return TIPO_LABELS[t] || (t ? t.charAt(0).toUpperCase() + t.slice(1) : 'Sesión'); }
+function modalLabel(m) { return m === 'online' ? 'Online' : m === 'presencial' ? 'Presencial' : m === 'ambas' ? 'Online / presencial' : ''; }
+function esProxima(s) {
+  const hoy = new Date().toISOString().split('T')[0];
+  return s.estado !== 'realizada' && s.estado !== 'cancelada' && s.fecha >= hoy && PROX_ESTADOS.includes(s.estado);
+}
+function nombrePaciente(s) {
+  const p = PACIENTES.find(p => p.id === s.paciente_id);
+  return p?.nombre || s.nombre || 'Paciente';
+}
+
+// ─── Render: Agenda ────────────────────────────────────────────
+function renderAgenda() {
+  const proximas = SESIONES.filter(esProxima)
+    .sort((a, b) => (a.fecha + (a.hora_inicio || '')).localeCompare(b.fecha + (b.hora_inicio || '')));
+  const pasadas = SESIONES.filter(s => !esProxima(s))
+    .sort((a, b) => (b.fecha + (b.hora_inicio || '')).localeCompare(a.fecha + (a.hora_inicio || '')));
+
+  const card = (s, mostrarNota) => {
+    const hora  = s.hora_inicio ? `${s.hora_inicio} hrs` : '';
+    const meta  = [tipoLabel(s.tipo), hora, modalLabel(s.modalidad)].filter(Boolean).join('  ·  ');
+    const meet  = s.meet_link
+      ? `<a class="link-btn" href="${esc(s.meet_link)}" target="_blank" rel="noopener">Videollamada →</a>` : '';
+    const nota  = mostrarNota
+      ? `<button class="link-btn" onclick="abrirPaciente('${s.paciente_id}','${s.id}')">Nota de evolución →</button>` : '';
+    return `
+      <div class="ses-card">
+        <div class="ses-top">
+          <div>
+            <div class="ses-when">${fechaLarga(s.fecha)}</div>
+            <div class="ses-meta">${esc(meta)}</div>
+          </div>
+          <span class="badge ${esc(s.estado)}">${esc(s.estado)}</span>
+        </div>
+        <div class="ses-pac">${esc(nombrePaciente(s))}</div>
+        <div class="ses-actions">
+          <button class="link-btn" onclick="abrirPaciente('${s.paciente_id}')">Ver paciente →</button>
+          ${nota}${meet}
+        </div>
+      </div>`;
+  };
+
+  document.getElementById('pane-agenda').innerHTML = `
+    <div class="sec-head">Próximas sesiones</div>
+    ${proximas.length ? proximas.map(s => card(s, false)).join('') : '<p class="empty">No tienes sesiones próximas agendadas.</p>'}
+    <div class="sec-head">Sesiones realizadas</div>
+    ${pasadas.length ? pasadas.map(s => card(s, true)).join('') : '<p class="empty">Aún no hay sesiones realizadas.</p>'}
+  `;
+}
+
+// ─── Render: Pacientes ─────────────────────────────────────────
+function renderPacientes() {
+  const pane = document.getElementById('pane-pacientes');
+  if (!PACIENTES.length) { pane.innerHTML = '<p class="empty">Aún no tienes pacientes asignados.</p>'; return; }
+  pane.innerHTML = PACIENTES.map(p => {
+    const contacto = [p.email, p.telefono].filter(Boolean).join('  ·  ');
+    const tags = [p.edad ? p.edad + ' años' : '', modalLabel(p.modalidad), p.area].filter(Boolean);
+    return `
+      <div class="pac-card" onclick="abrirPaciente('${p.id}')">
+        <div class="pac-name">${esc(p.nombre || 'Paciente')}</div>
+        ${contacto ? `<div class="pac-line">${esc(contacto)}</div>` : ''}
+        ${p.motivo ? `<div class="pac-line">${esc(p.motivo)}</div>` : ''}
+        ${tags.length ? `<div class="pac-tags">${tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ─── Detalle de paciente ───────────────────────────────────────
+async function abrirPaciente(pacienteId, focusSesionId) {
+  const p = PACIENTES.find(x => x.id === pacienteId);
+  if (!p) return;
+
+  document.getElementById('view-main').style.display = 'none';
+  const cont = document.getElementById('view-detalle');
+  cont.style.display = '';
+  cont.innerHTML = '<button class="back-btn" onclick="showMain()">← Volver</button><p class="loading">Cargando ficha…</p>';
+  window.scrollTo(0, 0);
+
+  // Ficha clínica (cache)
+  if (!(pacienteId in FICHA_CACHE)) {
+    const { data } = await db.from('fichas_clinicas').select('*').eq('paciente_id', pacienteId).maybeSingle();
+    FICHA_CACHE[pacienteId] = data || null;
+  }
+  // Notas de evolución del paciente (cache por sesión)
+  const { data: notas } = await db.from('notas_evolucion').select('*').eq('paciente_id', pacienteId);
+  (notas || []).forEach(n => { if (n.sesion_id) NOTA_CACHE[n.sesion_id] = n; });
+
+  renderDetalle(p, focusSesionId);
+}
+
+function renderDetalle(p, focusSesionId) {
+  const ficha = FICHA_CACHE[p.id] || {};
+  const cont = document.getElementById('view-detalle');
+
+  const meta = [
+    ['Edad', p.edad ? p.edad + ' años' : '—'],
+    ['Email', p.email || '—'],
+    ['Teléfono', p.telefono || '—'],
+    ['Modalidad', modalLabel(p.modalidad) || '—'],
+    ['Área', p.area || '—'],
+    ['Estado', p.estado || '—'],
+  ].map(([k, v]) => `<div class="detail-cell"><span class="k">${k}</span><span class="v">${esc(v)}</span></div>`).join('');
+
+  const fichaFields = FICHA_CAMPOS.map(([key, label]) => `
+    <div class="field">
+      <label for="ficha-${key}">${label}</label>
+      <textarea id="ficha-${key}">${esc(ficha[key] || '')}</textarea>
+    </div>`).join('');
+
+  // Sesiones de este paciente
+  const sesPac = SESIONES.filter(s => s.paciente_id === p.id)
+    .sort((a, b) => (b.fecha + (b.hora_inicio || '')).localeCompare(a.fecha + (a.hora_inicio || '')));
+
+  const sesHTML = sesPac.length ? sesPac.map(s => {
+    const realizada = s.estado === 'realizada' || !esProxima(s);
+    const hora = s.hora_inicio ? `${s.hora_inicio} hrs` : '';
+    const metaS = [tipoLabel(s.tipo), hora, modalLabel(s.modalidad)].filter(Boolean).join('  ·  ');
+    const notaEditor = realizada ? soapEditor(s) : '';
+    return `
+      <div class="ses-card" id="ses-${s.id}">
+        <div class="ses-top">
+          <div>
+            <div class="ses-when">${fechaLarga(s.fecha)}</div>
+            <div class="ses-meta">${esc(metaS)}</div>
+          </div>
+          <span class="badge ${esc(s.estado)}">${esc(s.estado)}</span>
+        </div>
+        ${notaEditor}
+      </div>`;
+  }).join('') : '<p class="empty">Sin sesiones registradas.</p>';
+
+  cont.innerHTML = `
+    <button class="back-btn" onclick="showMain()">← Volver</button>
+    <div class="detail-head">
+      <div class="detail-name">${esc(p.nombre || 'Paciente')}</div>
+      <div class="detail-grid">${meta}</div>
+      ${p.motivo ? `<div class="detail-grid" style="margin-top:12px"><div class="detail-cell" style="grid-column:1/-1"><span class="k">Motivo de consulta (formulario)</span><span class="v">${esc(p.motivo)}</span></div></div>` : ''}
+    </div>
+
+    <div class="card">
+      <span class="card-label">Ficha clínica</span>
+      ${fichaFields}
+      <button class="save-btn" id="btn-ficha" onclick="guardarFicha('${p.id}')">Guardar ficha</button>
+      <span class="save-msg" id="msg-ficha"></span>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Sesiones y notas de evolución</span>
+      ${sesHTML}
+    </div>`;
+
+  if (focusSesionId) {
+    const el = document.getElementById('ses-' + focusSesionId);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  }
+}
+
+function soapEditor(s) {
+  const n = NOTA_CACHE[s.id] || {};
+  const fields = SOAP_CAMPOS.map(([key, label]) => `
+    <div class="field">
+      <label for="soap-${s.id}-${key}">${label}</label>
+      <textarea id="soap-${s.id}-${key}">${esc(n[key] || '')}</textarea>
+    </div>`).join('');
+  return `
+    <div class="nota-block">
+      <div class="nota-soap">${fields}</div>
+      <button class="save-btn" id="btn-soap-${s.id}" onclick="guardarNota('${s.id}','${s.paciente_id}')">
+        ${n.id ? 'Actualizar nota' : 'Guardar nota'}
+      </button>
+      <span class="save-msg" id="msg-soap-${s.id}"></span>
+    </div>`;
+}
+
+// ─── Guardar ficha clínica ─────────────────────────────────────
+async function guardarFicha(pacienteId) {
+  const btn = document.getElementById('btn-ficha');
+  const msg = document.getElementById('msg-ficha');
+  btn.disabled = true; btn.textContent = 'Guardando…'; msg.textContent = '';
+
+  const payload = {};
+  FICHA_CAMPOS.forEach(([key]) => {
+    payload[key] = document.getElementById('ficha-' + key).value.trim() || null;
+  });
+  payload.updated_at = new Date().toISOString();
+
+  const existente = FICHA_CACHE[pacienteId];
+  let error, data;
+  if (existente && existente.id) {
+    ({ data, error } = await db.from('fichas_clinicas').update(payload).eq('id', existente.id).select().maybeSingle());
+  } else {
+    payload.paciente_id = pacienteId;
+    payload.psicologo_id = ME.id;
+    ({ data, error } = await db.from('fichas_clinicas').insert(payload).select().maybeSingle());
+  }
+
+  btn.disabled = false; btn.textContent = 'Guardar ficha';
+  if (error) {
+    msg.textContent = 'No se pudo guardar. ' + (error.message || '');
+    msg.className = 'save-msg err';
+  } else {
+    if (data) FICHA_CACHE[pacienteId] = data;
+    msg.textContent = 'Ficha guardada.';
+    msg.className = 'save-msg ok';
+  }
+}
+
+// ─── Guardar nota de evolución (SOAP) ──────────────────────────
+async function guardarNota(sesionId, pacienteId) {
+  const btn = document.getElementById('btn-soap-' + sesionId);
+  const msg = document.getElementById('msg-soap-' + sesionId);
+  btn.disabled = true; btn.textContent = 'Guardando…'; msg.textContent = '';
+
+  const payload = {};
+  SOAP_CAMPOS.forEach(([key]) => {
+    payload[key] = document.getElementById(`soap-${sesionId}-${key}`).value.trim() || null;
+  });
+  payload.updated_at = new Date().toISOString();
+
+  const existente = NOTA_CACHE[sesionId];
+  let error, data;
+  if (existente && existente.id) {
+    ({ data, error } = await db.from('notas_evolucion').update(payload).eq('id', existente.id).select().maybeSingle());
+  } else {
+    payload.sesion_id = sesionId;
+    payload.paciente_id = pacienteId;
+    payload.psicologo_id = ME.id;
+    ({ data, error } = await db.from('notas_evolucion').insert(payload).select().maybeSingle());
+  }
+
+  btn.disabled = false;
+  if (error) {
+    btn.textContent = existente?.id ? 'Actualizar nota' : 'Guardar nota';
+    msg.textContent = 'No se pudo guardar. ' + (error.message || '');
+    msg.className = 'save-msg err';
+  } else {
+    if (data) NOTA_CACHE[sesionId] = data;
+    btn.textContent = 'Actualizar nota';
+    msg.textContent = 'Nota guardada.';
+    msg.className = 'save-msg ok';
+  }
+}
+</script>
+</body>
+</html>

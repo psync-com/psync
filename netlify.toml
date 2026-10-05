@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/politica-de-privacidad"
+  to = "/politica-de-privacidad.html"
+  status = 200

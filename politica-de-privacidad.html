@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Privacidad — PSYNC</title>
+<meta name="description" content="Política de Privacidad de PSYNC: qué datos recolectamos, cómo los usamos, con quién los compartimos y tus derechos, conforme a la Ley N° 19.628 de Chile.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EBDFDB;
+    --surface: #FDFAF7;
+    --ink: #3D2212;
+    --ink-soft: #7A5840;
+    --accent: #4B1E23;
+    --accent-deep: #35161A;
+    --line: #DDD4C8;
+    --line-strong: #C8BDB0;
+    --font-display: 'Libre Caslon Text', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-display); background: var(--bg); color: var(--ink); }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 48px;
+    background: transparent;
+    border-bottom: 0.5px solid transparent;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+  nav.scrolled {
+    background: var(--surface);
+    border-bottom-color: var(--line);
+    box-shadow: 0 1px 8px rgba(61,34,18,0.12);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { height: 52px; width: auto; content: url(logo-burdeos.png); }
+  .nav-wordmark {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--ink);
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    list-style: none;
+  }
+  .nav-links a { color: inherit; text-decoration: none; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.active { color: var(--ink); border-bottom: 0.5px solid var(--ink); padding-bottom: 1px; }
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--accent-deep);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.82; }
+
+  /* ── TIPOGRAFÍA COMÚN ─────────────────────────────── */
+  .section-tag {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--accent);
+    background: rgba(237,224,212,0.16);
+    padding: 6px 13px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    text-transform: none;
+  }
+  .section-title {
+    font-size: 32px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.13;
+    margin-bottom: 10px;
+  }
+  .section-italic {
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .t-hero {
+    background: var(--accent);
+    padding: 46px 48px 38px;
+  }
+
+  /* ── CONTENIDO ────────────────────────────────────── */
+  .t-body {
+    background: var(--surface);
+    padding: 46px 48px;
+  }
+  .t-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .t-lead {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+
+  .t-section h2 {
+    font-family: var(--font-display);
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 14px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+  .t-section h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 44px;
+    height: 3px;
+    background: var(--accent);
+  }
+  .t-section h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.15;
+    color: var(--ink);
+    margin: 18px 0 8px;
+  }
+  .t-section h3:first-of-type { margin-top: 4px; }
+  .t-section p {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+    margin-bottom: 14px;
+  }
+  .t-section p:last-child { margin-bottom: 0; }
+  .t-section a { color: var(--ink); border-bottom: 0.5px solid currentColor; padding-bottom: 1px; text-decoration: none; }
+  .t-section a:hover { opacity: 0.7; }
+
+  /* Viñetas */
+  .t-list { list-style: none; margin: 0 0 14px; }
+  .t-list li {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .t-list li:last-child { margin-bottom: 0; }
+  .t-list li::before { content: '—'; position: absolute; left: 0; color: rgba(122,88,64,0.7); }
+
+  /* Contacto */
+  .t-contacto { text-align: center; margin: 20px 0; }
+  .t-email {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--ink);
+    padding-bottom: 2px;
+  }
+  .t-email:hover { opacity: 0.7; }
+
+  /* Volver */
+  .t-back {
+    padding: 48px 48px 0;
+    background: var(--surface);
+    max-width: 760px;
+    margin: 0 auto;
+    padding-bottom: 64px;
+  }
+  .t-back-link {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--line);
+    padding-bottom: 2px;
+  }
+  .t-back-link:hover { color: var(--ink); }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  footer {
+    background: var(--accent-deep);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; }
+  .footer-logo img { height: 40px; width: auto; opacity: 0.85; }
+  .footer-wordmark {
+    font-family: var(--font-body);
+    font-size: 15px;
+    letter-spacing: 4px;
+    color: rgba(237,224,212,0.75);
+  }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; list-style: none; }
+  .footer-links a {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(237,224,212,0.55);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: rgba(237,224,212,0.75); }
+  .footer-copy {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(237,224,212,0.4);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .t-hero { padding: 36px 24px 30px; }
+    .t-body { padding: 36px 24px; }
+    .t-back { padding: 28px 24px 36px; }
+    footer { padding: 24px; }
+    .footer-links { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="nav-wordmark">PSYNC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#mas-informacion">Más información</a></li>
+    <li><a href="index.html#quienes-somos">Quiénes somos</a></li>
+    <li><a href="index.html#para-psicologos">Para psicólogos/as</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+    <li><a href="politica-de-privacidad.html" class="active">Política de Privacidad</a></li>
+  </ul>
+  <a href="formulario.html" class="nav-cta">Reservar sesión →</a>
+</nav>
+
+<!-- HERO -->
+<section class="t-hero">
+  <p class="section-tag" style="color:rgba(237,224,212,0.75);">Legal</p>
+  <h1 class="section-title" style="color:#EBDFDB; font-size:clamp(24px,4.2vw,37px);">Política de Privacidad</h1>
+  <p class="section-italic" style="color:rgba(237,224,212,0.65);">Última actualización: 6 de julio de 2026</p>
+</section>
+
+<!-- CONTENIDO -->
+<div class="t-body">
+  <div class="t-inner">
+
+    <p class="t-lead">En Psync nos tomamos muy en serio la privacidad y confidencialidad de tu información, especialmente porque parte de los datos que manejamos son datos sensibles relacionados con tu salud mental. Esta Política de Privacidad explica qué información recolectamos, cómo la usamos, con quién la compartimos y qué derechos tienes sobre ella, en conformidad con la Ley N° 19.628 sobre Protección de la Vida Privada de Chile.</p>
+
+    <section class="t-section">
+      <h2>1. Responsable del tratamiento de datos</h2>
+      <p>Psync es responsable del tratamiento de los datos personales que recolecta a través de su plataforma (psync.cl). Para cualquier consulta relacionada con esta política, puedes contactarnos en <a href="mailto:contacto@psync.cl">contacto@psync.cl</a>.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>2. Qué datos recolectamos</h2>
+
+      <h3>2.1 Datos de identificación y contacto</h3>
+      <ul class="t-list">
+        <li>Nombre completo</li>
+        <li>Correo electrónico</li>
+        <li>Número de teléfono</li>
+        <li>Otros datos que entregues voluntariamente en el formulario de agendamiento</li>
+      </ul>
+
+      <h3>2.2 Datos de agendamiento y pago</h3>
+      <ul class="t-list">
+        <li>Fecha y hora de las sesiones agendadas</li>
+        <li>Historial de sesiones (agendadas, realizadas, canceladas)</li>
+        <li>Información de transacciones de pago, procesadas a través de Flow. Psync no almacena datos de tarjetas ni medios de pago directamente.</li>
+      </ul>
+
+      <h3>2.3 Datos sensibles (datos clínicos)</h3>
+      <p>Dado que Psync conecta a usuarios con psicólogos y psicólogas, recolectamos y almacenamos notas clínicas y contenido relacionado con las sesiones. Estos corresponden a datos sensibles bajo la Ley 19.628, por lo que reciben un nivel de protección reforzado, incluyendo:</p>
+      <ul class="t-list">
+        <li>Acceso restringido únicamente al psicólogo o psicóloga a cargo de tu proceso</li>
+        <li>Resguardo bajo el deber de secreto profesional</li>
+        <li>Medidas de seguridad adicionales para su almacenamiento y transmisión</li>
+      </ul>
+    </section>
+
+    <section class="t-section">
+      <h2>3. Para qué usamos tus datos</h2>
+      <ul class="t-list">
+        <li>Coordinar y gestionar el agendamiento de tus sesiones</li>
+        <li>Facilitar el proceso terapéutico entre tú y el psicólogo o psicóloga asignada</li>
+        <li>Procesar pagos a través de Flow</li>
+        <li>Comunicarnos contigo sobre tu cuenta, sesiones o cambios en nuestros servicios</li>
+        <li>Mejorar la calidad de nuestra plataforma y servicios</li>
+        <li>Cumplir con obligaciones legales, cuando corresponda</li>
+      </ul>
+    </section>
+
+    <section class="t-section">
+      <h2>4. Consentimiento</h2>
+      <p>Al agendar una sesión y entregar tu información a través de nuestra plataforma, prestas tu consentimiento expreso e informado para el tratamiento de tus datos personales, incluyendo los datos sensibles asociados a tu proceso terapéutico, conforme a lo descrito en esta política. Puedes retirar tu consentimiento en cualquier momento, sin efecto retroactivo, contactándonos directamente.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>5. Con quién compartimos tu información</h2>
+      <p>Tu información puede ser compartida únicamente en los siguientes casos:</p>
+      <ul class="t-list">
+        <li>Con el psicólogo o psicóloga de la red Psync asignado a tu proceso, en la medida necesaria para prestar el servicio</li>
+        <li>Con Flow, como procesador de pagos, únicamente para efectos de la transacción</li>
+        <li>Cuando la ley chilena así lo exija (por ejemplo, requerimiento judicial)</li>
+      </ul>
+      <p>Psync no vende, arrienda ni comparte tu información con terceros para fines comerciales o publicitarios.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>6. Cómo protegemos tu información</h2>
+      <ul class="t-list">
+        <li>Acceso restringido a la información sensible, limitado a quienes lo requieren para prestar el servicio</li>
+        <li>Los psicólogos y psicólogas de la red se rigen por el secreto profesional respecto del contenido de las sesiones</li>
+        <li>Medidas técnicas de seguridad para el almacenamiento y transmisión de datos</li>
+      </ul>
+    </section>
+
+    <section class="t-section">
+      <h2>7. Tiempo de conservación de los datos</h2>
+      <p>Conservamos tu información personal mientras mantengas una cuenta activa en Psync o mientras sea necesario para cumplir con las finalidades descritas en esta política. Los datos clínicos se conservan de acuerdo con los estándares y obligaciones éticas de la profesión psicológica. Puedes solicitar la eliminación de tus datos en cualquier momento, sujeto a las excepciones legales o profesionales que apliquen (por ejemplo, obligaciones de conservación de fichas clínicas).</p>
+    </section>
+
+    <section class="t-section">
+      <h2>8. Tus derechos (Derechos ARCO)</h2>
+      <p>Conforme a la Ley 19.628, tienes derecho a:</p>
+      <ul class="t-list">
+        <li>Acceder a los datos personales que tenemos sobre ti</li>
+        <li>Rectificar datos que sean erróneos, incompletos o desactualizados</li>
+        <li>Cancelar (eliminar) tus datos, cuando corresponda</li>
+        <li>Oponerte al tratamiento de tus datos en ciertos casos</li>
+      </ul>
+      <p>Para ejercer estos derechos, puedes escribirnos a <a href="mailto:contacto@psync.cl">contacto@psync.cl</a>.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>9. Menores de edad</h2>
+      <p>Psync atiende a menores de edad como parte de sus servicios. En estos casos, se requiere el consentimiento expreso e informado de un padre, madre o adulto responsable antes de agendar y realizar cualquier sesión. Este consentimiento debe ser otorgado por el adulto responsable al momento de la inscripción, y puede ser solicitado nuevamente por Psync o por el psicólogo o psicóloga a cargo cuando lo estime necesario. Los datos y el contenido clínico de las sesiones con menores de edad reciben el mismo nivel de protección y confidencialidad descrito en esta política, resguardando el interés superior del menor.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>10. Cambios a esta política</h2>
+      <p>Podemos actualizar esta Política de Privacidad periódicamente. Cualquier cambio será publicado en esta misma página, indicando la fecha de la última actualización.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>11. Contacto</h2>
+      <p>Si tienes preguntas sobre esta Política de Privacidad o sobre el tratamiento de tus datos, puedes escribirnos a:</p>
+      <div class="t-contacto">
+        <a href="mailto:contacto@psync.cl" class="t-email">contacto@psync.cl</a>
+      </div>
+    </section>
+
+  </div>
+
+  <div style="max-width:760px; margin:0 auto; padding-top:48px;">
+    <a href="index.html" class="t-back-link">← Volver al inicio</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="footer-wordmark">PSYNC</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#quienes-somos">Quiénes somos</a></li>
+    <li><a href="index.html#para-psicologos">Para psicólogos/as</a></li>
+    <li><a href="index.html#preguntas-frecuentes">FAQ</a></li>
+    <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+    <li><a href="politica-de-privacidad.html">Política de Privacidad</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 PSYNC</span>
+</footer>
+
+<script>
+  const navEl = document.querySelector('nav');
+  const syncNav = () => navEl.classList.toggle('scrolled', window.scrollY > 10);
+  syncNav();
+  window.addEventListener('scroll', syncNav, { passive: true });
+</script>
+
+</body>
+</html>

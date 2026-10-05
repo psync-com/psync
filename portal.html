@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi portal — PSYNC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:       #EBDFDB;
+  --bg-mid:   #E4D5C7;
+  --hero:     #4B1E23;
+  --dark:     #3D2212;
+  --text:     #7A5840;
+  --muted:    #A88F72;
+  --border:   #DDD4C8;
+  --surface:  #FDFAF7;
+  --accent:   #4B1E23;
+  --font-display: 'Libre Caslon Text', serif;
+  --font-body: 'Libre Franklin', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ─── Nav ────────────────────────────────────────────── */
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 48px;
+  background: transparent;
+  border-bottom: 0.5px solid transparent;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.site-nav.scrolled {
+  background: var(--bg);
+  border-bottom-color: var(--border);
+  box-shadow: 0 1px 8px rgba(61,34,18,0.12);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-logo img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  content: url(logo-burdeos.png);
+}
+.nav-wordmark {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-user {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+.nav-logout {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-logout:hover { color: var(--dark); border-color: var(--dark); }
+
+/* ─── Auth ───────────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 40px 24px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 52px;
+}
+.auth-brand img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+.auth-brand-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+
+.auth-heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+.auth-sub {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.form-field label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.form-field input {
+  width: 100%;
+  padding: 11px 0;
+  border: none;
+  border-bottom: 0.5px solid var(--border);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-field input:focus { border-bottom-color: var(--dark); }
+.form-field input::placeholder { color: var(--muted); }
+
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 28px; }
+.pw-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.pw-toggle:hover { color: var(--dark); }
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  margin-top: 28px;
+  padding: 13px 24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-align: center;
+  text-decoration: none;
+}
+.btn-primary:hover { opacity: 0.82; }
+.btn-primary:disabled { opacity: 0.4; cursor: default; }
+
+.btn-ghost {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  text-align: center;
+  text-decoration: none;
+}
+.btn-ghost:hover { color: var(--dark); border-color: var(--dark); }
+
+.auth-switch {
+  margin-top: 28px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+}
+.auth-switch button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-notice {
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 0.5px solid var(--border);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.6;
+  display: none;
+}
+.auth-notice.ok  { color: var(--text); display: block; }
+.auth-notice.err { color: #7A3C2D; display: block; }
+
+/* ─── Portal ─────────────────────────────────────────── */
+.portal-wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+.portal-body {
+  flex: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 46px 48px 72px;
+  width: 100%;
+}
+
+.portal-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 35px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.portal-intro {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  margin-bottom: 56px;
+}
+
+/* ─── Cards ──────────────────────────────────────────── */
+.p-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 14px;
+}
+.p-card-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 22px;
+  display: block;
+}
+
+/* ─── Pipeline ───────────────────────────────────────── */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.p-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  position: relative;
+}
+
+.p-step:not(:last-child) .p-connector {
+  position: absolute;
+  left: 5px;
+  top: 14px;
+  width: 0.5px;
+  height: calc(100%);
+  background: var(--border);
+}
+.p-step.done .p-connector { background: var(--hero); }
+
+.p-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  flex-shrink: 0;
+  margin-top: 3px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s;
+}
+.p-step.done .p-dot {
+  background: var(--hero);
+  border-color: var(--hero);
+}
+.p-step.current .p-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.p-body {
+  padding-bottom: 28px;
+  flex: 1;
+}
+.p-label {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.p-step.done .p-label { color: var(--text); }
+.p-step.current .p-label {
+  font-weight: 400;
+  color: var(--dark);
+}
+.p-desc {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Sesión próxima (bloque oscuro) ─────────────────── */
+.sesion-destacada {
+  background: var(--accent);
+  border-radius: 12px;
+  padding: 28px 28px 24px;
+}
+.sesion-tipo {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(237,224,212,0.55);
+  margin-bottom: 10px;
+  display: block;
+}
+.sesion-fecha {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 32px;
+  letter-spacing: -0.01em;
+  color: var(--bg);
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+.sesion-hora {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(237,224,212,0.65);
+  letter-spacing: 0.05em;
+  margin-bottom: 22px;
+}
+.sesion-cta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bg);
+  text-decoration: none;
+  border-bottom: 0.5px solid rgba(237,224,212,0.5);
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+  margin-bottom: 22px;
+  display: inline-block;
+}
+.sesion-cta:hover { opacity: 0.65; }
+
+/* ─── Botones pill ───────────────────────────────────── */
+.btn-pill {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.btn-pill:hover { border-color: var(--dark); color: var(--dark); }
+.btn-pill.danger { border-color: #C4908A; color: #9B6060; }
+.btn-pill.danger:hover { border-color: #7A3C2D; color: #7A3C2D; }
+.btn-pill:disabled { opacity: 0.35; cursor: default; }
+/* Variante sobre fondo oscuro */
+.sesion-destacada .btn-pill { border-color: rgba(237,224,212,0.28); color: rgba(237,224,212,0.7); }
+.sesion-destacada .btn-pill:hover { border-color: rgba(237,224,212,0.8); color: var(--bg); }
+.sesion-destacada .btn-pill.danger { border-color: rgba(255,190,180,0.4); color: rgba(255,190,180,0.9); }
+.sesion-destacada .btn-pill.danger:hover { border-color: #ffb3b3; color: #ffd9d9; }
+
+/* ─── Notas ──────────────────────────────────────────── */
+.notas-text {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.notas-empty {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Sin vínculo ────────────────────────────────────── */
+.no-vinculo { }
+.no-vinculo h2 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.15;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+.no-vinculo p {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 400px;
+}
+.no-vinculo a { color: var(--dark); }
+
+/* ─── Historial ──────────────────────────────────────── */
+.historial-lista { display: flex; flex-direction: column; gap: 8px; }
+.historial-fila {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+.historial-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.historial-left { flex: 1; min-width: 0; }
+.historial-tipo {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.historial-fecha {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dark);
+  letter-spacing: 0.02em;
+}
+.historial-detalle {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  margin-top: 3px;
+}
+.historial-estado {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+.historial-estado.realizada  { color: var(--hero); }
+.historial-estado.cancelada  { color: var(--muted); }
+.historial-estado.agendada,
+.historial-estado.confirmada { color: var(--dark); }
+.historial-empty {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  padding-top: 20px;
+}
+
+/* ─── Próximos pasos ────────────────────────────────── */
+.proximos-bloque {
+  border-left: 1px solid var(--hero);
+  padding-left: 20px;
+}
+.proximos-titulo {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+}
+.proximos-texto {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Acciones sesión ───────────────────────────────── */
+.sesion-acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.sesion-confirm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.sesion-confirm-msg {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(237,224,212,0.7);
+  letter-spacing: 0.04em;
+}
+.sesion-aviso {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(237,224,212,0.75);
+  letter-spacing: 0.04em;
+  margin-top: 22px;
+}
+
+/* ─── Feedback post-sesión ───────────────────────────── */
+.feedback-zona { padding: 14px 0 4px; }
+.feedback-prompt {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.star-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--border);
+  padding: 0;
+  line-height: 1;
+  transition: color 0.1s;
+}
+.star-btn.activa, .star-btn.hover { color: var(--hero); }
+.feedback-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 0.5px solid var(--border);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--dark);
+  padding: 6px 0;
+  resize: none;
+  outline: none;
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+.feedback-textarea:focus { border-color: var(--text); }
+.feedback-textarea::placeholder { color: var(--muted); }
+.feedback-enviar {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: var(--dark);
+  cursor: pointer;
+  padding: 0;
+  border-bottom: 0.5px solid var(--dark);
+  padding-bottom: 1px;
+  transition: opacity 0.2s;
+}
+.feedback-enviar:hover { opacity: 0.5; }
+.feedback-enviar:disabled { opacity: 0.35; cursor: default; }
+.feedback-msg { font-size: 11px; color: #7A3C2D; margin-top: 8px; }
+.feedback-gracias {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--hero);
+  letter-spacing: 0.08em;
+  padding: 10px 0 4px;
+}
+.feedback-enviado {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--hero);
+  letter-spacing: 0.05em;
+  padding-top: 10px;
+}
+
+/* ─── Loading ────────────────────────────────────────── */
+.loading {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 12px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH ═══════════════════════════════════════════════════ -->
+<div id="auth-screen" class="auth-page">
+  <div class="auth-box">
+    <div class="auth-brand">
+      <img src="logo.png" alt="PSYNC">
+      <span class="auth-brand-text">PSYNC</span>
+    </div>
+
+    <!-- Ingresar -->
+    <div id="view-login">
+      <h1 class="auth-heading">Mi portal</h1>
+      <p class="auth-sub">Ingresa con el email que usaste al postular.</p>
+      <form id="form-login" novalidate>
+        <div class="form-field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <div class="form-field">
+          <label for="login-password">Contraseña</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)" tabindex="-1" aria-label="Mostrar contraseña">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-login">Ingresar</button>
+        <div class="auth-notice" id="login-msg"></div>
+      </form>
+      <div class="auth-switch">
+        ¿Aún no tienes cuenta? <button type="button" onclick="showSignup()">Crear cuenta</button>
+        &nbsp;·&nbsp;
+        <button type="button" onclick="showReset()">Olvidé mi contraseña</button>
+      </div>
+    </div>
+
+    <!-- Restablecer contraseña -->
+    <div id="view-reset" style="display:none">
+      <h1 class="auth-heading">Restablecer contraseña</h1>
+      <p class="auth-sub">Ingresa tu email y te enviaremos un enlace para crear una nueva contraseña.</p>
+      <form id="form-reset" novalidate>
+        <div class="form-field">
+          <label for="reset-email">Email</label>
+          <input type="email" id="reset-email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-reset">Enviar enlace</button>
+        <div class="auth-notice" id="reset-msg"></div>
+      </form>
+      <div class="auth-switch">
+        <button type="button" onclick="showLogin()">Volver al ingreso</button>
+      </div>
+    </div>
+
+    <!-- Nueva contraseña (desde link de email) -->
+    <div id="view-new-password" style="display:none">
+      <h1 class="auth-heading">Nueva contraseña</h1>
+      <p class="auth-sub">Elige una contraseña para tu cuenta.</p>
+      <form id="form-new-password" novalidate>
+        <div class="form-field">
+          <label for="new-password">Nueva contraseña</label>
+          <div class="pw-wrap">
+            <input type="password" id="new-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" onclick="togglePw('new-password',this)" tabindex="-1" aria-label="Mostrar contraseña">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-new-password">Guardar contraseña</button>
+        <div class="auth-notice" id="new-password-msg"></div>
+      </form>
+    </div>
+
+    <!-- Crear cuenta -->
+    <div id="view-signup" style="display:none">
+      <h1 class="auth-heading">Crear cuenta</h1>
+      <p class="auth-sub">Usa el mismo email con el que postulaste a PSYNC.</p>
+      <form id="form-signup" novalidate>
+        <div class="form-field">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <div class="form-field">
+          <label for="signup-password">Contraseña</label>
+          <div class="pw-wrap">
+            <input type="password" id="signup-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" onclick="togglePw('signup-password',this)" tabindex="-1" aria-label="Mostrar contraseña">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="btn-signup">Crear cuenta</button>
+        <div class="auth-notice" id="signup-msg"></div>
+      </form>
+      <div class="auth-switch">
+        ¿Ya tienes cuenta? <button type="button" onclick="showLogin()">Ingresar</button>
+      </div>
+    </div>
+
+    <!-- Confirmar email -->
+    <div id="view-confirm" style="display:none">
+      <h1 class="auth-heading">Revisa tu email</h1>
+      <p class="auth-sub">Te enviamos un enlace de confirmación. Haz clic en él para activar tu cuenta y volver acá.</p>
+      <button type="button" class="btn-ghost" onclick="showLogin()" style="margin-top:28px;">Volver al ingreso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PORTAL ══════════════════════════════════════════════════ -->
+<div id="portal-screen" style="display:none" class="portal-wrap">
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="PSYNC">
+      <span class="nav-wordmark">PSYNC</span>
+    </a>
+    <div class="nav-right">
+      <span class="nav-user" id="portal-email"></span>
+      <button class="nav-logout" onclick="handleLogout()">Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <div class="portal-body">
+    <h1 class="portal-title" id="portal-title">Hola</h1>
+    <p class="portal-intro" id="portal-intro">Este es tu espacio en PSYNC.</p>
+    <div id="portal-content"><p class="loading">Cargando…</p></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+// Nav: transparente arriba del todo, sólida al hacer scroll
+(function () {
+  const n = document.querySelector('.site-nav');
+  if (!n) return;
+  const sync = () => n.classList.toggle('scrolled', window.scrollY > 10);
+  sync();
+  window.addEventListener('scroll', sync, { passive: true });
+})();
+
+// ─── Datos ────────────────────────────────────────────────────
+const ESTADOS = [
+  { key: 'formulario',            label: 'Formulario recibido',     desc: 'Tu solicitud fue recibida por el equipo PSYNC.' },
+  { key: 'sesion_coordinada',     label: 'Sesión de Arquitectura',  desc: 'Conversación de 1 hora con el equipo coordinada.' },
+  { key: 'en_diseno',             label: 'Diseño de match',         desc: 'Estamos trabajando para encontrar tu combinación ideal.' },
+  { key: 'match_propuesto',       label: 'Match propuesto',         desc: 'Tenemos opciones para presentarte.' },
+  { key: 'devolucion_coordinada', label: 'Sesión de Devolución',    desc: 'Te presentaremos tus opciones de psicólogo/a.' },
+  { key: 'activo',                label: 'Activo en terapia',       desc: 'Estás en proceso terapéutico.' },
+  { key: 'cerrado',               label: 'Proceso cerrado',         desc: '' },
+];
+
+const TIPO_LABELS = {
+  arquitectura: 'Sesión de Arquitectura',
+  devolucion:   'Sesión de Devolución',
+  terapia:      'Sesión de terapia',
+};
+
+const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+// ─── Auth ─────────────────────────────────────────────────────
+psyncDB.auth.onAuthStateChange(async (event, session) => {
+  console.log('[PSYNC] auth event:', event, 'email:', session?.user?.email);
+  if (event === 'PASSWORD_RECOVERY') {
+    showView('view-new-password');
+    document.getElementById('auth-screen').style.display = '';
+    document.getElementById('portal-screen').style.display = 'none';
+    return;
+  }
+  if (session) {
+    showPortal();
+    await loadData(session.user.email);
+  } else {
+    showAuthScreen();
+  }
+});
+
+function showAuthScreen() {
+  document.getElementById('auth-screen').style.display = '';
+  document.getElementById('portal-screen').style.display = 'none';
+  showLogin();
+}
+
+function showPortal() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('portal-screen').style.display = '';
+}
+
+function showView(id) {
+  ['view-login','view-signup','view-confirm','view-reset','view-new-password']
+    .forEach(v => { document.getElementById(v).style.display = (v === id) ? '' : 'none'; });
+}
+
+function showLogin()  { showView('view-login'); }
+function showSignup() { showView('view-signup'); }
+function showReset()  { showView('view-reset'); }
+
+function setMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'auth-notice ' + type;
+}
+
+// ─── Login ────────────────────────────────────────────────────
+document.getElementById('form-login').addEventListener('submit', async e => {
+  e.preventDefault();
+  console.log('[LOGIN] 1. submit capturado');
+
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  console.log('[LOGIN] 2. email:', email, '| password length:', password.length);
+
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'Ingresando…';
+  console.log('[LOGIN] 3. llamando a signInWithPassword...');
+
+  let result;
+  try {
+    result = await psyncDB.auth.signInWithPassword({ email, password });
+  } catch (thrown) {
+    console.error('[LOGIN] EXCEPCIÓN inesperada:', thrown);
+    setMsg('login-msg', 'Error inesperado: ' + thrown.message, 'err');
+    btn.disabled = false;
+    btn.textContent = 'Ingresar';
+    return;
+  }
+
+  const { data, error } = result;
+  console.log('[LOGIN] 4. respuesta de Supabase:');
+  console.log('  error:', error ? JSON.stringify(error) : 'null');
+  console.log('  user:', data?.user?.email ?? 'null');
+  console.log('  session:', data?.session ? 'presente' : 'null');
+
+  btn.disabled = false;
+  btn.textContent = 'Ingresar';
+
+  if (error) {
+    const rawMsg = error.message || '';
+    const msg =
+      rawMsg.includes('Invalid login credentials') ? 'Email o contraseña incorrectos.' :
+      rawMsg.includes('Email not confirmed')        ? 'Debes confirmar tu email. Revisa tu bandeja de entrada.' :
+      (rawMsg === '{}' || rawMsg === '' || error.status >= 500) ? 'Error de conexión. Intenta de nuevo en un momento.' :
+      rawMsg;
+    console.log('[LOGIN] 5. mostrando error:', msg, '| raw:', rawMsg, '| status:', error.status);
+    setMsg('login-msg', msg, 'err');
+  } else {
+    console.log('[LOGIN] 5. login OK — onAuthStateChange manejará la redirección');
+  }
+});
+
+// ─── Signup ───────────────────────────────────────────────────
+document.getElementById('form-signup').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email    = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const btn      = document.getElementById('btn-signup');
+
+  if (password.length < 6) {
+    setMsg('signup-msg', 'La contraseña debe tener al menos 6 caracteres.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Creando cuenta…';
+
+  const { data, error } = await psyncDB.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: 'https://psync.cl/portal.html' },
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Crear cuenta';
+
+  if (error) {
+    const msg = error.message.includes('already registered')
+      ? 'Este email ya tiene una cuenta. Prueba ingresar o restablece tu contraseña.'
+      : error.message;
+    setMsg('signup-msg', msg, 'err');
+  } else if (data?.user && !data.user.identities?.length) {
+    setMsg('signup-msg', 'Este email ya tiene una cuenta. Si olvidaste tu contraseña, usa "Olvidé mi contraseña" desde el ingreso.', 'err');
+  } else if (data?.session) {
+    // Email confirmation desactivado: sesión inmediata — onAuthStateChange manejará el portal
+  } else {
+    showView('view-confirm');
+  }
+});
+
+// ─── Reset contraseña ─────────────────────────────────────────
+document.getElementById('form-reset').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('reset-email').value.trim();
+  const btn   = document.getElementById('btn-reset');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const { error } = await psyncDB.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://psync.cl/portal.html',
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Enviar enlace';
+
+  if (error) {
+    setMsg('reset-msg', error.message, 'err');
+  } else {
+    setMsg('reset-msg', 'Te enviamos un enlace a ' + email + '. Revisa tu bandeja de entrada.', 'ok');
+  }
+});
+
+// ─── Nueva contraseña (desde link de reset) ───────────────────
+document.getElementById('form-new-password').addEventListener('submit', async e => {
+  e.preventDefault();
+  const password = document.getElementById('new-password').value;
+  const btn      = document.getElementById('btn-new-password');
+
+  if (password.length < 6) {
+    setMsg('new-password-msg', 'La contraseña debe tener al menos 6 caracteres.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+
+  const { error } = await psyncDB.auth.updateUser({ password });
+
+  btn.disabled = false;
+  btn.textContent = 'Guardar contraseña';
+
+  if (error) {
+    setMsg('new-password-msg', error.message, 'err');
+  } else {
+    setMsg('new-password-msg', 'Contraseña actualizada. Ingresando…', 'ok');
+    setTimeout(() => {
+      showPortal();
+      psyncDB.auth.getUser().then(({ data }) => {
+        if (data?.user) loadData(data.user.email);
+      });
+    }, 1500);
+  }
+});
+
+// ─── Logout ───────────────────────────────────────────────────
+async function handleLogout() {
+  await psyncDB.auth.signOut();
+}
+
+// ─── Datos ────────────────────────────────────────────────────
+async function loadData(email) {
+  document.getElementById('portal-email').textContent = email;
+
+  const { data: rows } = await psyncDB
+    .from('pacientes')
+    .select('id, nombre, estado, notas_sesion')
+    .eq('email', email)
+    .limit(1);
+
+  const paciente = rows?.[0];
+
+  if (!paciente) {
+    document.getElementById('portal-title').textContent = 'Hola';
+    renderNoVinculo(email);
+    return;
+  }
+
+  const nombre = paciente.nombre?.split(' ')[0] || '';
+  document.getElementById('portal-title').textContent = nombre ? `Hola, ${nombre}.` : 'Hola.';
+  document.getElementById('portal-intro').textContent = 'Este es tu espacio en PSYNC.';
+
+  const today = new Date().toISOString().split('T')[0];
+  const { data: todasSesiones } = await psyncDB
+    .from('sesiones')
+    .select('id, tipo, fecha, hora_inicio, modalidad, estado, meet_link')
+    .eq('paciente_id', paciente.id)
+    .order('fecha', { ascending: false });
+
+  const sesArr    = todasSesiones ?? [];
+  const ACTIVOS   = ['agendada', 'confirmada'];
+  const proxima   = [...sesArr].reverse().find(s => ACTIVOS.includes(s.estado) && s.fecha >= today) ?? null;
+  const historial = sesArr.filter(s => s.fecha < today || s.estado === 'realizada' || s.estado === 'cancelada');
+
+  const { data: feedbacks } = await psyncDB
+    .from('feedback')
+    .select('sesion_id, rating')
+    .eq('paciente_id', paciente.id);
+
+  renderContent(paciente, proxima, historial, feedbacks ?? []);
+}
+
+// ─── Render ───────────────────────────────────────────────────
+function renderNoVinculo(email) {
+  document.getElementById('portal-content').innerHTML = `
+    <div class="no-vinculo">
+      <h2>Cuenta aún no vinculada</h2>
+      <p>No encontramos un proceso activo asociado a ${esc(email)}.<br>
+      Si ya completaste el formulario, escríbenos a
+      <a href="mailto:contacto@psync.cl">contacto@psync.cl</a>.</p>
+    </div>`;
+}
+
+function renderContent(paciente, sesion, historial = [], feedbacks = []) {
+  const estadoIdx = ESTADOS.findIndex(e => e.key === paciente.estado);
+
+  // Pipeline
+  const steps = ESTADOS.map((e, i) => {
+    const cls  = i < estadoIdx ? 'p-step done' : i === estadoIdx ? 'p-step current' : 'p-step';
+    const desc = i === estadoIdx && e.desc ? `<div class="p-desc">${e.desc}</div>` : '';
+    return `
+      <div class="${cls}">
+        <div class="p-dot"></div>
+        <div class="p-connector"></div>
+        <div class="p-body">
+          <div class="p-label">${e.label}</div>
+          ${desc}
+        </div>
+      </div>`;
+  }).join('');
+
+  // Sesión
+  let sesionHTML = '';
+  if (sesion) {
+    const d = new Date(sesion.fecha + 'T12:00:00');
+    const fechaStr = `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`;
+    const tipo     = TIPO_LABELS[sesion.tipo] || sesion.tipo || 'Sesión';
+    const hora     = sesion.hora_inicio ? `${sesion.hora_inicio} hrs` : '';
+    const modal    = sesion.modalidad === 'online' ? '· Online' : sesion.modalidad === 'presencial' ? '· Presencial' : '';
+    const link     = sesion.meet_link
+      ? `<a href="${esc(sesion.meet_link)}" target="_blank" rel="noopener" class="sesion-cta">Unirse a la videollamada →</a>`
+      : '';
+    sesionHTML = `
+      <div class="p-card">
+        <span class="p-card-label">Próxima sesión</span>
+        <div class="sesion-destacada" id="sesion-bloque-${sesion.id}">
+          <span class="sesion-tipo">${tipo}</span>
+          <div class="sesion-fecha">${fechaStr}</div>
+          <div class="sesion-hora">${hora} ${modal}</div>
+          ${link}
+          <div class="sesion-acciones" id="sesion-acciones-${sesion.id}">
+            <button class="btn-pill" onclick="iniciarReagendar('${sesion.id}')">Solicitar reagendamiento</button>
+            <button class="btn-pill danger" onclick="iniciarCancelar('${sesion.id}')">Cancelar sesión</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Historial de sesiones
+  let historialHTML = '';
+  if (historial.length > 0) {
+    const ESTADO_LABEL = { agendada: 'Agendada', confirmada: 'Confirmada', realizada: 'Realizada', cancelada: 'Cancelada' };
+    const items = historial.map(s => {
+      const d          = new Date(s.fecha + 'T12:00:00');
+      const fechaStr   = `${d.getDate()} de ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+      const tipo       = TIPO_LABELS[s.tipo] || s.tipo || 'Sesión';
+      const partes     = [
+        s.hora_inicio ? `${s.hora_inicio} hrs` : '',
+        s.modalidad === 'online' ? 'Online' : s.modalidad === 'presencial' ? 'Presencial' : '',
+      ].filter(Boolean).join(' · ');
+      const estadoLabel  = ESTADO_LABEL[s.estado] || s.estado;
+      const fbExistente  = feedbacks.find(f => f.sesion_id === s.id);
+      const estrellas    = n => [1,2,3,4,5].map(i =>
+        `<button type="button" class="star-btn${i<=n?' activa':''}" data-val="${i}"
+          onmouseenter="hoverStar('${s.id}',${i})" onmouseleave="unhoverStar('${s.id}')"
+          onclick="selectStar('${s.id}',${i})">★</button>`).join('');
+
+      let feedbackZona = '';
+      if (fbExistente) {
+        feedbackZona = `<div class="feedback-enviado">${'★'.repeat(fbExistente.rating)}${'☆'.repeat(5 - fbExistente.rating)} · Gracias por tu feedback</div>`;
+      } else if (s.estado === 'realizada' || s.fecha < new Date().toISOString().split('T')[0]) {
+        feedbackZona = `
+          <div class="feedback-zona" id="fb-${s.id}">
+            <div class="feedback-prompt">¿Cómo estuvo la sesión?</div>
+            <div class="star-row" id="stars-${s.id}" data-rating="0">${estrellas(0)}</div>
+            <textarea class="feedback-textarea" id="comentario-${s.id}" placeholder="Comentario opcional…" rows="2"></textarea>
+            <button type="button" class="feedback-enviar" onclick="enviarFeedback('${s.id}','${paciente.id}')">Enviar</button>
+            <div class="feedback-msg" id="fb-msg-${s.id}"></div>
+          </div>`;
+      }
+
+      return `
+        <div class="historial-fila">
+          <div class="historial-row">
+            <div class="historial-left">
+              <div class="historial-tipo">${esc(tipo)}</div>
+              <div class="historial-fecha">${fechaStr}</div>
+              ${partes ? `<div class="historial-detalle">${esc(partes)}</div>` : ''}
+            </div>
+            <span class="historial-estado ${esc(s.estado)}">${esc(estadoLabel)}</span>
+          </div>
+          ${feedbackZona}
+        </div>`;
+    }).join('');
+    historialHTML = `
+      <div class="p-card">
+        <span class="p-card-label">Historial de sesiones</span>
+        <div class="historial-lista">${items}</div>
+      </div>`;
+  }
+
+  // Notas
+  const notas = (paciente.notas_sesion || '').trim();
+  const notasContent = notas
+    ? `<p class="notas-text">${esc(notas)}</p>`
+    : `<p class="notas-empty">El equipo PSYNC aún no ha dejado notas para ti.</p>`;
+
+  // Próximos pasos
+  const PASOS = {
+    formulario:            { titulo: 'Coordinaremos tu Sesión de Arquitectura',   texto: 'El equipo PSYNC revisará tu formulario y se pondrá en contacto contigo en los próximos días para agendar una conversación de 1 hora.' },
+    sesion_coordinada:     { titulo: 'Prepárate para tu Sesión de Arquitectura',  texto: 'Esta conversación de 1 hora es el corazón del proceso. Hablaremos de lo que buscas, de tu historia y de cómo quieres que sea tu terapia.' },
+    en_diseno:             { titulo: 'Estamos diseñando tu match',                texto: 'Con lo que aprendimos en la Sesión de Arquitectura, estamos cruzando tu perfil con nuestra red para encontrar las opciones que mejor se adaptan a ti.' },
+    match_propuesto:       { titulo: 'Coordinaremos tu Sesión de Devolución',     texto: 'Tenemos entre 2 y 3 opciones diseñadas para ti. Pronto agendaremos una reunión breve para presentártelas y responder todas tus preguntas.' },
+    devolucion_coordinada: { titulo: 'Prepárate para tu Sesión de Devolución',    texto: 'En esta reunión de 20 minutos te presentaremos tus opciones de psicólogo/a. Puedes elegir la que más resuene contigo y comenzar cuando quieras.' },
+    activo:                { titulo: 'Estás en proceso terapéutico',              texto: 'El equipo PSYNC está disponible si necesitas apoyo, quieres hacer algún cambio o tienes cualquier consulta sobre tu proceso.' },
+  };
+  const paso = PASOS[paciente.estado];
+  const pasosHTML = paso ? `
+    <div class="p-card">
+      <span class="p-card-label">Qué sigue</span>
+      <div class="proximos-bloque">
+        <div class="proximos-titulo">${paso.titulo}</div>
+        <div class="proximos-texto">${paso.texto}</div>
+      </div>
+    </div>` : '';
+
+  document.getElementById('portal-content').innerHTML = `
+    <div class="p-card">
+      <span class="p-card-label">Tu proceso</span>
+      <div class="pipeline">${steps}</div>
+    </div>
+    ${pasosHTML}
+    ${sesionHTML}
+    ${historialHTML}
+    <div class="p-card">
+      <span class="p-card-label">Notas de PSYNC</span>
+      ${notasContent}
+    </div>`;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Acciones sesión ──────────────────────────────────
+function iniciarCancelar(sesionId) {
+  document.getElementById('sesion-acciones-' + sesionId).outerHTML = `
+    <div class="sesion-confirm" id="sesion-acciones-${sesionId}">
+      <span class="sesion-confirm-msg">¿Confirmas la cancelación?</span>
+      <button class="btn-pill danger" onclick="cancelarSesion('${sesionId}')">Sí, cancelar</button>
+      <button class="btn-pill" onclick="restaurarAcciones('${sesionId}')">Volver</button>
+    </div>`;
+}
+
+function restaurarAcciones(sesionId) {
+  document.getElementById('sesion-acciones-' + sesionId).outerHTML = `
+    <div class="sesion-acciones" id="sesion-acciones-${sesionId}">
+      <button class="btn-pill" onclick="iniciarReagendar('${sesionId}')">Solicitar reagendamiento</button>
+      <button class="btn-pill danger" onclick="iniciarCancelar('${sesionId}')">Cancelar sesión</button>
+    </div>`;
+}
+
+async function cancelarSesion(sesionId) {
+  const btn = document.querySelector(`#sesion-acciones-${sesionId} .danger`);
+  btn.disabled = true; btn.textContent = 'Cancelando…';
+
+  const { error } = await psyncDB.from('sesiones').update({ estado: 'cancelada' }).eq('id', sesionId);
+
+  if (error) {
+    btn.disabled = false; btn.textContent = 'Sí, cancelar';
+  } else {
+    document.getElementById('sesion-bloque-' + sesionId).innerHTML =
+      `<div class="sesion-aviso">Sesión cancelada. El equipo PSYNC se pondrá en contacto para reagendar.</div>`;
+  }
+}
+
+async function iniciarReagendar(sesionId) {
+  const btn = document.querySelector(`#sesion-acciones-${sesionId} .btn-pill`);
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  const { error } = await psyncDB.from('sesiones').update({ estado: 'reagendamiento_solicitado' }).eq('id', sesionId);
+
+  if (error) {
+    btn.disabled = false; btn.textContent = 'Solicitar reagendamiento';
+  } else {
+    document.getElementById('sesion-acciones-' + sesionId).outerHTML =
+      `<div class="sesion-aviso">Solicitud enviada. El equipo PSYNC se pondrá en contacto pronto.</div>`;
+  }
+}
+
+// ─── Feedback post-sesión ─────────────────────────────
+function selectStar(sesionId, val) {
+  const row = document.getElementById('stars-' + sesionId);
+  row.dataset.rating = val;
+  row.querySelectorAll('.star-btn').forEach((b, i) => {
+    b.classList.toggle('activa', i < val);
+    b.classList.remove('hover');
+  });
+}
+function hoverStar(sesionId, val) {
+  document.getElementById('stars-' + sesionId)
+    .querySelectorAll('.star-btn').forEach((b, i) => b.classList.toggle('hover', i < val));
+}
+function unhoverStar(sesionId) {
+  document.getElementById('stars-' + sesionId)
+    .querySelectorAll('.star-btn').forEach(b => b.classList.remove('hover'));
+}
+async function enviarFeedback(sesionId, pacienteId) {
+  const row     = document.getElementById('stars-' + sesionId);
+  const rating  = parseInt(row?.dataset.rating || '0');
+  const msgEl   = document.getElementById('fb-msg-' + sesionId);
+  if (!rating) { msgEl.textContent = 'Selecciona una puntuación primero.'; return; }
+
+  const comentario = (document.getElementById('comentario-' + sesionId)?.value || '').trim();
+  const btn = document.querySelector('#fb-' + sesionId + ' .feedback-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  const { error } = await psyncDB.from('feedback').insert({
+    paciente_id: pacienteId,
+    sesion_id:   sesionId,
+    rating,
+    comentario:  comentario || null,
+  });
+
+  if (error) {
+    msgEl.textContent = 'Error al enviar. Intenta de nuevo.';
+    btn.disabled = false; btn.textContent = 'Enviar';
+  } else {
+    document.getElementById('fb-' + sesionId).innerHTML =
+      `<div class="feedback-gracias">${'★'.repeat(rating)}${'☆'.repeat(5-rating)} · Gracias por tu feedback</div>`;
+  }
+}
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.innerHTML = show
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+</script>
+</body>
+</html>

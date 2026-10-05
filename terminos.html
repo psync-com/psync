@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Términos y Condiciones — PSYNC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EBDFDB;
+    --surface: #FDFAF7;
+    --ink: #3D2212;
+    --ink-soft: #7A5840;
+    --accent: #4B1E23;
+    --accent-deep: #35161A;
+    --line: #DDD4C8;
+    --line-strong: #C8BDB0;
+    --font-display: 'Libre Caslon Text', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-display); background: var(--bg); color: var(--ink); }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 48px;
+    background: transparent;
+    border-bottom: 0.5px solid transparent;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+  nav.scrolled {
+    background: var(--surface);
+    border-bottom-color: var(--line);
+    box-shadow: 0 1px 8px rgba(61,34,18,0.12);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { height: 52px; width: auto; content: url(logo-burdeos.png); }
+  .nav-wordmark {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--ink);
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    list-style: none;
+  }
+  .nav-links a { color: inherit; text-decoration: none; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.active { color: var(--ink); border-bottom: 0.5px solid var(--ink); padding-bottom: 1px; }
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--accent-deep);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.82; }
+
+  /* ── TIPOGRAFÍA COMÚN ─────────────────────────────── */
+  .section-tag {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--accent);
+    background: rgba(237,224,212,0.16);
+    padding: 6px 13px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    text-transform: none;
+  }
+  .section-title {
+    font-size: 32px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.13;
+    margin-bottom: 10px;
+  }
+  .section-italic {
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .t-hero {
+    background: var(--accent);
+    padding: 46px 48px 38px;
+  }
+
+  /* ── CONTENIDO ────────────────────────────────────── */
+  .t-body {
+    background: var(--surface);
+    padding: 46px 48px;
+  }
+  .t-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .t-section h2 {
+    font-family: var(--font-display);
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 14px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+  .t-section h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 44px;
+    height: 3px;
+    background: var(--accent);
+  }
+  .t-section p {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+    margin-bottom: 14px;
+  }
+  .t-section p:last-child { margin-bottom: 0; }
+  .t-section a { color: var(--ink); border-bottom: 0.5px solid currentColor; padding-bottom: 1px; text-decoration: none; }
+  .t-section a:hover { opacity: 0.7; }
+
+  /* Tabla de valores */
+  .t-tabla {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .t-tabla-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    padding: 14px 20px;
+    border-bottom: 0.5px solid var(--line);
+    align-items: center;
+  }
+  .t-tabla-row:last-child { border-bottom: none; }
+  .t-tabla-header {
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(122,88,64,0.7);
+    background: var(--bg);
+  }
+  .t-tabla-body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    background: var(--surface);
+  }
+  .t-precio {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--ink);
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  /* Cards de política */
+  .t-politica { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+  .t-politica-item {
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+  .t-politica-tag {
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .t-tag-ok   { color: #4A7A68; }
+  .t-tag-warn { color: #8A6A30; }
+  .t-tag-psync { color: var(--ink-soft); }
+  .t-politica-item p {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.85;
+    margin: 0;
+  }
+
+  /* Aviso de urgencias */
+  .t-aviso {
+    padding: 20px 24px;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: var(--bg);
+    margin-bottom: 16px;
+  }
+  .t-aviso p {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: rgba(61,34,18,0.75);
+    line-height: 1.85;
+    margin: 0 0 8px;
+  }
+  .t-aviso p:last-child { margin: 0; }
+
+  /* Contacto */
+  .t-contacto { text-align: center; margin: 20px 0; }
+  .t-email {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--ink);
+    padding-bottom: 2px;
+  }
+  .t-email:hover { opacity: 0.7; }
+
+  /* Volver */
+  .t-back {
+    padding: 48px 48px 0;
+    background: var(--surface);
+    max-width: 760px;
+    margin: 0 auto;
+    padding-bottom: 64px;
+  }
+  .t-back-link {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--line);
+    padding-bottom: 2px;
+  }
+  .t-back-link:hover { color: var(--ink); }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  footer {
+    background: var(--accent-deep);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; }
+  .footer-logo img { height: 40px; width: auto; opacity: 0.85; }
+  .footer-wordmark {
+    font-family: var(--font-body);
+    font-size: 15px;
+    letter-spacing: 4px;
+    color: rgba(237,224,212,0.75);
+  }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; list-style: none; }
+  .footer-links a {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(237,224,212,0.55);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: rgba(237,224,212,0.75); }
+  .footer-copy {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(237,224,212,0.4);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .t-hero { padding: 36px 24px 30px; }
+    .t-body { padding: 36px 24px; }
+    .t-back { padding: 28px 24px 36px; }
+    footer { padding: 24px; }
+    .footer-links { gap: 16px; }
+    .t-tabla-row { grid-template-columns: 1fr; gap: 4px; }
+    .t-precio { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="nav-wordmark">PSYNC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#corrientes">Más información</a></li>
+    <li><a href="index.html#quienes">Quiénes somos</a></li>
+    <li><a href="index.html#psicologos">Para psicólogos/as</a></li>
+    <li><a href="terminos.html" class="active">Términos y Condiciones</a></li>
+  </ul>
+  <a href="formulario.html" class="nav-cta">Reservar sesión →</a>
+</nav>
+
+<!-- HERO -->
+<section class="t-hero">
+  <p class="section-tag" style="color:rgba(237,224,212,0.75);">Legal</p>
+  <h1 class="section-title" style="color:#EBDFDB; font-size:clamp(24px,4.2vw,37px);">Términos y Condiciones</h1>
+  <p class="section-italic" style="color:rgba(237,224,212,0.65);">Vigente desde el 1 de enero de 2026</p>
+</section>
+
+<!-- CONTENIDO -->
+<div class="t-body">
+  <div class="t-inner">
+
+    <section class="t-section">
+      <h2>1. Qué es PSYNC</h2>
+      <p>PSYNC es una plataforma chilena que conecta a personas con psicólogos y psicólogas a través de un proceso de matching terapéutico personalizado. Nuestro servicio central es la <strong>Sesión de Arquitectura</strong>: una conversación de 1 hora con el equipo PSYNC donde diseñamos a mano entre 2 y 3 opciones de psicólogo/a adaptadas a tus necesidades, preferencias y objetivos terapéuticos.</p>
+      <p>PSYNC no es un servicio de atención clínica directa ni reemplaza la relación terapéutica. Nuestra función es facilitar el inicio de un proceso psicoterapéutico con un profesional idóneo para ti.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>2. Servicios y valores</h2>
+      <div class="t-tabla">
+        <div class="t-tabla-row t-tabla-header">
+          <span>Servicio</span>
+          <span>Valor</span>
+        </div>
+        <div class="t-tabla-row t-tabla-body">
+          <span>Sesión de Arquitectura (1 hora)</span>
+          <span class="t-precio">$25.000 CLP</span>
+        </div>
+        <div class="t-tabla-row t-tabla-body">
+          <span>Primera sesión terapéutica con psicólogo/a asignado/a</span>
+          <span class="t-precio">15% de descuento sobre tarifa regular</span>
+        </div>
+      </div>
+      <p>El descuento en la primera sesión aplica únicamente para pacientes derivados desde PSYNC y se coordina directamente entre el paciente y el profesional asignado. PSYNC no cobra comisión adicional por las sesiones posteriores.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>3. Política de cancelación y reagendamiento</h2>
+      <p>Entendemos que los imprevistos ocurren. Nuestra política está diseñada para ser justa para ambas partes.</p>
+      <div class="t-politica">
+        <div class="t-politica-item">
+          <p class="t-politica-tag t-tag-ok">— Con 24 horas o más de anticipación</p>
+          <p>Puedes cancelar o reagendar tu Sesión de Arquitectura <strong>sin costo</strong>. Basta con avisarnos a <a href="mailto:contacto@psync.cl">contacto@psync.cl</a> antes de las 24 horas previas a tu sesión.</p>
+        </div>
+        <div class="t-politica-item">
+          <p class="t-politica-tag t-tag-warn">— Con menos de 24 horas de anticipación</p>
+          <p>Se cobrará el <strong>50% del valor de la sesión ($12.500 CLP)</strong> a modo de compensación por el tiempo reservado. El monto restante ($12.500 CLP) queda como crédito para una futura sesión o se reembolsa si decides no continuar.</p>
+        </div>
+        <div class="t-politica-item">
+          <p class="t-politica-tag t-tag-psync">— Cancelación por parte de PSYNC</p>
+          <p>Si PSYNC cancela la sesión por causa de fuerza mayor, se <strong>reembolsará el 100%</strong> del monto pagado dentro de 5 días hábiles, sin excepción.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="t-section">
+      <h2>4. Re-vinculación</h2>
+      <p>Si, una vez iniciado tu proceso terapéutico, sientes que el match no fue el adecuado, PSYNC ofrece hasta <strong>2 instancias de re-vinculación sin costo adicional</strong>. Esto significa que podemos buscar un nuevo profesional para ti dentro de nuestra red, sin cobrar nuevamente la Sesión de Arquitectura.</p>
+      <p>Las re-vinculaciones están disponibles durante los primeros 90 días desde tu primera sesión con el profesional asignado y están sujetas a disponibilidad en la red de PSYNC.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>5. Confidencialidad</h2>
+      <p>Toda la información que compartes con PSYNC —tanto en el formulario inicial como en la Sesión de Arquitectura— es tratada con estricta confidencialidad. Tus datos no serán compartidos con terceros ajenos al proceso de matching, salvo con los profesionales evaluados para tu caso y únicamente en la medida necesaria para diseñar el match.</p>
+      <p>La información clínica y personal que compartas durante la Sesión de Arquitectura no será usada con fines distintos al diseño de tu match terapéutico. PSYNC cumple con la Ley N° 19.628 sobre Protección de la Vida Privada vigente en Chile.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>6. Limitaciones del servicio</h2>
+      <div class="t-aviso">
+        <p><strong>PSYNC no es un servicio de atención de urgencias ni emergencias de salud mental.</strong></p>
+        <p>Si estás en una situación de crisis o riesgo para tu vida o la de otras personas, no esperes una sesión con PSYNC. Dirígete inmediatamente al <strong>servicio de urgencias más cercano</strong> o llama al <strong>131 (SAMU)</strong>.</p>
+      </div>
+      <p>La Sesión de Arquitectura no constituye una consulta clínica, diagnóstico ni tratamiento psicológico. PSYNC facilita el acceso a profesionales de salud mental, pero no ejerce la práctica clínica directa.</p>
+      <p>Los resultados del proceso terapéutico dependen de múltiples factores y no pueden ser garantizados. PSYNC se compromete a diseñar el mejor match posible con la información disponible.</p>
+    </section>
+
+    <section class="t-section">
+      <h2>7. Contacto</h2>
+      <p>Para consultas sobre estos términos, cancelaciones, reembolsos o cualquier asunto relacionado con tu experiencia en PSYNC:</p>
+      <div class="t-contacto">
+        <a href="mailto:contacto@psync.cl" class="t-email">contacto@psync.cl</a>
+      </div>
+      <p>Respondemos en un plazo de 1–2 días hábiles.</p>
+    </section>
+
+  </div>
+
+  <div style="max-width:760px; margin:0 auto; padding-top:48px;">
+    <a href="index.html" class="t-back-link">← Volver al inicio</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="footer-wordmark">PSYNC</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#quienes">Quiénes somos</a></li>
+    <li><a href="index.html#psicologos">Para psicólogos/as</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 PSYNC</span>
+</footer>
+
+<script>
+  const navEl = document.querySelector('nav');
+  const syncNav = () => navEl.classList.toggle('scrolled', window.scrollY > 10);
+  syncNav();
+  window.addEventListener('scroll', syncNav, { passive: true });
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +6,7 @@
 <title>Panel interno — PSYNC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,17 +15,13 @@
 <div id="login-screen">
   <div class="panel-login">
     <div class="login-card">
-      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+      <div class="logo"><img src="logo.png" class="site-logo" alt="PSYNC"><span class="logo-wordmark">PSYNC</span></div>
       <h2>Panel interno</h2>
       <p class="login-subtitle">Acceso exclusivo para el equipo PSYNC.</p>
       <form id="login-form" novalidate>
         <div class="field">
-          <label for="login-email">Correo electrónico</label>
-          <input type="email" id="login-email" autocomplete="email" required>
-        </div>
-        <div class="field">
           <label for="login-password">Contraseña</label>
-          <input type="password" id="login-password" autocomplete="current-password" required>
+          <input type="password" id="login-password" autocomplete="current-password" required autofocus>
         </div>
         <button type="submit" class="btn btn--solid" id="login-btn" style="width:100%; justify-content:center;">Ingresar</button>
         <p class="login-error" id="login-error"></p>
@@ -40,13 +36,33 @@
   <!-- Sidebar -->
   <aside class="panel-sidebar">
     <div class="sidebar-logo">
-      <div class="logo"><span class="logo-mark"></span>PSYNC</div>
+      <div class="logo"><img src="logo.png" class="site-logo" alt="PSYNC"></div>
     </div>
     <span class="sidebar-section-label">Vistas</span>
     <ul class="sidebar-nav">
       <li>
-        <button class="sidebar-nav-btn active" id="nav-pacientes" onclick="navigateTo('lista')">
+        <button class="sidebar-nav-btn active" id="nav-inicio" onclick="navigateTo('inicio')">
+          Inicio
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-nav-btn" id="nav-lista" onclick="navigateTo('lista')">
           Pacientes
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-nav-btn" id="nav-agenda" onclick="navigateTo('agenda')">
+          Agenda
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-nav-btn" id="nav-psicologos" onclick="navigateTo('psicologos')">
+          Psicólogos/as
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-nav-btn" id="nav-gastos" onclick="navigateTo('gastos')">
+          Gastos
         </button>
       </li>
     </ul>
@@ -59,11 +75,38 @@
   <!-- Main content -->
   <main class="panel-main">
 
+    <!-- ── VISTA: Dashboard ── -->
+    <div id="view-inicio" class="panel-view" hidden>
+      <div class="panel-header">
+        <h1>Inicio</h1>
+      </div>
+
+      <div class="dash-section">
+        <span class="dash-section-title">Funnel de proceso</span>
+        <div class="funnel-row" id="funnel-row">
+          <div class="funnel-card"><span class="funnel-count">—</span><span class="funnel-label">Cargando...</span></div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <span class="dash-section-title">⚠ Alertas de riesgo alto</span>
+        <div id="dash-alertas"><p class="dash-empty">Cargando...</p></div>
+      </div>
+
+      <div class="dash-section">
+        <span class="dash-section-title">Últimos pacientes ingresados</span>
+        <div id="dash-recientes"><p class="dash-empty">Cargando...</p></div>
+      </div>
+    </div>
+
     <!-- ── VISTA: Lista de pacientes ── -->
-    <div id="view-lista" class="panel-view">
+    <div id="view-lista" class="panel-view" hidden>
 
       <div class="panel-header">
-        <h1>Pacientes</h1>
+        <div class="panel-header-row">
+          <h1>Pacientes</h1>
+          <button class="panel-save-btn" onclick="mostrarModalPaciente()">+ Nuevo paciente</button>
+        </div>
         <div class="stats-row">
           <div class="stat-pill">
             <span class="stat-value" id="stat-total">—</span>
@@ -82,6 +125,10 @@
             <span class="stat-label">Riesgo alto/medio</span>
           </div>
         </div>
+      </div>
+
+      <div class="panel-search">
+        <input type="text" id="search-input" class="search-input" placeholder="Buscar por nombre o email..." oninput="buscarPacientes(this.value)">
       </div>
 
       <div class="panel-filters">
@@ -238,22 +285,22 @@
           </div>
         </div>
 
+        <!-- Sesión de Arquitectura -->
+        <div class="panel-card col-full" id="card-sesion" hidden>
+          <span class="panel-card-title">Sesión de Arquitectura</span>
+          <div id="sesion-content"></div>
+        </div>
+
         <!-- Estado del proceso -->
         <div class="panel-card col-full">
           <span class="panel-card-title">Estado del proceso</span>
-          <div class="estado-row">
-            <select class="estado-select" id="estado-select">
-              <option value="formulario">Formulario recibido</option>
-              <option value="sesion_coordinada">Sesión de arquitectura coordinada</option>
-              <option value="en_diseno">En diseño de match</option>
-              <option value="match_propuesto">Match propuesto al paciente</option>
-              <option value="devolucion_coordinada">Sesión de devolución coordinada</option>
-              <option value="activo">Activo en terapia</option>
-              <option value="cerrado">Cerrado</option>
-            </select>
-            <button class="panel-save-btn" onclick="guardarEstado()">Actualizar estado</button>
-          </div>
+          <div id="estado-pipeline" class="estado-pipeline"></div>
           <p class="panel-feedback" id="estado-feedback"></p>
+          <div class="cnip-panel-row">
+            <span class="cnip-panel-label">C-NIP previo</span>
+            <span id="cnip-panel-badge"></span>
+            <button class="cnip-panel-toggle" id="cnip-toggle-btn" onclick="toggleCnip()">—</button>
+          </div>
         </div>
 
         <!-- Match -->
@@ -281,10 +328,293 @@
           <p class="panel-feedback" id="notas-feedback"></p>
         </div>
 
+        <!-- Archivos del paciente -->
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Archivos del paciente</span>
+          <div class="upload-zone" id="upload-zone"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+            onclick="document.getElementById('file-input').click()">
+            <p>Arrastra archivos aquí o haz clic para seleccionar</p>
+            <button type="button" class="upload-zone-btn" onclick="event.stopPropagation(); document.getElementById('file-input').click()">Seleccionar archivo</button>
+            <input type="file" id="file-input" hidden multiple onchange="handleFileSelect(event)">
+          </div>
+          <p class="upload-status" id="upload-status"></p>
+          <div class="archivo-list" id="archivo-list"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── VISTA: Psicólogos/as ── -->
+    <div id="view-psicologos" class="panel-view" hidden>
+      <div class="panel-header">
+        <h1>Psicólogos/as</h1>
+      </div>
+      <div class="panel-filters">
+        <span class="filter-label">Ver:</span>
+        <button class="filter-btn active" id="tab-red" onclick="setTabPsicologos('red', this)">Red activa</button>
+        <button class="filter-btn" id="tab-postulaciones" onclick="setTabPsicologos('postulaciones', this)">Postulaciones</button>
+      </div>
+      <div id="psico-content"><p class="dash-empty">Cargando...</p></div>
+    </div>
+
+    <!-- ── VISTA: Gastos compartidos ── -->
+    <div id="view-gastos" class="panel-view" hidden>
+
+      <div class="gastos-header">
+        <h1>Gastos compartidos</h1>
+        <p class="gastos-subtitle">Dominga &amp; Angelita</p>
+      </div>
+
+      <div class="gastos-resumen">
+        <div class="gastos-resumen-grid">
+          <div class="gastos-stat">
+            <span class="gastos-stat-label">Total gastado</span>
+            <span class="gastos-stat-value" id="g-total">$0</span>
+          </div>
+          <div class="gastos-stat">
+            <span class="gastos-stat-label">Dominga ha puesto</span>
+            <span class="gastos-stat-value" id="g-dominga">$0</span>
+          </div>
+          <div class="gastos-stat">
+            <span class="gastos-stat-label">Angelita ha puesto</span>
+            <span class="gastos-stat-value" id="g-angelita">$0</span>
+          </div>
+        </div>
+        <div class="gastos-balance" id="g-balance">
+          <span class="gastos-balance-ok">✓ Están a mano</span>
+        </div>
+      </div>
+
+      <div class="gastos-form-wrap">
+        <span class="gastos-section-label">Agregar gasto</span>
+        <form id="gastos-form" onsubmit="agregarGasto(event)" class="gastos-form">
+          <div class="gastos-form-grid">
+            <div class="gastos-field gastos-field--wide">
+              <label for="g-desc">Descripción</label>
+              <input type="text" id="g-desc" placeholder="Ej: Mercado, taxi, café..." required>
+            </div>
+            <div class="gastos-field">
+              <label for="g-monto">Monto (CLP)</label>
+              <input type="number" id="g-monto" placeholder="0" min="1" required>
+            </div>
+            <div class="gastos-field">
+              <label for="g-fecha">Fecha</label>
+              <input type="date" id="g-fecha" required>
+            </div>
+            <div class="gastos-field">
+              <label for="g-quien">¿Quién pagó?</label>
+              <select id="g-quien">
+                <option value="Dominga">Dominga</option>
+                <option value="Angelita">Angelita</option>
+              </select>
+            </div>
+            <div class="gastos-field">
+              <label>&nbsp;</label>
+              <label class="gastos-check-label">
+                <input type="checkbox" id="g-dividir" checked>
+                <span>Dividir 50/50</span>
+              </label>
+            </div>
+            <div class="gastos-field">
+              <label>&nbsp;</label>
+              <label class="gastos-check-label">
+                <input type="checkbox" id="g-suscripcion">
+                <span>Suscripción</span>
+              </label>
+            </div>
+            <div class="gastos-field">
+              <label>&nbsp;</label>
+              <button type="submit" class="gastos-add-btn">+ Agregar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="gastos-table-wrap">
+        <span class="gastos-section-label">Registro de gastos</span>
+        <div class="gastos-table-scroll">
+          <table class="gastos-table">
+            <thead>
+              <tr>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Quién pagó</th>
+                <th>Tipo</th>
+                <th>Dividido</th>
+                <th>→ Dominga</th>
+                <th>→ Angelita</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="gastos-tbody">
+              <tr><td colspan="9" class="gastos-empty">Sin gastos registrados aún.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── VISTA: Agenda ── -->
+    <div id="view-agenda" class="panel-view" hidden>
+      <div class="panel-header">
+        <div class="panel-header-row">
+          <h1>Agenda</h1>
+          <button class="panel-save-btn" onclick="mostrarModalEntrevista()">+ Link entrevista psicólogo/a</button>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <span class="dash-section-title">Sesiones de Arquitectura</span>
+        <div id="agenda-arquitectura"><p class="dash-empty">Cargando...</p></div>
+      </div>
+
+      <div class="dash-section">
+        <span class="dash-section-title">Entrevistas psicólogos/as</span>
+        <div id="agenda-entrevistas"><p class="dash-empty">Cargando...</p></div>
       </div>
     </div>
 
   </main>
+</div>
+
+<!-- MODAL: Link entrevista psicólogo -->
+<div id="modal-entrevista" class="modal-overlay" hidden onclick="if(event.target===this) cerrarModalEntrevista()">
+  <div class="modal-card">
+    <h2>Generar link de entrevista</h2>
+    <p style="color:var(--ink-soft); font-size:15px; margin-bottom:20px;">Genera un link único para que un/a psicólogo/a agende su entrevista. Los datos son opcionales.</p>
+    <div class="field">
+      <label for="entrevista-nombre">Nombre del/la psicólogo/a</label>
+      <input type="text" id="entrevista-nombre" placeholder="Opcional — para pre-llenar el formulario">
+    </div>
+    <div class="field">
+      <label for="entrevista-email">Email</label>
+      <input type="email" id="entrevista-email" placeholder="Opcional">
+    </div>
+    <p class="panel-feedback" id="entrevista-feedback"></p>
+    <div id="entrevista-link-box" hidden style="margin:16px 0;">
+      <label style="font-size:13px; color:var(--ink-soft); display:block; margin-bottom:6px;">Link generado:</label>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input type="text" id="entrevista-link-input" readonly style="flex:1; font-size:13px; font-family:var(--font-mono); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px;">
+        <button class="panel-save-btn" onclick="copiarLinkEntrevista()" style="white-space:nowrap;">Copiar</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" onclick="cerrarModalEntrevista()">Cerrar</button>
+      <button type="button" class="panel-save-btn" id="entrevista-gen-btn" onclick="generarLinkEntrevista()">Generar link</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Detalle postulación psicólogo -->
+<div id="modal-postulacion" class="modal-overlay" hidden onclick="if(event.target===this) cerrarModalPostulacion()">
+  <div class="modal-card modal-card--wide">
+    <h2 id="post-modal-nombre">—</h2>
+    <div class="post-modal-body">
+      <div class="post-section">
+        <span class="post-section-label">Contacto</span>
+        <div class="field-grid">
+          <div class="field-group"><span class="field-lbl">Email</span><span class="field-val" id="pm-email">—</span></div>
+          <div class="field-group"><span class="field-lbl">Teléfono</span><span class="field-val" id="pm-tel">—</span></div>
+          <div class="field-group"><span class="field-lbl">Ciudad</span><span class="field-val" id="pm-ciudad">—</span></div>
+        </div>
+      </div>
+      <div class="post-section">
+        <span class="post-section-label">Formación</span>
+        <div class="field-grid">
+          <div class="field-group"><span class="field-lbl">Título</span><span class="field-val" id="pm-titulo">—</span></div>
+          <div class="field-group"><span class="field-lbl">Universidad</span><span class="field-val" id="pm-uni">—</span></div>
+          <div class="field-group"><span class="field-lbl">Año titulación</span><span class="field-val" id="pm-anio">—</span></div>
+          <div class="field-group"><span class="field-lbl">Años experiencia</span><span class="field-val" id="pm-exp">—</span></div>
+        </div>
+      </div>
+      <div class="post-section">
+        <span class="post-section-label">Práctica clínica</span>
+        <div class="field-grid">
+          <div class="field-group span-2"><span class="field-lbl">Enfoque</span><span class="field-val" id="pm-enfoque">—</span></div>
+          <div class="field-group span-2"><span class="field-lbl">Especializaciones</span><span class="field-val italic" id="pm-especializaciones">—</span></div>
+          <div class="field-group span-2"><span class="field-lbl">Poblaciones</span><span class="field-val" id="pm-poblaciones">—</span></div>
+        </div>
+      </div>
+      <div class="post-section">
+        <span class="post-section-label">Logística</span>
+        <div class="field-grid">
+          <div class="field-group"><span class="field-lbl">Modalidad</span><span class="field-val" id="pm-modalidad">—</span></div>
+          <div class="field-group"><span class="field-lbl">Horarios</span><span class="field-val" id="pm-horarios">—</span></div>
+          <div class="field-group"><span class="field-lbl">Tarifa regular</span><span class="field-val" id="pm-precio">—</span></div>
+          <div class="field-group"><span class="field-lbl">Tarifa preferencial PSYNC</span><span class="field-val" id="pm-tarifa-psync">—</span></div>
+        </div>
+      </div>
+      <div class="post-section">
+        <span class="post-section-label">Motivación</span>
+        <div class="field-grid">
+          <div class="field-group span-2"><span class="field-lbl">¿Por qué PSYNC?</span><span class="field-val italic" id="pm-motivacion">—</span></div>
+          <div class="field-group"><span class="field-lbl">Cómo llegó</span><span class="field-val" id="pm-como">—</span></div>
+        </div>
+      </div>
+      <div class="post-section">
+        <span class="post-section-label">Estado</span>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+          <select id="pm-estado" style="border:1px solid var(--line); border-radius:8px; padding:8px 12px; font-family:var(--font-body); font-size:0.9rem; background:var(--surface);">
+            <option value="nueva">Nueva</option>
+            <option value="en_revision">En revisión</option>
+            <option value="entrevista_coordinada">Entrevista coordinada</option>
+            <option value="aprobado">Aprobado/a ✓</option>
+            <option value="no_aprobado">No aprobado/a</option>
+          </select>
+          <button class="panel-save-btn" onclick="actualizarEstadoPostulacion()">Guardar estado</button>
+          <button class="panel-save-btn" onclick="generarLinkDesdePostulacion()">Generar link entrevista</button>
+        </div>
+        <p class="panel-feedback" id="pm-feedback"></p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModalPostulacion()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo paciente -->
+<div id="modal-nuevo-paciente" class="modal-overlay" hidden onclick="if(event.target===this) cerrarModal()">
+  <div class="modal-card">
+    <h2>Nuevo paciente</h2>
+    <div class="field">
+      <label for="nuevo-nombre">Nombre completo *</label>
+      <input type="text" id="nuevo-nombre" placeholder="Ej: María González">
+    </div>
+    <div class="field">
+      <label for="nuevo-email">Email *</label>
+      <input type="email" id="nuevo-email" placeholder="maria@ejemplo.com">
+    </div>
+    <div class="field">
+      <label for="nuevo-tel">Teléfono</label>
+      <input type="tel" id="nuevo-tel" placeholder="+56 9 1234 5678">
+    </div>
+    <div class="field">
+      <label for="nuevo-area">Área principal</label>
+      <input type="text" id="nuevo-area" placeholder="Ej: Ansiedad, depresión...">
+    </div>
+    <div class="field">
+      <label for="nuevo-estado-modal">Estado inicial</label>
+      <select id="nuevo-estado-modal">
+        <option value="formulario">Formulario recibido</option>
+        <option value="sesion_coordinada">Sesión de arquitectura coordinada</option>
+        <option value="en_diseno">En diseño de match</option>
+        <option value="match_propuesto">Match propuesto al paciente</option>
+        <option value="devolucion_coordinada">Sesión de devolución coordinada</option>
+        <option value="activo">Activo en terapia</option>
+      </select>
+    </div>
+    <p class="panel-feedback" id="modal-feedback"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button type="button" class="panel-save-btn" id="modal-save-btn" onclick="guardarNuevoPaciente()">Crear paciente</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -293,34 +623,30 @@
 // ================================================================
 // STATE
 // ================================================================
-let currentUser = null;
-let pacientesList = [];
+const PANEL_PASSWORD = 'psync2026';
+const SESSION_KEY    = 'psync_panel_auth';
+
+let pacientesList  = [];
 let psicologosList = [];
 let currentPaciente = null;
 let matchesActuales = [];
+let currentSesion   = null;
 let filtroActivo = 'todos';
+let searchQuery = '';
+let postulacionesList = [];
+let sesionesEntrevista = [];
+let psicologosTab = 'red';
+let currentPostulacion = null;
 
 // ================================================================
 // INIT
 // ================================================================
 async function init() {
-  const { data: { session } } = await psyncDB.auth.getSession();
-  if (session) {
-    currentUser = session.user;
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
     await activarPanel();
   } else {
     mostrarLogin();
   }
-
-  psyncDB.auth.onAuthStateChange(async (event, session) => {
-    if (session) {
-      currentUser = session.user;
-      await activarPanel();
-    } else {
-      currentUser = null;
-      mostrarLogin();
-    }
-  });
 }
 
 // ================================================================
@@ -328,27 +654,25 @@ async function init() {
 // ================================================================
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
-  const errorEl = document.getElementById('login-error');
-  const btn = document.getElementById('login-btn');
+  const errorEl  = document.getElementById('login-error');
+  const btn      = document.getElementById('login-btn');
 
-  errorEl.textContent = '';
-  btn.disabled = true;
-  btn.textContent = 'Ingresando...';
-
-  const { error } = await psyncDB.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    errorEl.textContent = 'Credenciales incorrectas. Verifica tu email y contraseña.';
+  if (password === PANEL_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    btn.textContent = 'Ingresando...';
+    await activarPanel();
+  } else {
+    errorEl.textContent = 'Contraseña incorrecta.';
     btn.disabled = false;
-    btn.textContent = 'Ingresar';
   }
-  // Éxito: onAuthStateChange activa el panel
 });
 
-async function handleLogout() {
-  await psyncDB.auth.signOut();
+function handleLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  mostrarLogin();
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').textContent = '';
 }
 
 // ================================================================
@@ -362,13 +686,24 @@ function mostrarLogin() {
 async function activarPanel() {
   document.getElementById('login-screen').hidden = true;
   document.getElementById('panel-shell').hidden = false;
-  document.getElementById('sidebar-email').textContent = currentUser.email;
+  document.getElementById('sidebar-email').textContent = 'contacto@psync.cl';
+  navigateTo('inicio');
   await Promise.all([cargarPacientes(), cargarPsicologos()]);
 }
 
 function navigateTo(vista) {
   document.querySelectorAll('.panel-view').forEach(v => { v.hidden = true; });
   document.getElementById('view-' + vista).hidden = false;
+  document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById('nav-' + vista);
+  if (navBtn) navBtn.classList.add('active');
+  if (vista === 'inicio') renderDashboard();
+  if (vista === 'lista') { renderEstadisticas(); renderListaPacientes(); }
+  if (vista === 'agenda') cargarAgenda();
+  if (vista === 'psicologos') cargarPsicologosView();
+  if (vista === 'gastos') { initGastos(); renderGastos(); }
+  const main = document.querySelector('.panel-main');
+  if (main) main.scrollTop = 0;
 }
 
 function volverALista() {
@@ -396,12 +731,13 @@ async function cargarPacientes() {
   pacientesList = data || [];
   renderEstadisticas();
   renderListaPacientes();
+  renderDashboard();
 }
 
 async function cargarPsicologos() {
   const { data, error } = await psyncDB
     .from('psicologos')
-    .select('id, nombre, enfoque, especializacion, precio_primera, precio_normal, modalidad, calidez, estado')
+    .select('id, nombre, email, enfoque, especializacion, precio_primera, precio_normal, modalidad, calidez, estado, cnip_enviado, cnip_completado')
     .order('nombre');
 
   if (error) {
@@ -439,16 +775,23 @@ function setFiltro(btn) {
 }
 
 function renderListaPacientes() {
-  const filtrados = filtroActivo === 'todos'
+  let filtrados = filtroActivo === 'todos'
     ? pacientesList
     : filtroActivo === 'riesgo'
       ? pacientesList.filter(p => p.riesgo === 'alto' || p.riesgo === 'medio')
       : pacientesList.filter(p => p.estado === filtroActivo);
 
+  if (searchQuery) {
+    filtrados = filtrados.filter(p =>
+      (p.nombre || '').toLowerCase().includes(searchQuery) ||
+      (p.email  || '').toLowerCase().includes(searchQuery)
+    );
+  }
+
   const tbody = document.getElementById('pacientes-tbody');
 
   if (filtrados.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="panel-table-empty">Sin resultados para este filtro.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="panel-table-empty">Sin resultados.</td></tr>';
     return;
   }
 
@@ -457,7 +800,7 @@ function renderListaPacientes() {
       day: '2-digit', month: '2-digit', year: '2-digit'
     });
     return `<tr onclick="abrirDetalle('${esc(p.id)}')">
-      <td class="td-nombre">${esc(p.nombre)}</td>
+      <td><div class="patient-row-name"><div class="avatar-circle">${iniciales(p.nombre)}</div><span class="td-nombre">${esc(p.nombre)}</span></div></td>
       <td class="td-mono">${esc(p.email || '—')}</td>
       <td>${esc(p.area || '—')}</td>
       <td>${badgeEstado(p.estado)}</td>
@@ -467,6 +810,11 @@ function renderListaPacientes() {
   }).join('');
 }
 
+function buscarPacientes(query) {
+  searchQuery = query.toLowerCase();
+  renderListaPacientes();
+}
+
 // ================================================================
 // PATIENT DETAIL
 // ================================================================
@@ -474,17 +822,18 @@ async function abrirDetalle(id) {
   currentPaciente = pacientesList.find(p => p.id === id) || null;
   if (!currentPaciente) return;
 
-  const { data: matches } = await psyncDB
-    .from('matches')
-    .select('*, psicologos(id, nombre, enfoque)')
-    .eq('paciente_id', id)
-    .order('ranking');
+  const [{ data: matches }, { data: sesiones }] = await Promise.all([
+    psyncDB.from('matches').select('*, psicologos(id, nombre, enfoque)').eq('paciente_id', id).order('ranking'),
+    psyncDB.from('sesiones').select('*').eq('tipo', 'arquitectura')
+      .or(`paciente_id.eq.${id}${currentPaciente.email ? ',email.eq.' + currentPaciente.email : ''}`)
+      .order('created_at', { ascending: false }).limit(1),
+  ]);
 
   matchesActuales = matches || [];
+  currentSesion   = (sesiones && sesiones[0]) || null;
 
   renderDetalle();
   navigateTo('detalle');
-  window.scrollTo({ top: 0 });
 }
 
 function renderDetalle() {
@@ -493,17 +842,17 @@ function renderDetalle() {
   // Header
   document.getElementById('detalle-nombre').textContent = p.nombre;
   document.getElementById('detalle-sub').textContent = p.email || '';
-  document.getElementById('detalle-badges').innerHTML = badgeEstado(p.estado) + ' ' + badgeRiesgo(p.riesgo);
+  document.getElementById('detalle-badges').innerHTML = badgeEstado(p.estado) + ' ' + badgeRiesgo(p.riesgo) + ' ' + badgeCnip(p.cnip_completado);
 
   // Riesgo alert
   const alertEl = document.getElementById('detalle-riesgo-alert');
   const msgEl = document.getElementById('detalle-riesgo-msg');
   if (p.riesgo === 'alto') {
     alertEl.hidden = false;
-    msgEl.textContent = 'Reportó pensamientos de daño con frecuencia o intensidad. Priorizar contacto inmediato.';
+    msgEl.textContent = 'Nivel de riesgo alto. Priorizar contacto y coordinación inmediata.';
   } else if (p.riesgo === 'medio') {
     alertEl.hidden = false;
-    msgEl.textContent = 'Reportó pensamientos de daño ocasionales. Tener en cuenta al coordinar la sesión.';
+    msgEl.textContent = 'Nivel de riesgo medio. Tener en cuenta al coordinar la sesión de arquitectura.';
   } else {
     alertEl.hidden = true;
   }
@@ -535,17 +884,28 @@ function renderDetalle() {
   setText('d-horario',    p.horario    || '—');
   setText('d-presupuesto', p.presupuesto ? '$' + Number(p.presupuesto).toLocaleString('es-CL') : '—');
 
-  // Estado
-  document.getElementById('estado-select').value = p.estado || 'formulario';
+  // Estado — pipeline visual
+  renderEstadoPipeline();
   document.getElementById('estado-feedback').textContent = '';
 
   // Notas
   document.getElementById('notas-textarea').value = p.notas_vinculacion || '';
   document.getElementById('notas-feedback').textContent = '';
 
+  // Archivos
+  document.getElementById('archivo-list').innerHTML = '';
+  document.getElementById('upload-status').textContent = '';
+  cargarArchivos();
+
+  // Sesión de Arquitectura
+  renderSesionDetalle();
+
   // Matches
   renderMatchesExistentes();
   renderMatchForm();
+
+  // C-NIP
+  renderCnipStatus();
 }
 
 // ================================================================
@@ -658,7 +1018,7 @@ async function guardarMatch() {
       // Auto-avanzar estado si sigue en 'formulario'
       if (currentPaciente.estado === 'formulario') {
         await _actualizarEstado('en_diseno');
-        document.getElementById('estado-select').value = 'en_diseno';
+        renderEstadoPipeline();
       }
     }
 
@@ -688,15 +1048,33 @@ async function guardarMatch() {
 }
 
 // ================================================================
-// ESTADO
+// ESTADO — PIPELINE VISUAL
 // ================================================================
-async function guardarEstado() {
-  const nuevoEstado = document.getElementById('estado-select').value;
+const PIPELINE_ETAPAS = [
+  { key: 'formulario',            label: 'Formulario' },
+  { key: 'sesion_coordinada',     label: 'Sesión coordinada' },
+  { key: 'en_diseno',             label: 'En diseño' },
+  { key: 'match_propuesto',       label: 'Match propuesto' },
+  { key: 'devolucion_coordinada', label: 'Devolución' },
+  { key: 'activo',                label: 'Activo' },
+  { key: 'cerrado',               label: 'Cerrado' },
+];
+
+function renderEstadoPipeline() {
+  const current = currentPaciente ? currentPaciente.estado : 'formulario';
+  const container = document.getElementById('estado-pipeline');
+  container.innerHTML = PIPELINE_ETAPAS.map(e =>
+    `<button class="estado-step${e.key === current ? ' active' : ''}" onclick="cambiarEstadoDesdePanel('${e.key}')">${e.label}</button>`
+  ).join('');
+}
+
+async function cambiarEstadoDesdePanel(nuevoEstado) {
   const feedback = document.getElementById('estado-feedback');
   feedback.textContent = '';
   feedback.className = 'panel-feedback';
 
   const ok = await _actualizarEstado(nuevoEstado);
+  renderEstadoPipeline();
   if (ok) {
     feedback.textContent = '✓ Estado actualizado.';
     feedback.className = 'panel-feedback ok';
@@ -718,8 +1096,96 @@ async function _actualizarEstado(nuevoEstado) {
   const idx = pacientesList.findIndex(p => p.id === currentPaciente.id);
   if (idx >= 0) pacientesList[idx].estado = nuevoEstado;
   document.getElementById('detalle-badges').innerHTML =
-    badgeEstado(nuevoEstado) + ' ' + badgeRiesgo(currentPaciente.riesgo);
+    badgeEstado(nuevoEstado) + ' ' + badgeRiesgo(currentPaciente.riesgo) + ' ' + badgeCnip(currentPaciente.cnip_completado);
   return true;
+}
+
+// ================================================================
+// SESIÓN DE ARQUITECTURA — detalle paciente
+// ================================================================
+function renderSesionDetalle() {
+  const card    = document.getElementById('card-sesion');
+  const content = document.getElementById('sesion-content');
+  if (!card || !content) return;
+
+  if (!currentSesion) {
+    card.hidden = true;
+    return;
+  }
+
+  card.hidden = false;
+  const s = currentSesion;
+
+  const fechaStr = s.fecha
+    ? new Date(s.fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : '—';
+  const horaStr = s.hora_inicio ? s.hora_inicio.slice(0, 5) + ' hrs' : '—';
+  const estadoBadge = s.estado === 'confirmada'
+    ? '<span class="badge badge--activo">Confirmada</span>'
+    : '<span class="badge badge--formulario">Pendiente</span>';
+
+  const meetHtml = s.meet_link
+    ? `<a href="${esc(s.meet_link)}" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;
+                text-decoration:none;padding:8px 18px;border-radius:999px;font-size:0.85rem;font-weight:600;margin-top:4px;">
+         🎥 Entrar a videollamada
+       </a>`
+    : `<span style="font-size:0.85rem;color:var(--ink-soft);">Sin link de videollamada</span>`;
+
+  content.innerHTML = `
+    <div class="field-grid">
+      <div class="field-group">
+        <span class="field-lbl">Fecha</span>
+        <span class="field-val">${fechaStr}</span>
+      </div>
+      <div class="field-group">
+        <span class="field-lbl">Hora</span>
+        <span class="field-val">${horaStr}</span>
+      </div>
+      <div class="field-group">
+        <span class="field-lbl">Estado</span>
+        <span class="field-val">${estadoBadge}</span>
+      </div>
+      <div class="field-group">
+        <span class="field-lbl">Videollamada</span>
+        ${meetHtml}
+      </div>
+    </div>`;
+}
+
+// ================================================================
+// C-NIP
+// ================================================================
+function renderCnipStatus() {
+  const ok    = currentPaciente && currentPaciente.cnip_completado;
+  const badge = document.getElementById('cnip-panel-badge');
+  const btn   = document.getElementById('cnip-toggle-btn');
+  if (badge) badge.innerHTML = ok
+    ? '<span class="badge badge--cnip-ok">Completado</span>'
+    : '<span class="badge badge--cnip-pendiente">Pendiente</span>';
+  if (btn) btn.textContent = ok ? 'Marcar pendiente' : 'Marcar completado';
+}
+
+async function toggleCnip() {
+  if (!currentPaciente) return;
+  const nuevoValor = !currentPaciente.cnip_completado;
+  const btn = document.getElementById('cnip-toggle-btn');
+  btn.disabled = true;
+
+  const { error } = await psyncDB
+    .from('pacientes')
+    .update({ cnip_completado: nuevoValor })
+    .eq('id', currentPaciente.id);
+
+  btn.disabled = false;
+  if (error) { console.error(error); return; }
+
+  currentPaciente.cnip_completado = nuevoValor;
+  const idx = pacientesList.findIndex(p => p.id === currentPaciente.id);
+  if (idx >= 0) pacientesList[idx].cnip_completado = nuevoValor;
+  renderCnipStatus();
+  document.getElementById('detalle-badges').innerHTML =
+    badgeEstado(currentPaciente.estado) + ' ' + badgeRiesgo(currentPaciente.riesgo) + ' ' + badgeCnip(nuevoValor);
 }
 
 // ================================================================
@@ -800,6 +1266,12 @@ function badgeRiesgo(riesgo) {
   return `<span class="badge ${cls}">${label}</span>`;
 }
 
+function badgeCnip(completado) {
+  return completado
+    ? '<span class="badge badge--cnip-ok">C-NIP ✓</span>'
+    : '<span class="badge badge--cnip-pendiente">C-NIP pendiente</span>';
+}
+
 function badgeMatchEstado(estado) {
   const map = {
     propuesto: { label: 'Propuesto', cls: 'badge--match-propuesto' },
@@ -824,6 +1296,687 @@ const ESTILO_MAP = {
   cognitivo_conductual: 'Cognitivo-conductual', psicodinamico: 'Psicodinámico',
   humanista: 'Humanista', sistemico: 'Sistémico', sin_preferencia: 'Sin preferencia',
 };
+
+// ================================================================
+// HELPERS — AVATAR
+// ================================================================
+function iniciales(nombre) {
+  if (!nombre) return '?';
+  const parts = nombre.trim().split(/\s+/);
+  return parts.length >= 2
+    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    : parts[0][0].toUpperCase();
+}
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+function renderDashboard() {
+  const ETAPAS = [
+    { key: 'formulario',            label: 'Formulario',      num: '01' },
+    { key: 'sesion_coordinada',     label: 'Sesión coord.',   num: '02' },
+    { key: 'en_diseno',             label: 'En diseño',       num: '03' },
+    { key: 'match_propuesto',       label: 'Match propuesto', num: '04' },
+    { key: 'devolucion_coordinada', label: 'Devolución',      num: '05' },
+    { key: 'activo',                label: 'Activos',         num: '06' },
+  ];
+
+  document.getElementById('funnel-row').innerHTML = ETAPAS.map(e => {
+    const count = pacientesList.filter(p => p.estado === e.key).length;
+    return `<div class="funnel-card" onclick="irAListaConFiltro('${e.key}')">
+      <span class="funnel-num">${e.num}</span>
+      <span class="funnel-count">${count}</span>
+      <span class="funnel-label">${e.label}</span>
+    </div>`;
+  }).join('');
+
+  const alertas = pacientesList.filter(p => p.riesgo === 'alto');
+  const alertasEl = document.getElementById('dash-alertas');
+  if (alertas.length === 0) {
+    alertasEl.innerHTML = '<p class="dash-empty">Sin alertas de riesgo alto.</p>';
+  } else {
+    alertasEl.innerHTML = '<div class="dash-alert-list">' + alertas.map(p => `
+      <div class="dash-alert-item" onclick="abrirDetalle('${esc(p.id)}')">
+        <div class="avatar-circle avatar-sm">${iniciales(p.nombre)}</div>
+        <div class="dash-alert-info">
+          <span class="dash-alert-name">${esc(p.nombre)}</span>
+          <span class="dash-alert-detail">${p.area || '—'}</span>
+        </div>
+        ${badgeEstado(p.estado)}
+        <span class="dash-alert-tag">Riesgo alto</span>
+      </div>
+    `).join('') + '</div>';
+  }
+
+  const recientes = pacientesList.slice(0, 5);
+  document.getElementById('dash-recientes').innerHTML =
+    '<div class="dash-recent-list">' + recientes.map(p => {
+      const fecha = new Date(p.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: '2-digit' });
+      return `<div class="dash-recent-item" onclick="abrirDetalle('${esc(p.id)}')">
+        <div class="avatar-circle avatar-sm">${iniciales(p.nombre)}</div>
+        <div class="dash-recent-info">
+          <span class="dash-recent-name">${esc(p.nombre)}</span>
+          <span class="dash-recent-meta">${esc(p.area || '—')} · ${fecha}</span>
+        </div>
+        ${badgeEstado(p.estado)}
+      </div>`;
+    }).join('') + '</div>';
+}
+
+function irAListaConFiltro(filtro) {
+  filtroActivo = filtro;
+  navigateTo('lista');
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filtro === filtro);
+  });
+  renderListaPacientes();
+}
+
+// ================================================================
+// MODAL — NUEVO PACIENTE
+// ================================================================
+function mostrarModalPaciente() {
+  document.getElementById('nuevo-nombre').value = '';
+  document.getElementById('nuevo-email').value = '';
+  document.getElementById('nuevo-tel').value = '';
+  document.getElementById('nuevo-area').value = '';
+  document.getElementById('nuevo-estado-modal').value = 'formulario';
+  document.getElementById('modal-feedback').textContent = '';
+  document.getElementById('modal-save-btn').disabled = false;
+  document.getElementById('modal-nuevo-paciente').hidden = false;
+}
+
+function cerrarModal() {
+  document.getElementById('modal-nuevo-paciente').hidden = true;
+}
+
+async function guardarNuevoPaciente() {
+  const nombre = document.getElementById('nuevo-nombre').value.trim();
+  const email  = document.getElementById('nuevo-email').value.trim();
+  const tel    = document.getElementById('nuevo-tel').value.trim();
+  const area   = document.getElementById('nuevo-area').value.trim();
+  const estado = document.getElementById('nuevo-estado-modal').value;
+  const fb     = document.getElementById('modal-feedback');
+  const btn    = document.getElementById('modal-save-btn');
+
+  if (!nombre || !email) {
+    fb.textContent = 'Nombre y email son obligatorios.';
+    fb.className = 'panel-feedback err';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  fb.textContent = '';
+  fb.className = 'panel-feedback';
+
+  const { data, error } = await psyncDB
+    .from('pacientes')
+    .insert({ nombre, email, telefono: tel || null, area: area || null, estado, riesgo: 'no' })
+    .select()
+    .single();
+
+  btn.disabled = false;
+  btn.textContent = 'Crear paciente';
+
+  if (error) {
+    fb.textContent = 'Error: ' + error.message;
+    fb.className = 'panel-feedback err';
+    return;
+  }
+
+  pacientesList.unshift(data);
+  renderEstadisticas();
+  cerrarModal();
+  abrirDetalle(data.id);
+}
+
+// ================================================================
+// ARCHIVOS — SUPABASE STORAGE
+// ================================================================
+const STORAGE_BUCKET = 'pacientes-docs';
+
+async function cargarArchivos() {
+  if (!currentPaciente) return;
+  const { data, error } = await psyncDB.storage
+    .from(STORAGE_BUCKET)
+    .list(currentPaciente.id, { sortBy: { column: 'created_at', order: 'desc' } });
+
+  if (error) {
+    document.getElementById('upload-status').textContent = 'Error al cargar archivos.';
+    return;
+  }
+  renderArchivos(data || []);
+}
+
+function renderArchivos(archivos) {
+  const list = document.getElementById('archivo-list');
+  if (archivos.length === 0) {
+    list.innerHTML = '';
+    return;
+  }
+  list.innerHTML = archivos.map(a => {
+    const path = currentPaciente.id + '/' + a.name;
+    const { data: urlData } = psyncDB.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+    const displayName = a.name.replace(/^\d+_/, '');
+    return `<div class="archivo-item">
+      <span class="archivo-nombre">${esc(displayName)}</span>
+      <a href="${urlData.publicUrl}" target="_blank" rel="noopener" class="archivo-link">Abrir</a>
+      <button class="archivo-del" onclick="eliminarArchivo('${esc(path)}', this)" title="Eliminar">✕</button>
+    </div>`;
+  }).join('');
+}
+
+async function eliminarArchivo(path, btn) {
+  if (!confirm('¿Eliminar este archivo?')) return;
+  btn.disabled = true;
+  const { error } = await psyncDB.storage.from(STORAGE_BUCKET).remove([path]);
+  if (error) { alert('Error al eliminar: ' + error.message); btn.disabled = false; return; }
+  await cargarArchivos();
+}
+
+async function subirArchivos(files) {
+  const status = document.getElementById('upload-status');
+  if (!files || files.length === 0) return;
+
+  const total = files.length;
+  let done = 0;
+
+  for (const file of files) {
+    const path = `${currentPaciente.id}/${Date.now()}_${file.name}`;
+    status.textContent = `Subiendo ${file.name}...`;
+
+    const { error } = await psyncDB.storage.from(STORAGE_BUCKET).upload(path, file);
+    if (error) {
+      status.textContent = 'Error: ' + error.message;
+      return;
+    }
+    done++;
+    status.textContent = `${done}/${total} subido${done > 1 ? 's' : ''}`;
+  }
+
+  status.textContent = `✓ ${done} archivo${done > 1 ? 's' : ''} subido${done > 1 ? 's' : ''}.`;
+  document.getElementById('file-input').value = '';
+  await cargarArchivos();
+}
+
+function handleFileSelect(event) {
+  subirArchivos(event.target.files);
+}
+
+function handleDragOver(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.add('dragover');
+}
+
+function handleDragLeave(event) {
+  document.getElementById('upload-zone').classList.remove('dragover');
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  subirArchivos(event.dataTransfer.files);
+}
+
+// ================================================================
+// AGENDA
+// ================================================================
+async function cargarAgenda() {
+  document.getElementById('agenda-arquitectura').innerHTML = '<p class="dash-empty">Cargando...</p>';
+  document.getElementById('agenda-entrevistas').innerHTML  = '<p class="dash-empty">Cargando...</p>';
+
+  const { data, error } = await psyncDB
+    .from('sesiones')
+    .select('*')
+    .order('fecha', { ascending: true })
+    .order('hora_inicio', { ascending: true });
+
+  if (error) {
+    document.getElementById('agenda-arquitectura').innerHTML = '<p class="dash-empty">Error al cargar.</p>';
+    document.getElementById('agenda-entrevistas').innerHTML  = '<p class="dash-empty">Error al cargar.</p>';
+    return;
+  }
+
+  const sesiones = data || [];
+  const arquitectura = sesiones.filter(s => s.tipo === 'arquitectura');
+  const entrevistas  = sesiones.filter(s => s.tipo === 'entrevista');
+
+  document.getElementById('agenda-arquitectura').innerHTML =
+    arquitectura.length === 0
+      ? '<p class="dash-empty">Sin sesiones agendadas.</p>'
+      : '<div class="agenda-list">' + arquitectura.map(renderSesionRow).join('') + '</div>';
+
+  document.getElementById('agenda-entrevistas').innerHTML =
+    entrevistas.length === 0
+      ? '<p class="dash-empty">Sin entrevistas agendadas aún.</p>'
+      : '<div class="agenda-list">' + entrevistas.map(s => renderSesionRow(s, true)).join('') + '</div>';
+}
+
+function renderSesionRow(s, esPsicologo = false) {
+  const fechaStr = s.fecha
+    ? new Date(s.fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday:'short', day:'2-digit', month:'short', year:'numeric' })
+    : '—';
+  const horaStr = s.hora_inicio ? s.hora_inicio.slice(0, 5) + ' hrs' : '—';
+  const estadoBadge = s.estado === 'pendiente'
+    ? '<span class="badge badge--formulario">Pendiente</span>'
+    : s.estado === 'confirmada'
+      ? '<span class="badge badge--activo">Confirmada</span>'
+      : '<span class="badge badge--cerrado">Cancelada</span>';
+
+  return `<div class="agenda-row">
+    <div class="agenda-row-info">
+      <span class="agenda-nombre">${esc(s.nombre || '—')}</span>
+      <span class="agenda-meta">${esc(s.email || '—')}</span>
+    </div>
+    <div class="agenda-row-fecha">
+      <span class="agenda-fecha">${fechaStr}</span>
+      <span class="agenda-hora">${horaStr}</span>
+    </div>
+    <div class="agenda-row-right">
+      ${estadoBadge}
+      ${s.meet_link ? `<a href="${esc(s.meet_link)}" target="_blank" rel="noopener" class="agenda-meet-link">Meet</a>` : ''}
+    </div>
+  </div>`;
+}
+
+// ================================================================
+// MODAL ENTREVISTA PSICÓLOGO
+// ================================================================
+function mostrarModalEntrevista() {
+  document.getElementById('entrevista-nombre').value = '';
+  document.getElementById('entrevista-email').value  = '';
+  document.getElementById('entrevista-feedback').textContent = '';
+  document.getElementById('entrevista-link-box').hidden = true;
+  document.getElementById('entrevista-gen-btn').disabled = false;
+  document.getElementById('entrevista-gen-btn').textContent = 'Generar link';
+  document.getElementById('modal-entrevista').hidden = false;
+}
+
+function cerrarModalEntrevista() {
+  document.getElementById('modal-entrevista').hidden = true;
+  cargarAgenda();
+}
+
+async function generarLinkEntrevista() {
+  const nombre   = document.getElementById('entrevista-nombre').value.trim() || null;
+  const email    = document.getElementById('entrevista-email').value.trim()  || null;
+  const btn      = document.getElementById('entrevista-gen-btn');
+  const feedback = document.getElementById('entrevista-feedback');
+
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  feedback.textContent = '';
+
+  try {
+    const token = crypto.randomUUID();
+    const { error } = await psyncDB.from('sesiones').insert({
+      tipo: 'entrevista',
+      nombre,
+      email,
+      estado: 'pendiente',
+      token,
+    });
+    if (error) throw error;
+
+    const link = `${window.location.origin}/entrevista.html?token=${token}`;
+    document.getElementById('entrevista-link-input').value = link;
+    document.getElementById('entrevista-link-box').hidden = false;
+    feedback.textContent = '✓ Link generado. Cópialo y envíalo al/la psicólogo/a.';
+    feedback.className = 'panel-feedback ok';
+  } catch (err) {
+    feedback.textContent = 'Error: ' + (err.message || 'error desconocido');
+    feedback.className = 'panel-feedback err';
+    btn.disabled = false;
+    btn.textContent = 'Generar link';
+  }
+}
+
+function copiarLinkEntrevista() {
+  const input = document.getElementById('entrevista-link-input');
+  navigator.clipboard.writeText(input.value).then(() => {
+    const fb = document.getElementById('entrevista-feedback');
+    fb.textContent = '✓ Link copiado al portapapeles.';
+    fb.className = 'panel-feedback ok';
+  });
+}
+
+// ================================================================
+// PSICÓLOGOS / POSTULACIONES
+// ================================================================
+async function cargarPsicologosView() {
+  document.getElementById('psico-content').innerHTML = '<p class="dash-empty">Cargando...</p>';
+
+  const [, postRes, sesRes] = await Promise.all([
+    cargarPsicologos(),
+    psyncDB.from('postulaciones_psicologos').select('*').order('created_at', { ascending: false }),
+    psyncDB.from('sesiones').select('*').eq('tipo', 'entrevista').order('fecha', { ascending: true }),
+  ]);
+
+  postulacionesList = postRes.data || [];
+  sesionesEntrevista = sesRes.data || [];
+
+  renderTabPsicologos();
+}
+
+function setTabPsicologos(tab, btn) {
+  psicologosTab = tab;
+  document.querySelectorAll('#view-psicologos .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTabPsicologos();
+}
+
+function renderTabPsicologos() {
+  if (psicologosTab === 'red') renderRedPsicologos();
+  else renderPostulaciones();
+}
+
+function renderRedPsicologos() {
+  const container = document.getElementById('psico-content');
+  if (psicologosList.length === 0) {
+    container.innerHTML = '<div style="padding:24px"><p class="dash-empty">Sin psicólogos/as en la red aún. Las postulaciones aceptadas aparecerán aquí.</p></div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="psico-grid">' + psicologosList.map(p => {
+    const entrevista = p.email
+      ? sesionesEntrevista.find(s => s.email === p.email && s.estado !== 'cancelada')
+      : null;
+    let entrevistaHtml = '';
+    if (entrevista && entrevista.fecha) {
+      const fechaStr = new Date(entrevista.fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday:'short', day:'2-digit', month:'short' });
+      const horaStr = entrevista.hora_inicio ? entrevista.hora_inicio.slice(0,5) + ' hrs' : '';
+      entrevistaHtml = `<span class="psico-entrevista">Entrevista: ${fechaStr} ${horaStr}</span>`;
+    }
+    const cnipBadge = p.cnip_completado
+      ? `<span class="badge badge--cnip-ok" style="cursor:pointer;" onclick="toggleCnipPsicologo('${p.id}', true)" title="Marcar como pendiente">C-NIP completado ✓</span>`
+      : `<span class="badge badge--cnip-pendiente" style="cursor:pointer;" onclick="toggleCnipPsicologo('${p.id}', false)" title="Marcar como completado">C-NIP pendiente</span>`;
+    const cnipBtn = p.cnip_enviado
+      ? `<button class="psico-cnip-btn psico-cnip-btn--sent" onclick="enviarCnipPsicologo('${p.id}', '${esc(p.nombre || '')}', '${esc(p.email || '')}', this)">Reenviar C-NIP</button>`
+      : `<button class="psico-cnip-btn" onclick="enviarCnipPsicologo('${p.id}', '${esc(p.nombre || '')}', '${esc(p.email || '')}', this)">Enviar C-NIP</button>`;
+    return `<div class="psico-card">
+      <div class="avatar-circle">${iniciales(p.nombre)}</div>
+      <div class="psico-info">
+        <div class="psico-nombre">${esc(p.nombre)}</div>
+        ${p.enfoque ? `<div class="psico-meta">${esc(p.enfoque)}</div>` : ''}
+        ${p.modalidad ? `<div class="psico-meta">${esc(p.modalidad)}</div>` : ''}
+        ${p.precio_primera ? `<div class="psico-meta">$${Number(p.precio_primera).toLocaleString('es-CL')} primera sesión</div>` : ''}
+        ${entrevistaHtml}
+      </div>
+      <div class="psico-actions">
+        <span class="badge ${p.estado === 'activo' ? 'badge--activo' : 'badge--formulario'}">${esc(p.estado || '—')}</span>
+        <button class="panel-save-btn" style="font-size:0.78rem; padding:6px 14px;" onclick="abrirModalEntrevistaParaPsico('${esc(p.nombre || '')}','${esc(p.email || '')}')">Generar link entrevista</button>
+        <div class="psico-cnip-row">
+          ${cnipBadge}
+          ${p.email ? cnipBtn : '<span style="font-size:0.75rem;color:var(--ink-soft);">Sin email</span>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+async function enviarCnipPsicologo(id, nombre, email, btn) {
+  if (!email) return;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  try {
+    const res  = await fetch('/.netlify/functions/send-cnip-psicologo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ psicologo_id: id, nombre, email }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Error');
+    btn.textContent = 'Enviado ✓';
+    btn.classList.add('psico-cnip-btn--sent');
+    const p = psicologosList.find(x => x.id === id);
+    if (p) p.cnip_enviado = true;
+  } catch (e) {
+    btn.textContent = 'Error — reintentar';
+    btn.disabled = false;
+    console.error(e);
+  }
+}
+
+async function toggleCnipPsicologo(id, completadoActual) {
+  const nuevoValor = !completadoActual;
+  const { error } = await psyncDB.from('psicologos').update({ cnip_completado: nuevoValor }).eq('id', id);
+  if (error) { console.error(error); return; }
+  const p = psicologosList.find(x => x.id === id);
+  if (p) p.cnip_completado = nuevoValor;
+  renderRedPsicologos();
+}
+
+function renderPostulaciones() {
+  const container = document.getElementById('psico-content');
+  if (postulacionesList.length === 0) {
+    container.innerHTML = '<div style="padding:24px"><p class="dash-empty">Sin postulaciones recibidas aún.</p></div>';
+    return;
+  }
+
+  const ESTADO_LABEL = { nueva: 'Nueva', en_revision: 'En revisión', entrevista_coordinada: 'Entrevista coordinada', aprobado: 'Aprobado/a', no_aprobado: 'No aprobado/a' };
+  const ESTADO_CLS   = { nueva: 'badge--formulario', en_revision: 'badge--sesion_coordinada', entrevista_coordinada: 'badge--match_propuesto', aprobado: 'badge--activo', no_aprobado: 'badge--cerrado' };
+
+  container.innerHTML = '<div class="psico-grid">' + postulacionesList.map(p => {
+    const fecha = new Date(p.created_at).toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit', year:'2-digit' });
+    const entrevista = p.email
+      ? sesionesEntrevista.find(s => s.email === p.email && s.estado !== 'cancelada')
+      : null;
+    let entrevistaHtml = '';
+    if (entrevista && entrevista.fecha) {
+      const fechaStr = new Date(entrevista.fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday:'short', day:'2-digit', month:'short' });
+      const horaStr = entrevista.hora_inicio ? entrevista.hora_inicio.slice(0,5) + ' hrs' : '';
+      entrevistaHtml = `<span class="psico-entrevista">Entrevista: ${fechaStr} ${horaStr}</span>`;
+    }
+    const mailEstado = p.email_confirmacion_enviado
+      ? `<span class="psico-mail-status psico-mail-status--ok">✓ Mail enviado ${p.email_confirmacion_fecha ? new Date(p.email_confirmacion_fecha).toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit', year:'2-digit' }) : ''}</span>`
+      : `<span class="psico-mail-status psico-mail-status--pendiente">Mail pendiente</span>`;
+    return `<div class="psico-card psico-card--clickable" onclick="verDetallePostulacion('${esc(p.id)}')">
+      <div class="avatar-circle">${iniciales(p.nombre)}</div>
+      <div class="psico-info">
+        <div class="psico-nombre">${esc(p.nombre || '—')}</div>
+        ${p.enfoque ? `<div class="psico-meta">${esc(p.enfoque)}</div>` : ''}
+        <div class="psico-meta">${esc(p.email || '—')}${p.ciudad ? ' · ' + esc(p.ciudad) : ''}</div>
+        ${entrevistaHtml}
+      </div>
+      <div class="psico-actions">
+        <span class="badge ${ESTADO_CLS[p.estado] || 'badge--formulario'}">${ESTADO_LABEL[p.estado] || p.estado}</span>
+        <span class="mono" style="font-size:0.72rem; color:var(--ink-soft);">${fecha}</span>
+        ${mailEstado}
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function verDetallePostulacion(id) {
+  currentPostulacion = postulacionesList.find(p => p.id === id);
+  if (!currentPostulacion) return;
+  const p = currentPostulacion;
+
+  document.getElementById('post-modal-nombre').textContent = p.nombre || '—';
+  const set = (elId, val) => { const el = document.getElementById(elId); if (el) el.textContent = val || '—'; };
+  set('pm-email',  p.email);
+  set('pm-tel',    p.telefono);
+  set('pm-ciudad', p.ciudad);
+  set('pm-titulo', p.titulo);
+  set('pm-uni',    p.universidad);
+  set('pm-anio',   p.anio_titulacion);
+  set('pm-exp',    p.anios_experiencia != null ? p.anios_experiencia + ' años' : null);
+  set('pm-enfoque',         p.enfoque);
+  set('pm-especializaciones', p.especializaciones);
+  set('pm-poblaciones',     p.poblaciones);
+  set('pm-modalidad',       p.modalidad);
+  set('pm-horarios',        p.horarios);
+  set('pm-precio',          p.precio_sesion ? '$' + Number(p.precio_sesion).toLocaleString('es-CL') : null);
+  set('pm-tarifa-psync',    p.tarifa_psync === true ? 'Sí' : p.tarifa_psync === false ? 'No' : null);
+  set('pm-motivacion',      p.motivacion);
+  set('pm-como',            p.como);
+
+  const sel = document.getElementById('pm-estado');
+  if (sel) sel.value = p.estado || 'nueva';
+
+  document.getElementById('pm-feedback').textContent = '';
+  document.getElementById('pm-feedback').className = 'panel-feedback';
+  document.getElementById('modal-postulacion').hidden = false;
+}
+
+function cerrarModalPostulacion() {
+  document.getElementById('modal-postulacion').hidden = true;
+  currentPostulacion = null;
+}
+
+async function actualizarEstadoPostulacion() {
+  if (!currentPostulacion) return;
+  const nuevoEstado = document.getElementById('pm-estado').value;
+  const fb = document.getElementById('pm-feedback');
+
+  const { error } = await psyncDB
+    .from('postulaciones_psicologos')
+    .update({ estado: nuevoEstado })
+    .eq('id', currentPostulacion.id);
+
+  if (error) {
+    fb.textContent = 'Error: ' + error.message;
+    fb.className = 'panel-feedback err';
+    return;
+  }
+
+  currentPostulacion.estado = nuevoEstado;
+  const idx = postulacionesList.findIndex(p => p.id === currentPostulacion.id);
+  if (idx >= 0) postulacionesList[idx].estado = nuevoEstado;
+  fb.textContent = '✓ Estado actualizado.';
+  fb.className = 'panel-feedback ok';
+  renderPostulaciones();
+}
+
+function generarLinkDesdePostulacion() {
+  if (!currentPostulacion) return;
+  cerrarModalPostulacion();
+  abrirModalEntrevistaParaPsico(currentPostulacion.nombre, currentPostulacion.email);
+}
+
+function abrirModalEntrevistaParaPsico(nombre, email) {
+  document.getElementById('entrevista-nombre').value = nombre || '';
+  document.getElementById('entrevista-email').value  = email  || '';
+  document.getElementById('entrevista-feedback').textContent = '';
+  document.getElementById('entrevista-link-box').hidden = true;
+  document.getElementById('entrevista-gen-btn').disabled = false;
+  document.getElementById('entrevista-gen-btn').textContent = 'Generar link';
+  document.getElementById('modal-entrevista').hidden = false;
+}
+
+// ================================================================
+// GASTOS COMPARTIDOS
+// ================================================================
+const GASTOS_KEY = 'psync_gastos_v1';
+let gastosList = [];
+
+function initGastos() {
+  try { gastosList = JSON.parse(localStorage.getItem(GASTOS_KEY) || '[]'); }
+  catch { gastosList = []; }
+  const fechaInput = document.getElementById('g-fecha');
+  if (fechaInput && !fechaInput.value) {
+    fechaInput.value = new Date().toISOString().split('T')[0];
+  }
+}
+
+function saveGastos() {
+  localStorage.setItem(GASTOS_KEY, JSON.stringify(gastosList));
+}
+
+function agregarGasto(event) {
+  event.preventDefault();
+  const desc    = document.getElementById('g-desc').value.trim();
+  const monto   = parseFloat(document.getElementById('g-monto').value);
+  const fecha   = document.getElementById('g-fecha').value;
+  const quien   = document.getElementById('g-quien').value;
+  const dividir     = document.getElementById('g-dividir').checked;
+  const suscripcion = document.getElementById('g-suscripcion').checked;
+
+  if (!desc || isNaN(monto) || monto <= 0 || !fecha) return;
+
+  gastosList.unshift({ id: Date.now().toString(), desc, monto, fecha, quien, dividir, suscripcion });
+  saveGastos();
+
+  document.getElementById('g-desc').value  = '';
+  document.getElementById('g-monto').value = '';
+  document.getElementById('g-fecha').value = new Date().toISOString().split('T')[0];
+
+  renderGastos();
+}
+
+function eliminarGasto(id) {
+  if (!confirm('¿Eliminar este gasto?')) return;
+  gastosList = gastosList.filter(g => g.id !== id);
+  saveGastos();
+  renderGastos();
+}
+
+function renderGastos() {
+  renderResumenGastos();
+  renderTablaGastos();
+}
+
+function renderResumenGastos() {
+  let total = 0, pDominga = 0, pAngelita = 0, balance = 0;
+
+  gastosList.forEach(g => {
+    total += g.monto;
+    if (g.quien === 'Dominga') pDominga += g.monto;
+    else pAngelita += g.monto;
+    if (g.dividir) {
+      const mitad = g.monto / 2;
+      balance += g.quien === 'Angelita' ? mitad : -mitad;
+    }
+  });
+
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+  document.getElementById('g-total').textContent    = fmt(total);
+  document.getElementById('g-dominga').textContent  = fmt(pDominga);
+  document.getElementById('g-angelita').textContent = fmt(pAngelita);
+
+  const el = document.getElementById('g-balance');
+  if (Math.abs(balance) < 1) {
+    el.innerHTML = '<span class="gastos-balance-ok">✓ Están a mano</span>';
+  } else if (balance > 0) {
+    el.innerHTML = `<span class="gastos-balance-debe">Dominga le debe <strong>${fmt(balance)}</strong> a Angelita para quedar a mano</span>`;
+  } else {
+    el.innerHTML = `<span class="gastos-balance-debe">Angelita le debe <strong>${fmt(Math.abs(balance))}</strong> a Dominga para quedar a mano</span>`;
+  }
+}
+
+function renderTablaGastos() {
+  const tbody = document.getElementById('gastos-tbody');
+  if (gastosList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="gastos-empty">Sin gastos registrados aún.</td></tr>';
+    return;
+  }
+
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+
+  tbody.innerHTML = gastosList.map(g => {
+    const mitad     = g.monto / 2;
+    const fechaStr  = new Date(g.fecha + 'T12:00:00').toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit', year:'2-digit' });
+    const cDominga  = g.dividir ? fmt(mitad) : (g.quien === 'Dominga'  ? fmt(g.monto) : '—');
+    const cAngelita = g.dividir ? fmt(mitad) : (g.quien === 'Angelita' ? fmt(g.monto) : '—');
+
+    const tipoHtml = g.suscripcion
+      ? '<span class="gastos-tipo gastos-tipo--suscripcion">Mensual</span>'
+      : '<span class="gastos-tipo gastos-tipo--unico">Único</span>';
+
+    return `<tr>
+      <td class="gastos-td-desc">${esc(g.desc)}</td>
+      <td class="gastos-td-mono">${fmt(g.monto)}</td>
+      <td class="gastos-td-mono gastos-td-muted">${fechaStr}</td>
+      <td><span class="gastos-quien gastos-quien--${g.quien.toLowerCase()}">${esc(g.quien)}</span></td>
+      <td>${tipoHtml}</td>
+      <td class="gastos-td-mono">${g.dividir ? '<span class="gastos-split">50/50</span>' : '—'}</td>
+      <td class="gastos-td-mono">${cDominga}</td>
+      <td class="gastos-td-mono">${cAngelita}</td>
+      <td><button class="gastos-del" onclick="eliminarGasto('${esc(g.id)}')" title="Eliminar">✕</button></td>
+    </tr>`;
+  }).join('');
+}
 
 // ================================================================
 // START

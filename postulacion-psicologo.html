@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postulación Red PSYNC — Psicólogos/as</title>
+<meta name="description" content="Postula para formar parte de la red de psicólogos y psicólogas de PSYNC en Chile.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  :root {
+    --bg: #EBDFDB;
+    --surface: #FDFAF7;
+    --ink: #3D2212;
+    --ink-soft: #7A5840;
+    --accent: #4B1E23;
+    --accent-deep: #35161A;
+    --teal: #4D7A68;
+    --line: #DDD4C8;
+    --line-strong: #C8BDB0;
+    --font-display: 'Libre Caslon Text', serif;
+    --font-body: 'Libre Franklin', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <a href="index.html" class="logo" style="text-decoration:none;"><img src="logo.png" class="site-logo" alt="PSYNC"><span class="logo-wordmark">PSYNC</span></a>
+      <span class="mono" id="step-indicator">Paso 1 de 5</span>
+      <a href="terminos.html" target="_blank" class="nav-tc-link">Términos y Condiciones</a>
+    </nav>
+  </div>
+</header>
+<div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+
+<main id="formulario">
+  <div class="form-shell">
+    <div class="form-header">
+      <span class="mono eyebrow">Para profesionales</span>
+      <h1>Postula a la red PSYNC.</h1>
+      <p>Buscamos psicólogos/as con enfoque claro, experiencia específica y compromiso con la calidad. Si entras a la red, PSYNC te acerca pacientes ya preparados para iniciar un proceso contigo.</p>
+    </div>
+  </div>
+
+  <form id="psync-form" novalidate>
+
+    <!-- 01 — DATOS DE CONTACTO -->
+    <section class="form-section" data-step="1">
+      <div class="form-shell">
+        <span class="step-label">01 / 05 — Datos de contacto</span>
+        <h2>Empecemos por lo básico</h2>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+56 9 ...">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="ciudad">Ciudad o región donde ejerces</label>
+            <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Santiago, Valparaíso...">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — FORMACIÓN -->
+    <section class="form-section" data-step="2">
+      <div class="form-shell">
+        <span class="step-label">02 / 05 — Formación y experiencia</span>
+        <h2>Tu formación profesional</h2>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="titulo">Título profesional</label>
+            <input type="text" id="titulo" name="titulo" placeholder="Ej: Psicólogo/a clínico/a">
+          </div>
+          <div class="field">
+            <label for="universidad">Universidad</label>
+            <input type="text" id="universidad" name="universidad" placeholder="Ej: Universidad de Chile">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="anio_titulacion">Año de titulación</label>
+            <input type="number" id="anio_titulacion" name="anio_titulacion" min="1970" max="2026" inputmode="numeric" placeholder="Ej: 2018">
+          </div>
+          <div class="field">
+            <label for="anios_experiencia">Años de experiencia clínica</label>
+            <input type="number" id="anios_experiencia" name="anios_experiencia" min="0" max="50" inputmode="numeric" placeholder="Ej: 5">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — PRÁCTICA CLÍNICA -->
+    <section class="form-section" data-step="3">
+      <div class="form-shell">
+        <span class="step-label">03 / 05 — Tu práctica clínica</span>
+        <h2>Cómo trabajas</h2>
+        <p class="section-desc">Puedes marcar más de una opción donde corresponda.</p>
+
+        <div class="field">
+          <label>Enfoque(s) terapéutico(s)</label>
+          <div class="choice-group">
+            <label class="choice"><input type="checkbox" name="enfoque" value="tcc">Cognitivo-conductual (TCC)</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="psicodinamico">Psicodinámico</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="humanista">Humanista / centrado en la persona</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="sistemico">Sistémico</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="emdr">EMDR</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="act">ACT (Terapia de Aceptación y Compromiso)</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="mindfulness">Mindfulness</label>
+            <label class="choice"><input type="checkbox" name="enfoque" value="otro">Otro</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="especializaciones">Áreas de especialización</label>
+          <p class="hint">¿Con qué temáticas o problemáticas tienes más experiencia?</p>
+          <textarea id="especializaciones" name="especializaciones" rows="3" placeholder="Ej: ansiedad, trauma, duelo, TDAH en adultos, dificultades relacionales..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Poblaciones que atiendes</label>
+          <div class="choice-group">
+            <label class="choice"><input type="checkbox" name="poblaciones" value="adultos">Adultos</label>
+            <label class="choice"><input type="checkbox" name="poblaciones" value="adolescentes">Adolescentes</label>
+            <label class="choice"><input type="checkbox" name="poblaciones" value="ninos">Niños/as</label>
+            <label class="choice"><input type="checkbox" name="poblaciones" value="adultos_mayores">Adultos mayores</label>
+            <label class="choice"><input type="checkbox" name="poblaciones" value="parejas">Parejas</label>
+            <label class="choice"><input type="checkbox" name="poblaciones" value="familias">Familias</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — LOGÍSTICA -->
+    <section class="form-section" data-step="4">
+      <div class="form-shell">
+        <span class="step-label">04 / 05 — Logística</span>
+        <h2>Modalidad, horarios y tarifas</h2>
+
+        <div class="field">
+          <label>Modalidad de atención</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="modalidad" value="online">Online</label>
+            <label class="choice"><input type="radio" name="modalidad" value="presencial">Presencial</label>
+            <label class="choice"><input type="radio" name="modalidad" value="ambas">Ambas</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Horarios disponibles <span style="font-weight:400; color:var(--ink-soft);">(puedes elegir más de uno)</span></label>
+          <div class="choice-group">
+            <label class="choice"><input type="checkbox" name="horarios" value="manana">Mañana (8–13h)</label>
+            <label class="choice"><input type="checkbox" name="horarios" value="tarde">Tarde (13–18h)</label>
+            <label class="choice"><input type="checkbox" name="horarios" value="noche">Noche (18–21h)</label>
+            <label class="choice"><input type="checkbox" name="horarios" value="fin_de_semana">Fines de semana</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="precio_sesion">Tarifa regular por sesión (CLP)</label>
+          <input type="number" id="precio_sesion" name="precio_sesion" min="0" step="1000" placeholder="Ej: 50000">
+        </div>
+
+        <div class="field">
+          <label>¿Podrías ofrecer una tarifa preferencial PSYNC para la primera sesión?</label>
+          <p class="hint">Esto aumenta mucho la conversión — los pacientes vienen pre-calificados para trabajar contigo.</p>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="tarifa_psync" value="si">Sí, puedo ofrecer descuento en la primera sesión</label>
+            <label class="choice"><input type="radio" name="tarifa_psync" value="no">No, no puedo ofrecer descuento</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — MOTIVACIÓN -->
+    <section class="form-section" data-step="5">
+      <div class="form-shell">
+        <span class="step-label">05 / 05 — Último paso</span>
+        <h2>Por qué PSYNC</h2>
+
+        <div class="field">
+          <label for="motivacion">¿Por qué quieres formar parte de la red PSYNC?</label>
+          <p class="hint">Cuéntanos con tus palabras — no hay respuestas correctas o incorrectas.</p>
+          <textarea id="motivacion" name="motivacion" rows="4"></textarea>
+        </div>
+
+        <div class="field">
+          <label>¿Cómo nos encontraste?</label>
+          <div class="choice-group">
+            <label class="choice"><input type="radio" name="como" value="instagram">Instagram</label>
+            <label class="choice"><input type="radio" name="como" value="recomendacion">Recomendación de alguien</label>
+            <label class="choice"><input type="radio" name="como" value="google">Búsqueda en Google</label>
+            <label class="choice"><input type="radio" name="como" value="colega">Un/a colega</label>
+            <label class="choice"><input type="radio" name="como" value="otro">Otro</label>
+          </div>
+        </div>
+
+        <div class="submit-section">
+          <p class="hint">Revisamos cada postulación personalmente. Te escribiremos al correo en los próximos días.</p>
+          <button type="submit" class="btn btn--solid" id="submit-btn">Enviar postulación</button>
+          <p class="submit-error" id="submit-error"></p>
+        </div>
+      </div>
+    </section>
+
+  </form>
+</main>
+
+<section class="success-screen" id="success" hidden>
+  <div class="form-shell">
+    <span class="mono eyebrow">Postulación recibida</span>
+    <h1>Gracias por postular.</h1>
+    <p>Revisamos cada postulación personalmente. Si tu perfil calza con lo que buscamos, te escribiremos al correo que indicaste en los próximos días hábiles.</p>
+    <a href="index.html" class="btn btn--ghost" style="margin-top:24px;">Volver al inicio</a>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+  // Header: transparente arriba del todo, sólido al hacer scroll
+  (function () {
+    const h = document.querySelector('header');
+    if (!h) return;
+    const sync = () => h.classList.toggle('scrolled', window.scrollY > 10);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+  })();
+
+  const sections = document.querySelectorAll('.form-section');
+  const fill     = document.getElementById('progress-fill');
+  const stepInd  = document.getElementById('step-indicator');
+  const total    = sections.length;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const step = parseInt(entry.target.dataset.step, 10);
+        fill.style.width = ((step / total) * 100) + '%';
+        stepInd.textContent = `Paso ${step} de ${total}`;
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach((s) => observer.observe(s));
+
+  const form        = document.getElementById('psync-form');
+  const submitBtn   = document.getElementById('submit-btn');
+  const submitError = document.getElementById('submit-error');
+
+  const getVal = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const v = el.value.trim();
+    return v === '' ? null : v;
+  };
+  const getRadio     = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+  const getCheckboxes = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitError.textContent = '';
+
+    const nombre = getVal('nombre');
+    const email  = getVal('email');
+    if (!nombre || !email) {
+      submitError.textContent = 'Por favor completa al menos tu nombre y correo electrónico (sección 1).';
+      document.querySelector('.form-section[data-step="1"]').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Enviando...';
+
+    const anioVal     = getVal('anio_titulacion');
+    const expVal      = getVal('anios_experiencia');
+    const precioVal   = getVal('precio_sesion');
+    const tarifaRaw   = getRadio('tarifa_psync');
+
+    const formData = {
+      nombre,
+      email,
+      telefono:          getVal('telefono'),
+      ciudad:            getVal('ciudad'),
+      titulo:            getVal('titulo'),
+      universidad:       getVal('universidad'),
+      anio_titulacion:   anioVal  ? parseInt(anioVal, 10)  : null,
+      anios_experiencia: expVal   ? parseInt(expVal, 10)   : null,
+      enfoque:           getCheckboxes('enfoque').join(', ')    || null,
+      especializaciones: getVal('especializaciones'),
+      poblaciones:       getCheckboxes('poblaciones').join(', ') || null,
+      modalidad:         getRadio('modalidad'),
+      horarios:          getCheckboxes('horarios').join(', ')    || null,
+      precio_sesion:     precioVal ? parseInt(precioVal, 10) : null,
+      tarifa_psync:      tarifaRaw === 'si' ? true : tarifaRaw === 'no' ? false : null,
+      motivacion:        getVal('motivacion'),
+      como:              getRadio('como'),
+      estado:            'nueva',
+    };
+
+    try {
+      const { error } = await psyncDB
+        .from('postulaciones_psicologos')
+        .insert(formData);
+
+      if (error) throw error;
+
+      document.getElementById('formulario').hidden = true;
+      document.querySelector('.progress-bar').hidden = true;
+      document.getElementById('success').hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      console.error(err);
+      submitError.textContent = 'Hubo un problema al enviar. Intenta de nuevo. Detalle: ' + (err.message || 'error desconocido');
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'Enviar postulación';
+    }
+  });
+</script>
+
+<footer class="site-footer">
+  <div class="site-footer-logo">
+    <img src="logo.png" alt="PSYNC">
+    <span class="site-footer-wordmark">PSYNC</span>
+  </div>
+  <ul class="site-footer-links">
+    <li><a href="index.html#como-funciona">Cómo funciona</a></li>
+    <li><a href="index.html#psicologos">Para psicólogos/as</a></li>
+    <li><a href="terminos.html">Términos y Condiciones</a></li>
+    <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
+  </ul>
+  <span class="site-footer-copy">© 2026 PSYNC</span>
+</footer>
+
+</body>
+</html>
