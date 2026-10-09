@@ -6,7 +6,7 @@
 <title>Agenda tu Sesión de Arquitectura — PSYNC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
   :root {
@@ -19,8 +19,8 @@
     --teal: #4D7A68;
     --line: #DDD4C8;
     --line-strong: #C8BDB0;
-    --font-display: 'Libre Caslon Text', serif;
-    --font-body: 'Libre Franklin', sans-serif;
+    --font-display: var(--font-base); /* --font-base viene de styles.css */
+    --font-body: var(--font-base);
   }
 </style>
 </head>
@@ -485,7 +485,7 @@ init();
   </div>
   <ul class="site-footer-links">
     <li><a href="index.html#como-funciona">Cómo funciona</a></li>
-    <li><a href="index.html#quienes">Quiénes somos</a></li>
+    <li><a href="index.html#quienes-somos">Quiénes somos</a></li>
     <li><a href="terminos.html">Términos y Condiciones</a></li>
     <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
   </ul>

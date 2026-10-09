@@ -12,6 +12,9 @@
     --line: #DDD4C8;
     --line-strong: #C8BDB0;
 
+    /* Tipografía del sitio público: cambiar aquí. Las páginas públicas apuntan
+       --font-display y --font-body a esta variable; panel.html sigue con Libre. */
+    --font-base: 'Montserrat', sans-serif;
     --font-display: 'Libre Caslon Text', serif;
     --font-body: 'Libre Franklin', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
@@ -743,6 +746,50 @@ input[type="range"] {
   transition: color 0.15s;
 }
 .sidebar-logout:hover { color: rgba(245,242,237,0.9); }
+
+/* --- Sidebar: admin auth (Supabase Auth real, para datos C-NIP) --- */
+.sidebar-admin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  flex-wrap: wrap;
+}
+.sidebar-admin-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(245,242,237,0.3);
+  flex-shrink: 0;
+}
+.sidebar-admin-dot--on { background: #5FAF6A; }
+.sidebar-admin-text {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: rgba(245,242,237,0.65);
+  letter-spacing: 0.03em;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-admin-link {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  color: rgba(245,242,237,0.65);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+  width: 100%;
+  text-align: left;
+}
+.sidebar-admin-link:hover { color: rgba(245,242,237,0.9); }
 
 /* --- Panel main --- */
 .panel-main { flex: 1; background: #EDE6DC; min-width: 0; overflow-y: auto; }
@@ -2088,6 +2135,29 @@ input[type="range"] {
 @media (max-width: 640px) {
   .site-footer { padding: 20px 24px; }
   .site-footer-links { gap: 12px; }
+  /* Áreas de toque ≥44px en celular (páginas públicas) */
+  .site-footer-links { row-gap: 0; column-gap: 16px; }
+  .site-footer-links a { display: inline-block; padding: 15px 0; }
+  header a.logo { min-height: 44px; }
+  /* Montserrat: logo + "Paso X de Y" + Términos caben en una línea */
+  header nav { gap: 10px; }
+  header .logo { gap: 8px; }
+  header .logo-wordmark { letter-spacing: 0.18em; }
+  header #step-indicator { white-space: nowrap; font-size: 0.66rem; letter-spacing: 0.06em; }
+  .nav-tc-link { font-size: 10px; letter-spacing: 0.5px; }
+  .nav-tc-link { position: relative; }
+  .nav-tc-link::after {
+    content: ''; position: absolute; left: -8px; right: 0; top: 50%; height: 44px; transform: translateY(-50%);
+  }
+}
+@media (max-width: 380px) {
+  header .logo-wordmark { letter-spacing: 0.1em; }
+  header #step-indicator { letter-spacing: 0; }
+  header nav { gap: 8px; }
+  .nav-tc-link { letter-spacing: 0.2px; }
+}
+@media (max-width: 340px) {
+  header nav { flex-wrap: wrap; row-gap: 0; }
 }
 .pago-monto-total {
   font-family: var(--font-display);
@@ -2214,3 +2284,112 @@ input[type="range"] {
 /* --- badges C-NIP --- */
 .badge--cnip-pendiente { background: rgba(196,164,90,0.15); color: #7A5A10; }
 .badge--cnip-ok        { background: rgba(39,96,39,0.12);   color: #276027; }
+
+/* --- C-NIP: resultados detallados (ficha paciente / psicólogo/a) --- */
+.cnip-fecha {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  margin-bottom: 18px;
+}
+.cnip-dimensiones { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; margin-bottom: 20px; }
+.cnip-dim-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(75,30,35,0.08);
+  padding: 4px 11px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.cnip-dim-items { display: flex; flex-direction: column; gap: 8px; }
+.cnip-item-row { display: flex; align-items: center; gap: 10px; }
+.cnip-item-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-soft);
+  width: 60px;
+  flex-shrink: 0;
+}
+.cnip-item-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  background: var(--line);
+  border-radius: 999px;
+}
+.cnip-item-mid {
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 1px;
+  height: 10px;
+  background: var(--line-strong);
+}
+.cnip-item-fill {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+}
+.cnip-item-val {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.cnip-comp { padding-top: 16px; border-top: 1px solid var(--line); }
+
+/* --- C-NIP: afinidad en el match --- */
+.cnip-afinidad-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.cnip-afinidad-row:last-child { border-bottom: none; }
+.cnip-afinidad-nombre { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; min-width: 140px; }
+.cnip-afinidad-total { font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent); }
+.cnip-afinidad-dims { font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+
+/* --- C-NIP: panel admin (peso + sin asociar) --- */
+.cnip-peso-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.cnip-peso-row label { font-size: 0.85rem; color: var(--ink); }
+.cnip-peso-row input {
+  width: 72px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.cnip-sinasociar-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.cnip-sinasociar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+.cnip-sinasociar-row select {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+}

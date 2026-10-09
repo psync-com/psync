@@ -6,7 +6,7 @@
 <title>Mi portal — PSYNC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -21,8 +21,9 @@ html { scroll-behavior: smooth; }
   --border:   #DDD4C8;
   --surface:  #FDFAF7;
   --accent:   #4B1E23;
-  --font-display: 'Libre Caslon Text', serif;
-  --font-body: 'Libre Franklin', sans-serif;
+  --font-base: 'Montserrat', sans-serif; /* = styles.css */
+  --font-display: var(--font-base);
+  --font-body: var(--font-base);
 }
 
 body {
@@ -688,6 +689,14 @@ body {
   text-transform: uppercase;
   color: var(--muted);
   padding-top: 12px;
+}
+/* Celular: áreas de toque ≥44px en el ingreso (mismo diseño) */
+@media (max-width: 620px) {
+  .form-field input { padding: 13px 0; }
+  .pw-wrap input { padding-right: 44px; }
+  .pw-toggle { min-width: 44px; min-height: 44px; justify-content: center; }
+  .btn-primary, .btn-ghost { padding-top: 15px; padding-bottom: 15px; }
+  .auth-switch button { display: inline-block; padding: 15px 4px; }
 }
 </style>
 </head>

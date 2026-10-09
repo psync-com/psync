@@ -6,7 +6,7 @@
 <title>Términos y Condiciones — PSYNC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #EBDFDB;
@@ -17,8 +17,9 @@
     --accent-deep: #35161A;
     --line: #DDD4C8;
     --line-strong: #C8BDB0;
-    --font-display: 'Libre Caslon Text', serif;
-    --font-body: 'Libre Franklin', sans-serif;
+    --font-base: 'Montserrat', sans-serif; /* = styles.css */
+    --font-display: var(--font-base);
+    --font-body: var(--font-base);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -76,6 +77,27 @@
     transition: opacity 0.2s;
   }
   .nav-cta:hover { opacity: 0.82; }
+  /* Barra sin cortes de línea: se compacta en pantallas medianas y,
+     cuando ya no cabe, se ocultan los enlaces (como en celular) */
+  .nav-links a, .nav-cta { white-space: nowrap; }
+  @media (max-width: 1789px) {
+    nav { padding: 14px 32px; }
+    .nav-links { gap: 18px; font-size: 11px; letter-spacing: 1px; }
+    .nav-cta { font-size: 11px; letter-spacing: 1.5px; padding: 9px 14px; }
+  }
+  @media (max-width: 1499px) {
+    .nav-links { gap: 14px; letter-spacing: 0.6px; }
+    .nav-wordmark { letter-spacing: 3px; font-size: 14px; }
+  }
+  @media (max-width: 1409px) {
+    nav { padding: 12px 24px; }
+    .nav-logo img { height: 44px; }
+    .nav-links { gap: 12px; font-size: 10.5px; letter-spacing: 0.4px; }
+    .nav-cta { font-size: 10.5px; letter-spacing: 1px; padding: 8px 11px; }
+  }
+  @media (max-width: 1009px) {
+    .nav-links { display: none; }
+  }
 
   /* ── TIPOGRAFÍA COMÚN ─────────────────────────────── */
   .section-tag {
@@ -310,8 +332,16 @@
     .t-back { padding: 28px 24px 36px; }
     footer { padding: 24px; }
     .footer-links { gap: 16px; }
+    /* Áreas de toque ≥44px sin cambiar lo que se ve */
+    .nav-cta { padding: 16px 16px; }
+    .footer-links { row-gap: 0; column-gap: 16px; }
+    .footer-links a { display: inline-block; padding: 15px 0; }
+    .t-back-link, .t-email { position: relative; }
+    .t-back-link::after, .t-email::after {
+      content: ''; position: absolute; left: -8px; right: -8px; top: 50%; height: 44px; transform: translateY(-50%);
+    }
     .t-tabla-row { grid-template-columns: 1fr; gap: 4px; }
-    .t-precio { text-align: left; }
+    .t-precio { text-align: left; white-space: normal; }
   }
 </style>
 </head>
@@ -325,9 +355,10 @@
   </a>
   <ul class="nav-links">
     <li><a href="index.html#como-funciona">Cómo funciona</a></li>
-    <li><a href="index.html#corrientes">Más información</a></li>
-    <li><a href="index.html#quienes">Quiénes somos</a></li>
-    <li><a href="index.html#psicologos">Para psicólogos/as</a></li>
+    <li><a href="index.html#sesiones-y-valores">Sesiones y valores</a></li>
+    <li><a href="index.html#mas-informacion">Más información</a></li>
+    <li><a href="index.html#quienes-somos">Quiénes somos</a></li>
+    <li><a href="index.html#para-psicologos">Para psicólogos/as</a></li>
     <li><a href="terminos.html" class="active">Términos y Condiciones</a></li>
   </ul>
   <a href="formulario.html" class="nav-cta">Reservar sesión →</a>
@@ -434,9 +465,9 @@
   </div>
   <ul class="footer-links">
     <li><a href="index.html#como-funciona">Cómo funciona</a></li>
-    <li><a href="index.html#quienes">Quiénes somos</a></li>
-    <li><a href="index.html#psicologos">Para psicólogos/as</a></li>
-    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="index.html#quienes-somos">Quiénes somos</a></li>
+    <li><a href="index.html#para-psicologos">Para psicólogos/as</a></li>
+    <li><a href="index.html#preguntas-frecuentes">FAQ</a></li>
     <li><a href="mailto:contacto@psync.cl">contacto@psync.cl</a></li>
     <li><a href="terminos.html">Términos y Condiciones</a></li>
   </ul>
