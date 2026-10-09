@@ -8,6 +8,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>
+/* Entrevistas (solo admins) */
+.entrevista-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.entrevista-item {
+  display: grid; grid-template-columns: auto auto 1fr; gap: 6px 14px; align-items: baseline;
+  padding: 10px 14px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--bg); cursor: pointer; text-align: left; font: inherit; color: var(--ink); width: 100%;
+}
+.entrevista-item:hover { border-color: var(--accent); }
+.entrevista-item-fecha { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-soft); white-space: nowrap; }
+.entrevista-item-tipo { font-size: 0.85rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
+.entrevista-item-resumen { font-size: 0.85rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.entrevista-transcripcion { min-height: 260px; font-size: 0.88rem; line-height: 1.5; }
+.entrevista-consent {
+  display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; margin: 4px 0 8px;
+  border: 1px solid var(--line-strong); border-radius: 4px; background: rgba(75,30,35,0.05);
+  font-size: 0.9rem; color: var(--ink); cursor: pointer;
+}
+.entrevista-consent input { margin-top: 3px; accent-color: var(--accent); }
+.entrevista-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-soft); margin: -8px 0 16px; }
+.panel-save-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+@media (max-width: 600px) {
+  .entrevista-item { grid-template-columns: 1fr; }
+  .entrevista-item-resumen { white-space: normal; }
+}
+</style>
 </head>
 <body>
 
@@ -60,12 +86,22 @@
           Psicólogos/as
         </button>
       </li>
+      <li id="nav-entrevistas-li" hidden>
+        <button class="sidebar-nav-btn" id="nav-entrevistas" onclick="navigateTo('entrevistas')">
+          Entrevistas
+        </button>
+      </li>
       <li>
         <button class="sidebar-nav-btn" id="nav-gastos" onclick="navigateTo('gastos')">
           Gastos
         </button>
       </li>
     </ul>
+    <div class="sidebar-admin">
+      <span class="sidebar-admin-dot" id="admin-dot"></span>
+      <span class="sidebar-admin-text" id="admin-status-text">Admin: no autenticado</span>
+      <button class="sidebar-admin-link" id="admin-auth-btn" onclick="abrirModalAdmin()">Iniciar sesión</button>
+    </div>
     <div class="sidebar-user">
       <div class="sidebar-user-email" id="sidebar-email">—</div>
       <button class="sidebar-logout" onclick="handleLogout()">Cerrar sesión</button>
@@ -285,6 +321,12 @@
           </div>
         </div>
 
+        <!-- Resultados C-NIP -->
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Resultados C-NIP</span>
+          <div id="cnip-paciente-content"><p class="dash-empty">Cargando...</p></div>
+        </div>
+
         <!-- Sesión de Arquitectura -->
         <div class="panel-card col-full" id="card-sesion" hidden>
           <span class="panel-card-title">Sesión de Arquitectura</span>
@@ -312,6 +354,10 @@
           </div>
 
           <hr class="match-divider">
+          <span class="match-form-label">Afinidad C-NIP por psicólogo/a</span>
+          <div id="match-cnip-afinidad"><p class="dash-empty">Cargando...</p></div>
+
+          <hr class="match-divider">
           <span class="match-form-label">Crear / reemplazar match</span>
           <p class="match-replace-note">Guardar reemplaza el match completo del paciente.</p>
           <div id="match-form-slots"></div>
@@ -326,6 +372,13 @@
           <textarea class="notas-input" id="notas-textarea" placeholder="Notas sobre el proceso de vinculación, observaciones de la sesión de arquitectura, coordinaciones, etc."></textarea>
           <button class="panel-save-btn" id="notas-save-btn" onclick="guardarNotas()">Guardar notas</button>
           <p class="panel-feedback" id="notas-feedback"></p>
+        </div>
+
+        <!-- Entrevistas (solo admins) -->
+        <div class="panel-card col-full" id="card-entrevistas-paciente" hidden>
+          <span class="panel-card-title">Entrevistas</span>
+          <div id="entrevistas-paciente-content"></div>
+          <button class="panel-save-btn" onclick="nuevaEntrevistaDesdeFicha('paciente')">+ Nueva entrevista</button>
         </div>
 
         <!-- Archivos del paciente -->
@@ -357,7 +410,75 @@
         <button class="filter-btn active" id="tab-red" onclick="setTabPsicologos('red', this)">Red activa</button>
         <button class="filter-btn" id="tab-postulaciones" onclick="setTabPsicologos('postulaciones', this)">Postulaciones</button>
       </div>
+      <div class="dash-section" id="cnip-admin-panel"><p class="dash-empty">Cargando...</p></div>
       <div id="psico-content"><p class="dash-empty">Cargando...</p></div>
+    </div>
+
+    <!-- ── VISTA: Detalle psicólogo/a ── -->
+    <div id="view-psico-detalle" class="panel-view" hidden>
+      <div class="detalle-topbar">
+        <button class="back-btn" onclick="volverAPsicologos()">← Volver</button>
+        <div class="detalle-header-info">
+          <div class="detalle-nombre" id="pd-nombre">—</div>
+          <div class="detalle-sub" id="pd-sub">—</div>
+          <div class="detalle-badges" id="pd-badges"></div>
+        </div>
+      </div>
+      <div class="detalle-body">
+        <div class="panel-card">
+          <span class="panel-card-title">Perfil</span>
+          <div class="field-grid">
+            <div class="field-group"><span class="field-lbl">Enfoque</span><span class="field-val" id="pd-enfoque">—</span></div>
+            <div class="field-group"><span class="field-lbl">Especialización</span><span class="field-val" id="pd-especializacion">—</span></div>
+            <div class="field-group"><span class="field-lbl">Modalidad</span><span class="field-val" id="pd-modalidad">—</span></div>
+            <div class="field-group"><span class="field-lbl">Universidad</span><span class="field-val" id="pd-universidad">—</span></div>
+            <div class="field-group"><span class="field-lbl">Años de experiencia</span><span class="field-val" id="pd-experiencia">—</span></div>
+            <div class="field-group"><span class="field-lbl">Calidez</span><span class="field-val" id="pd-calidez">—</span></div>
+            <div class="field-group"><span class="field-lbl">Precio primera sesión</span><span class="field-val" id="pd-precio-primera">—</span></div>
+            <div class="field-group"><span class="field-lbl">Precio regular</span><span class="field-val" id="pd-precio-normal">—</span></div>
+          </div>
+        </div>
+
+        <div class="panel-card col-full">
+          <span class="panel-card-title">Resultados C-NIP</span>
+          <div id="cnip-psicologo-content"><p class="dash-empty">Cargando...</p></div>
+        </div>
+
+        <!-- Entrevistas (solo admins) -->
+        <div class="panel-card col-full" id="card-entrevistas-psicologo" hidden>
+          <span class="panel-card-title">Entrevistas</span>
+          <div id="entrevistas-psicologo-content"></div>
+          <button class="panel-save-btn" onclick="nuevaEntrevistaDesdeFicha('psicologo')">+ Nueva entrevista</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VISTA: Entrevistas (solo admins) ── -->
+    <div id="view-entrevistas" class="panel-view" hidden>
+      <div class="panel-header">
+        <div class="panel-header-row">
+          <h1>Entrevistas</h1>
+          <button class="panel-save-btn" onclick="abrirModalRegistroEntrevista()">+ Nueva entrevista</button>
+        </div>
+      </div>
+      <div class="panel-search">
+        <input type="text" id="entrevistas-search" class="search-input" placeholder="Buscar por nombre o texto de la transcripción..." oninput="buscarEntrevistas(this.value)">
+      </div>
+      <div class="panel-table-wrap">
+        <table class="panel-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Persona</th>
+              <th>Tipo</th>
+              <th>Tipo de entrevista</th>
+            </tr>
+          </thead>
+          <tbody id="entrevistas-tbody">
+            <tr><td colspan="4" class="panel-table-empty">Cargando entrevistas...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ── VISTA: Gastos compartidos ── -->
@@ -617,6 +738,71 @@
   </div>
 </div>
 
+<!-- MODAL: Registro de entrevista (crear / ver / editar — solo admins) -->
+<div id="modal-registro-entrevista" class="modal-overlay" hidden onclick="if(event.target===this) cerrarModalRegistroEntrevista()">
+  <div class="modal-card modal-card--wide">
+    <h2 id="re-titulo">Nueva entrevista</h2>
+    <p class="entrevista-meta" id="re-meta" hidden></p>
+    <div class="field">
+      <label for="re-tipo-persona">Tipo de persona *</label>
+      <select id="re-tipo-persona" onchange="poblarPersonasEntrevista(this.value, '')">
+        <option value="paciente">Paciente</option>
+        <option value="psicologo">Psicólogo/a</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="re-persona">Persona *</label>
+      <select id="re-persona"></select>
+    </div>
+    <div class="field">
+      <label for="re-tipo-entrevista">Tipo de entrevista *</label>
+      <select id="re-tipo-entrevista"></select>
+    </div>
+    <div class="field">
+      <label for="re-fecha">Fecha *</label>
+      <input type="datetime-local" id="re-fecha">
+    </div>
+    <div class="field">
+      <label for="re-transcripcion">Transcripción *</label>
+      <textarea id="re-transcripcion" class="notas-input entrevista-transcripcion" placeholder="Pega aquí la transcripción completa de la entrevista."></textarea>
+    </div>
+    <div class="field">
+      <label for="re-resumen">Resumen (opcional)</label>
+      <textarea id="re-resumen" class="notas-input" placeholder="Puntos clave de la entrevista."></textarea>
+    </div>
+    <label class="entrevista-consent">
+      <input type="checkbox" id="re-consentimiento" onchange="actualizarBotonGuardarEntrevista()">
+      <span>Se registró el consentimiento para grabar/transcribir *</span>
+    </label>
+    <p class="panel-feedback" id="re-feedback"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" onclick="cerrarModalRegistroEntrevista()">Cancelar</button>
+      <button type="button" class="panel-save-btn" id="re-save-btn" onclick="guardarEntrevista()" disabled>Guardar entrevista</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Acceso administrador (Supabase Auth real, para datos C-NIP) -->
+<div id="modal-admin" class="modal-overlay" hidden onclick="if(event.target===this) cerrarModalAdmin()">
+  <div class="modal-card">
+    <h2>Acceso administrador</h2>
+    <p style="color:var(--ink-soft); font-size:14px; margin-bottom:20px;">Necesario para ver y gestionar datos C-NIP — acceso restringido a cuentas admin.</p>
+    <div class="field">
+      <label for="admin-email">Email</label>
+      <input type="email" id="admin-email" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="admin-password">Contraseña</label>
+      <input type="password" id="admin-password" autocomplete="current-password">
+    </div>
+    <p class="panel-feedback" id="admin-login-feedback"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" onclick="cerrarModalAdmin()">Cancelar</button>
+      <button type="button" class="panel-save-btn" id="admin-login-btn" onclick="loginAdmin()">Ingresar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script>
@@ -637,6 +823,11 @@ let postulacionesList = [];
 let sesionesEntrevista = [];
 let psicologosTab = 'red';
 let currentPostulacion = null;
+let currentPsicologo = null;
+let esAdmin = false;          // resultado de es_admin() con la sesión de dbAdmin
+let entrevistasList = [];
+let entrevistasQuery = '';
+let entrevistaEditando = null; // fila en edición (null = nueva)
 
 // ================================================================
 // INIT
@@ -647,6 +838,161 @@ async function init() {
   } else {
     mostrarLogin();
   }
+}
+
+// ================================================================
+// ADMIN AUTH (Supabase Auth real, separado del login del panel y
+// del cliente anon `psyncDB`). Solo se usa para cnip_respuestas,
+// match_config y la función cnip_afinidad — todo lo demás del panel
+// sigue funcionando igual que antes, con la anon key.
+// ================================================================
+const dbAdmin = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { storageKey: 'psync-panel-admin-auth', persistSession: true, autoRefreshToken: true },
+});
+let adminUser = null;
+
+dbAdmin.auth.onAuthStateChange((event, session) => {
+  adminUser = session ? { email: session.user.email } : null;
+  renderAdminStatus();
+  refrescarSeccionesCnip();
+  // Fuera del callback: supabase-js no recomienda llamar al cliente dentro de onAuthStateChange
+  setTimeout(verificarAdmin, 0);
+});
+
+function renderAdminStatus() {
+  const dot  = document.getElementById('admin-dot');
+  const text = document.getElementById('admin-status-text');
+  const btn  = document.getElementById('admin-auth-btn');
+  if (!dot) return;
+  if (adminUser) {
+    dot.className = 'sidebar-admin-dot sidebar-admin-dot--on';
+    text.textContent = 'Admin: ' + adminUser.email;
+    btn.textContent = 'Cerrar sesión admin';
+    btn.onclick = logoutAdmin;
+  } else {
+    dot.className = 'sidebar-admin-dot';
+    text.textContent = 'Admin: no autenticado';
+    btn.textContent = 'Iniciar sesión';
+    btn.onclick = abrirModalAdmin;
+  }
+}
+
+function abrirModalAdmin() {
+  document.getElementById('admin-email').value = '';
+  document.getElementById('admin-password').value = '';
+  document.getElementById('admin-login-feedback').textContent = '';
+  document.getElementById('admin-login-feedback').className = 'panel-feedback';
+  document.getElementById('modal-admin').hidden = false;
+}
+function cerrarModalAdmin() { document.getElementById('modal-admin').hidden = true; }
+
+async function loginAdmin() {
+  const email    = document.getElementById('admin-email').value.trim();
+  const password = document.getElementById('admin-password').value;
+  const btn      = document.getElementById('admin-login-btn');
+  const feedback = document.getElementById('admin-login-feedback');
+
+  btn.disabled = true; btn.textContent = 'Ingresando...';
+  feedback.textContent = ''; feedback.className = 'panel-feedback';
+
+  const { error } = await dbAdmin.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    btn.disabled = false; btn.textContent = 'Ingresar';
+    feedback.textContent = error.message.includes('Invalid login credentials')
+      ? 'Email o contraseña incorrectos.' : error.message;
+    feedback.className = 'panel-feedback err';
+    return;
+  }
+
+  // Login válido no basta: debe además estar en la tabla admins (RLS es_admin()).
+  const { data, error: checkErr } = await dbAdmin.from('match_config').select('clave').limit(1);
+  btn.disabled = false; btn.textContent = 'Ingresar';
+
+  if (checkErr || !data || data.length === 0) {
+    feedback.textContent = 'Esta cuenta no tiene permisos de administrador.';
+    feedback.className = 'panel-feedback err';
+    await dbAdmin.auth.signOut();
+    return;
+  }
+
+  cerrarModalAdmin();
+}
+
+async function logoutAdmin() { await dbAdmin.auth.signOut(); }
+
+// Vuelve a pintar las secciones de C-NIP visibles cuando cambia la sesión admin
+function refrescarSeccionesCnip() {
+  const vDetalle = document.getElementById('view-detalle');
+  if (vDetalle && !vDetalle.hidden && currentPaciente) {
+    renderCnipPaciente();
+    renderMatchCnipAfinidad();
+  }
+  const vPsicoDetalle = document.getElementById('view-psico-detalle');
+  if (vPsicoDetalle && !vPsicoDetalle.hidden && currentPsicologo) {
+    renderCnipPsicologo();
+  }
+  const vPsicologos = document.getElementById('view-psicologos');
+  if (vPsicologos && !vPsicologos.hidden) {
+    renderCnipAdminPanel();
+  }
+}
+
+function cnipLoginPrompt() {
+  return '<p class="dash-empty">Inicia sesión como administrador para ver datos C-NIP. '
+    + '<button class="panel-save-btn" style="margin-left:8px;" onclick="abrirModalAdmin()">Iniciar sesión</button></p>';
+}
+
+// ================================================================
+// C-NIP — helpers de render compartidos (paciente y psicólogo/a)
+// ================================================================
+const CNIP_DIMENSIONES = [
+  { key: 'dir',  label: 'Dirección',           from: 1,  to: 5  },
+  { key: 'emo',  label: 'Intensidad emocional', from: 6,  to: 10 },
+  { key: 'temp', label: 'Temporalidad',         from: 11, to: 13 },
+  { key: 'vinc', label: 'Vínculo',              from: 14, to: 18 },
+];
+
+function renderCnipItemBar(valor) {
+  const pct = ((valor + 3) / 6) * 100;
+  const signo = valor > 0 ? ('+' + valor) : String(valor);
+  return `<div class="cnip-item-track">
+    <div class="cnip-item-mid"></div>
+    <div class="cnip-item-fill" style="left:${pct}%"></div>
+  </div><span class="cnip-item-val">${signo}</span>`;
+}
+
+function renderCnipDetalleHTML(row) {
+  if (!row) return '<p class="dash-empty">Aún no completa el C-NIP.</p>';
+
+  const fecha = new Date(row.enviado_en).toLocaleDateString('es-CL', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+
+  let html = `<p class="cnip-fecha">Completado el ${fecha}</p><div class="cnip-dimensiones">`;
+  CNIP_DIMENSIONES.forEach(d => {
+    html += `<div class="cnip-dim"><span class="cnip-dim-title">${esc(d.label)}</span><div class="cnip-dim-items">`;
+    let n = 1;
+    for (let i = d.from; i <= d.to; i++) {
+      const valor = row.items[i - 1];
+      html += `<div class="cnip-item-row"><span class="cnip-item-label">Ítem ${n}</span>${renderCnipItemBar(valor)}</div>`;
+      n++;
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  const comp = (row.complementarias && typeof row.complementarias === 'object')
+    ? Object.entries(row.complementarias) : [];
+  html += '<div class="cnip-comp"><span class="cnip-dim-title">Respuestas complementarias</span>';
+  html += comp.length === 0
+    ? '<p class="dash-empty">Sin respuestas complementarias.</p>'
+    : '<div class="field-grid">' + comp.map(([k, v]) =>
+        `<div class="field-group"><span class="field-lbl">${esc(k)}</span><span class="field-val">${esc(v)}</span></div>`
+      ).join('') + '</div>';
+  html += '</div>';
+
+  return html;
 }
 
 // ================================================================
@@ -692,6 +1038,7 @@ async function activarPanel() {
 }
 
 function navigateTo(vista) {
+  if (vista === 'entrevistas' && !esAdmin) vista = 'inicio';
   document.querySelectorAll('.panel-view').forEach(v => { v.hidden = true; });
   document.getElementById('view-' + vista).hidden = false;
   document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
@@ -701,6 +1048,7 @@ function navigateTo(vista) {
   if (vista === 'lista') { renderEstadisticas(); renderListaPacientes(); }
   if (vista === 'agenda') cargarAgenda();
   if (vista === 'psicologos') cargarPsicologosView();
+  if (vista === 'entrevistas') cargarEntrevistas();
   if (vista === 'gastos') { initGastos(); renderGastos(); }
   const main = document.querySelector('.panel-main');
   if (main) main.scrollTop = 0;
@@ -906,6 +1254,60 @@ function renderDetalle() {
 
   // C-NIP
   renderCnipStatus();
+  renderCnipPaciente();
+  renderMatchCnipAfinidad();
+
+  // Entrevistas (solo admins)
+  renderEntrevistasFicha('paciente');
+}
+
+async function renderCnipPaciente() {
+  const container = document.getElementById('cnip-paciente-content');
+  if (!container || !currentPaciente) return;
+  if (!adminUser) { container.innerHTML = cnipLoginPrompt(); return; }
+
+  container.innerHTML = '<p class="dash-empty">Cargando...</p>';
+  const { data, error } = await dbAdmin
+    .from('cnip_respuestas')
+    .select('*')
+    .eq('tipo', 'paciente')
+    .eq('paciente_id', currentPaciente.id)
+    .order('enviado_en', { ascending: false })
+    .limit(1);
+
+  if (error) { container.innerHTML = '<p class="dash-empty">Error al cargar el C-NIP.</p>'; console.error(error); return; }
+  container.innerHTML = renderCnipDetalleHTML(data && data[0]);
+}
+
+async function renderMatchCnipAfinidad() {
+  const container = document.getElementById('match-cnip-afinidad');
+  if (!container || !currentPaciente) return;
+  if (!adminUser) { container.innerHTML = cnipLoginPrompt(); return; }
+
+  container.innerHTML = '<p class="dash-empty">Calculando afinidad...</p>';
+  const { data, error } = await dbAdmin.rpc('cnip_afinidad', { p_paciente_id: currentPaciente.id });
+
+  if (error) { container.innerHTML = '<p class="dash-empty">Error al calcular afinidad C-NIP.</p>'; console.error(error); return; }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = '<p class="dash-empty">Sin afinidad C-NIP disponible — el paciente aún no completa el C-NIP, o ninguna psicóloga tiene C-NIP registrado.</p>';
+    return;
+  }
+
+  const nota = data.length < psicologosList.length
+    ? `<p class="match-replace-note">Mostrando ${data.length} de ${psicologosList.length} psicólogos/as — el resto no tiene C-NIP registrado aún.</p>`
+    : '';
+
+  const rows = data.map(r => `
+    <div class="cnip-afinidad-row">
+      <span class="cnip-afinidad-nombre">${esc(r.nombre)}</span>
+      <span class="cnip-afinidad-total">${r.afinidad}%</span>
+      <span class="cnip-afinidad-dims">Dirección ${r.dir}% · Emocional ${r.emo}% · Temporalidad ${r.temp}% · Vínculo ${r.vinc}%</span>
+    </div>`).join('');
+
+  container.innerHTML =
+    '<p class="match-replace-note">Sin motor de matching automático aún — esto muestra solo la afinidad C-NIP de cada psicóloga con este paciente.</p>'
+    + nota + rows;
 }
 
 // ================================================================
@@ -1657,6 +2059,7 @@ async function cargarPsicologosView() {
   sesionesEntrevista = sesRes.data || [];
 
   renderTabPsicologos();
+  renderCnipAdminPanel();
 }
 
 function setTabPsicologos(tab, btn) {
@@ -1697,7 +2100,7 @@ function renderRedPsicologos() {
     return `<div class="psico-card">
       <div class="avatar-circle">${iniciales(p.nombre)}</div>
       <div class="psico-info">
-        <div class="psico-nombre">${esc(p.nombre)}</div>
+        <div class="psico-nombre" style="cursor:pointer" onclick="abrirDetallePsicologo('${esc(p.id)}')">${esc(p.nombre)}</div>
         ${p.enfoque ? `<div class="psico-meta">${esc(p.enfoque)}</div>` : ''}
         ${p.modalidad ? `<div class="psico-meta">${esc(p.modalidad)}</div>` : ''}
         ${p.precio_primera ? `<div class="psico-meta">$${Number(p.precio_primera).toLocaleString('es-CL')} primera sesión</div>` : ''}
@@ -1713,6 +2116,155 @@ function renderRedPsicologos() {
       </div>
     </div>`;
   }).join('') + '</div>';
+}
+
+// ================================================================
+// FICHA PSICÓLOGO/A
+// ================================================================
+function abrirDetallePsicologo(id) {
+  currentPsicologo = psicologosList.find(p => p.id === id) || null;
+  if (!currentPsicologo) return;
+  renderPsicoDetalle();
+  navigateTo('psico-detalle');
+}
+
+function volverAPsicologos() {
+  currentPsicologo = null;
+  navigateTo('psicologos');
+}
+
+function renderPsicoDetalle() {
+  const p = currentPsicologo;
+  setText('pd-nombre', p.nombre);
+  setText('pd-sub', p.email || '');
+  document.getElementById('pd-badges').innerHTML =
+    `<span class="badge ${p.estado === 'activo' ? 'badge--activo' : 'badge--formulario'}">${esc(p.estado || '—')}</span> `
+    + badgeCnip(p.cnip_completado);
+  setText('pd-enfoque', p.enfoque || '—');
+  setText('pd-especializacion', (p.especializacion && p.especializacion.length) ? p.especializacion.join(', ') : '—');
+  setText('pd-modalidad', p.modalidad || '—');
+  setText('pd-universidad', p.universidad || '—');
+  setText('pd-experiencia', p.anios_experiencia != null ? p.anios_experiencia + ' años' : '—');
+  setText('pd-calidez', p.calidez != null ? p.calidez + ' / 5' : '—');
+  setText('pd-precio-primera', p.precio_primera ? '$' + Number(p.precio_primera).toLocaleString('es-CL') : '—');
+  setText('pd-precio-normal', p.precio_normal ? '$' + Number(p.precio_normal).toLocaleString('es-CL') : '—');
+  renderCnipPsicologo();
+  renderEntrevistasFicha('psicologo');
+}
+
+async function renderCnipPsicologo() {
+  const container = document.getElementById('cnip-psicologo-content');
+  if (!container || !currentPsicologo) return;
+  if (!adminUser) { container.innerHTML = cnipLoginPrompt(); return; }
+
+  container.innerHTML = '<p class="dash-empty">Cargando...</p>';
+  const { data, error } = await dbAdmin
+    .from('cnip_respuestas')
+    .select('*')
+    .eq('tipo', 'psicologo')
+    .eq('psicologo_id', currentPsicologo.id)
+    .order('enviado_en', { ascending: false })
+    .limit(1);
+
+  if (error) { container.innerHTML = '<p class="dash-empty">Error al cargar el C-NIP.</p>'; console.error(error); return; }
+  container.innerHTML = renderCnipDetalleHTML(data && data[0]);
+}
+
+// ================================================================
+// C-NIP — panel admin (peso del match + respuestas sin asociar)
+// ================================================================
+async function renderCnipAdminPanel() {
+  const container = document.getElementById('cnip-admin-panel');
+  if (!container) return;
+
+  if (!adminUser) {
+    container.innerHTML = '<span class="dash-section-title">C-NIP — Configuración</span>' + cnipLoginPrompt();
+    return;
+  }
+
+  container.innerHTML = '<span class="dash-section-title">C-NIP — Configuración</span><p class="dash-empty">Cargando...</p>';
+
+  const [{ data: cfg }, { data: sinAsociar, error: sinAsociarErr }] = await Promise.all([
+    dbAdmin.from('match_config').select('*').eq('clave', 'peso_cnip').limit(1),
+    dbAdmin.from('cnip_respuestas').select('*')
+      .or('and(tipo.eq.paciente,paciente_id.is.null),and(tipo.eq.psicologo,psicologo_id.is.null)')
+      .order('enviado_en', { ascending: false }),
+  ]);
+
+  if (sinAsociarErr) console.error(sinAsociarErr);
+
+  const peso = (cfg && cfg[0]) ? cfg[0].valor : 0;
+
+  let html = `
+    <span class="dash-section-title">C-NIP — Configuración</span>
+    <div class="cnip-peso-row">
+      <label for="cnip-peso-input">Peso del C-NIP en el puntaje de match (0–100)</label>
+      <input type="number" id="cnip-peso-input" min="0" max="100" value="${esc(peso)}">
+      <button class="panel-save-btn" onclick="guardarPesoCnip()">Guardar</button>
+      <span class="panel-feedback" id="cnip-peso-feedback"></span>
+    </div>
+    <p class="match-replace-note">Hoy no hay motor de matching automático — este peso queda listo para cuando exista.</p>
+  `;
+
+  const lista = sinAsociar || [];
+  html += `<span class="dash-section-title" style="margin-top:20px;">C-NIP sin asociar (${lista.length})</span>`;
+  html += lista.length === 0
+    ? '<p class="dash-empty">No hay respuestas C-NIP sin asociar.</p>'
+    : '<div class="cnip-sinasociar-list">' + lista.map(r => renderCnipSinAsociarRow(r)).join('') + '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCnipSinAsociarRow(r) {
+  const fecha = new Date(r.enviado_en).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  const opciones = r.tipo === 'paciente'
+    ? pacientesList.map(p => `<option value="${esc(p.id)}">${esc(p.nombre)}</option>`).join('')
+    : psicologosList.map(p => `<option value="${esc(p.id)}">${esc(p.nombre)}</option>`).join('');
+  return `<div class="cnip-sinasociar-row">
+    <span class="td-mono">${esc(r.email || '—')}</span>
+    <span class="badge badge--formulario">${r.tipo === 'paciente' ? 'Paciente' : 'Psicólogo/a'}</span>
+    <span class="td-mono">${fecha}</span>
+    <select id="sinasociar-sel-${esc(r.id)}"><option value="">— Elegir —</option>${opciones}</select>
+    <button class="panel-save-btn" style="font-size:0.78rem; padding:6px 14px;" onclick="asociarCnip('${r.id}', '${r.tipo}')">Asociar</button>
+  </div>`;
+}
+
+async function asociarCnip(id, tipo) {
+  const sel = document.getElementById('sinasociar-sel-' + id);
+  const targetId = sel ? sel.value : '';
+  if (!targetId) return;
+  const campo = tipo === 'paciente' ? 'paciente_id' : 'psicologo_id';
+  const { error } = await dbAdmin.from('cnip_respuestas').update({ [campo]: targetId }).eq('id', id);
+  if (error) { console.error(error); alert('Error al asociar: ' + error.message); return; }
+  renderCnipAdminPanel();
+}
+
+async function guardarPesoCnip() {
+  const input    = document.getElementById('cnip-peso-input');
+  const feedback = document.getElementById('cnip-peso-feedback');
+  const valor    = Number(input.value);
+
+  if (isNaN(valor) || valor < 0 || valor > 100) {
+    feedback.textContent = 'Debe ser un número entre 0 y 100.';
+    feedback.className = 'panel-feedback err';
+    return;
+  }
+
+  feedback.textContent = 'Guardando...';
+  feedback.className = 'panel-feedback';
+
+  const { error } = await dbAdmin
+    .from('match_config')
+    .update({ valor, updated_at: new Date().toISOString() })
+    .eq('clave', 'peso_cnip');
+
+  if (error) {
+    feedback.textContent = 'Error: ' + error.message;
+    feedback.className = 'panel-feedback err';
+    return;
+  }
+  feedback.textContent = '✓ Guardado.';
+  feedback.className = 'panel-feedback ok';
 }
 
 async function enviarCnipPsicologo(id, nombre, email, btn) {
@@ -1976,6 +2528,314 @@ function renderTablaGastos() {
       <td><button class="gastos-del" onclick="eliminarGasto('${esc(g.id)}')" title="Eliminar">✕</button></td>
     </tr>`;
   }).join('');
+}
+
+// ================================================================
+// ENTREVISTAS — solo admins. Toda lectura/escritura va por dbAdmin
+// (sesión del usuario logueado); nunca por psyncDB / anon key.
+// ================================================================
+const TIPOS_ENTREVISTA = {
+  arquitectura: 'Sesión de Arquitectura',
+  devolucion:   'Sesión de Devolución',
+  seleccion:    'Entrevista de selección (psicólogo/a)',
+  seguimiento:  'Seguimiento',
+  otra:         'Otra',
+};
+const TIPO_PERSONA_LABEL = { paciente: 'Paciente', psicologo: 'Psicólogo/a' };
+
+let verificarAdminSeq = 0;
+async function verificarAdmin() {
+  const seq = ++verificarAdminSeq;
+  let ok = false;
+  if (adminUser) {
+    try {
+      const { data, error } = await dbAdmin.rpc('es_admin');
+      ok = !error && data === true;
+    } catch (e) { ok = false; }
+  }
+  if (seq !== verificarAdminSeq) return; // llegó una verificación más nueva
+  esAdmin = ok;
+  aplicarVisibilidadEntrevistas();
+}
+
+function aplicarVisibilidadEntrevistas() {
+  document.getElementById('nav-entrevistas-li').hidden = !esAdmin;
+  document.getElementById('card-entrevistas-paciente').hidden = !esAdmin;
+  document.getElementById('card-entrevistas-psicologo').hidden = !esAdmin;
+
+  if (!esAdmin) {
+    entrevistasList = [];
+    document.getElementById('entrevistas-paciente-content').innerHTML = '';
+    document.getElementById('entrevistas-psicologo-content').innerHTML = '';
+    document.getElementById('modal-registro-entrevista').hidden = true;
+    if (!document.getElementById('view-entrevistas').hidden) navigateTo('inicio');
+    return;
+  }
+
+  if (!document.getElementById('view-entrevistas').hidden) cargarEntrevistas();
+  if (!document.getElementById('view-detalle').hidden && currentPaciente) renderEntrevistasFicha('paciente');
+  if (!document.getElementById('view-psico-detalle').hidden && currentPsicologo) renderEntrevistasFicha('psicologo');
+}
+
+function nombrePersonaEntrevista(e) {
+  if (e.tipo_persona === 'paciente') {
+    const p = pacientesList.find(x => x.id === e.paciente_id);
+    return p ? p.nombre : 'Paciente (no encontrado)';
+  }
+  const p = psicologosList.find(x => x.id === e.psicologo_id);
+  return p ? p.nombre : (e.psicologo_id || '—');
+}
+
+function fmtFechaEntrevista(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleString('es-CL', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+
+function toDatetimeLocal(d) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function normalizarBusqueda(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+// ── Lista general ──
+async function cargarEntrevistas() {
+  const tbody = document.getElementById('entrevistas-tbody');
+  if (!esAdmin) return;
+  tbody.innerHTML = '<tr><td colspan="4" class="panel-table-empty">Cargando entrevistas...</td></tr>';
+
+  const { data, error } = await dbAdmin
+    .from('entrevistas')
+    .select('*')
+    .order('fecha_entrevista', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error al cargar entrevistas:', error);
+    tbody.innerHTML = '<tr><td colspan="4" class="panel-table-empty">Error al cargar entrevistas.</td></tr>';
+    return;
+  }
+  entrevistasList = data || [];
+  renderListaEntrevistas();
+}
+
+function buscarEntrevistas(query) {
+  entrevistasQuery = normalizarBusqueda(query.trim());
+  renderListaEntrevistas();
+}
+
+function renderListaEntrevistas() {
+  const tbody = document.getElementById('entrevistas-tbody');
+  let filtradas = entrevistasList;
+  if (entrevistasQuery) {
+    filtradas = filtradas.filter(e =>
+      normalizarBusqueda(nombrePersonaEntrevista(e)).includes(entrevistasQuery) ||
+      normalizarBusqueda(e.transcripcion).includes(entrevistasQuery)
+    );
+  }
+
+  if (filtradas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="panel-table-empty">${entrevistasList.length ? 'Sin resultados.' : 'Aún no hay entrevistas registradas.'}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtradas.map(e => {
+    const nombre = nombrePersonaEntrevista(e);
+    return `<tr onclick="abrirEntrevista('${esc(e.id)}')">
+      <td class="td-mono">${fmtFechaEntrevista(e.fecha_entrevista)}</td>
+      <td><div class="patient-row-name"><div class="avatar-circle">${iniciales(nombre)}</div><span class="td-nombre">${esc(nombre)}</span></div></td>
+      <td>${esc(TIPO_PERSONA_LABEL[e.tipo_persona] || e.tipo_persona)}</td>
+      <td>${esc(TIPOS_ENTREVISTA[e.tipo_entrevista] || e.tipo_entrevista || '—')}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Sección en ficha de paciente / psicólogo/a ──
+async function renderEntrevistasFicha(tipo) {
+  const esPac = tipo === 'paciente';
+  const card = document.getElementById(esPac ? 'card-entrevistas-paciente' : 'card-entrevistas-psicologo');
+  const cont = document.getElementById(esPac ? 'entrevistas-paciente-content' : 'entrevistas-psicologo-content');
+  const persona = esPac ? currentPaciente : currentPsicologo;
+  card.hidden = !esAdmin;
+  if (!esAdmin || !persona) { cont.innerHTML = ''; return; }
+
+  cont.innerHTML = '<p class="dash-empty">Cargando...</p>';
+  const { data, error } = await dbAdmin
+    .from('entrevistas')
+    .select('id, tipo_entrevista, fecha_entrevista, resumen')
+    .eq(esPac ? 'paciente_id' : 'psicologo_id', persona.id)
+    .order('fecha_entrevista', { ascending: false });
+
+  // Si mientras cargaba se abrió otra ficha, no pintar datos ajenos
+  if ((esPac ? currentPaciente : currentPsicologo) !== persona) return;
+
+  if (error) {
+    console.error('Error al cargar entrevistas:', error);
+    cont.innerHTML = '<p class="dash-empty">Error al cargar entrevistas.</p>';
+    return;
+  }
+  if (!data || data.length === 0) {
+    cont.innerHTML = '<p class="dash-empty">Sin entrevistas registradas.</p>';
+    return;
+  }
+  cont.innerHTML = '<div class="entrevista-list">' + data.map(e => `
+    <button type="button" class="entrevista-item" onclick="abrirEntrevista('${esc(e.id)}')">
+      <span class="entrevista-item-fecha">${fmtFechaEntrevista(e.fecha_entrevista)}</span>
+      <span class="entrevista-item-tipo">${esc(TIPOS_ENTREVISTA[e.tipo_entrevista] || e.tipo_entrevista || '—')}</span>
+      <span class="entrevista-item-resumen">${esc(e.resumen || 'Sin resumen')}</span>
+    </button>`).join('') + '</div>';
+}
+
+function nuevaEntrevistaDesdeFicha(tipo) {
+  const persona = tipo === 'paciente' ? currentPaciente : currentPsicologo;
+  if (!persona) return;
+  abrirModalRegistroEntrevista({ tipo_persona: tipo, persona_id: persona.id });
+}
+
+// ── Modal crear / ver / editar ──
+function poblarPersonasEntrevista(tipo, seleccionId) {
+  const select = document.getElementById('re-persona');
+  const lista = (tipo === 'paciente' ? pacientesList : psicologosList)
+    .slice()
+    .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'));
+  select.innerHTML = '<option value="">Selecciona...</option>' + lista.map(p =>
+    `<option value="${esc(p.id)}">${esc(p.nombre || p.id)}${p.email ? ' — ' + esc(p.email) : ''}</option>`
+  ).join('');
+  select.value = seleccionId || '';
+}
+
+function abrirModalRegistroEntrevista(preset) {
+  if (!esAdmin) return;
+  entrevistaEditando = null;
+  const tipo = (preset && preset.tipo_persona) || 'paciente';
+
+  document.getElementById('re-titulo').textContent = 'Nueva entrevista';
+  document.getElementById('re-meta').hidden = true;
+  document.getElementById('re-tipo-persona').value = tipo;
+  poblarPersonasEntrevista(tipo, preset && preset.persona_id);
+  document.getElementById('re-tipo-entrevista').innerHTML = Object.entries(TIPOS_ENTREVISTA)
+    .map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('');
+  document.getElementById('re-tipo-entrevista').value = tipo === 'psicologo' ? 'seleccion' : 'arquitectura';
+  document.getElementById('re-fecha').value = toDatetimeLocal(new Date());
+  document.getElementById('re-transcripcion').value = '';
+  document.getElementById('re-resumen').value = '';
+  document.getElementById('re-consentimiento').checked = false;
+  document.getElementById('re-feedback').textContent = '';
+  document.getElementById('re-feedback').className = 'panel-feedback';
+  document.getElementById('re-save-btn').textContent = 'Guardar entrevista';
+  actualizarBotonGuardarEntrevista();
+  document.getElementById('modal-registro-entrevista').hidden = false;
+}
+
+async function abrirEntrevista(id) {
+  if (!esAdmin) return;
+  const { data, error } = await dbAdmin.from('entrevistas').select('*').eq('id', id).maybeSingle();
+  if (error || !data) {
+    console.error('Error al abrir entrevista:', error);
+    return;
+  }
+
+  abrirModalRegistroEntrevista({
+    tipo_persona: data.tipo_persona,
+    persona_id: data.tipo_persona === 'paciente' ? data.paciente_id : data.psicologo_id,
+  });
+  entrevistaEditando = data;
+
+  // Tipo guardado que no esté en la lista fija: agregarlo para no perderlo al editar
+  const selTipo = document.getElementById('re-tipo-entrevista');
+  if (data.tipo_entrevista && !TIPOS_ENTREVISTA[data.tipo_entrevista]) {
+    selTipo.insertAdjacentHTML('beforeend', `<option value="${esc(data.tipo_entrevista)}">${esc(data.tipo_entrevista)}</option>`);
+  }
+  selTipo.value = data.tipo_entrevista || 'otra';
+
+  document.getElementById('re-titulo').textContent = 'Entrevista — ' + nombrePersonaEntrevista(data);
+  const meta = document.getElementById('re-meta');
+  meta.textContent = 'Creada ' + fmtFechaEntrevista(data.created_at)
+    + (data.updated_at && data.updated_at !== data.created_at ? ' · actualizada ' + fmtFechaEntrevista(data.updated_at) : '');
+  meta.hidden = false;
+  document.getElementById('re-fecha').value = data.fecha_entrevista ? toDatetimeLocal(new Date(data.fecha_entrevista)) : '';
+  document.getElementById('re-transcripcion').value = data.transcripcion || '';
+  document.getElementById('re-resumen').value = data.resumen || '';
+  document.getElementById('re-consentimiento').checked = !!data.consentimiento_registrado;
+  document.getElementById('re-save-btn').textContent = 'Guardar cambios';
+  actualizarBotonGuardarEntrevista();
+}
+
+function cerrarModalRegistroEntrevista() {
+  document.getElementById('modal-registro-entrevista').hidden = true;
+  entrevistaEditando = null;
+}
+
+function actualizarBotonGuardarEntrevista() {
+  document.getElementById('re-save-btn').disabled = !document.getElementById('re-consentimiento').checked;
+}
+
+async function guardarEntrevista() {
+  const feedback = document.getElementById('re-feedback');
+  const btn      = document.getElementById('re-save-btn');
+  const setErr = msg => { feedback.textContent = msg; feedback.className = 'panel-feedback err'; };
+
+  if (!esAdmin) { setErr('Necesitas una sesión de administrador.'); return; }
+
+  const tipoPersona   = document.getElementById('re-tipo-persona').value;
+  const personaId     = document.getElementById('re-persona').value;
+  const tipoEntrev    = document.getElementById('re-tipo-entrevista').value;
+  const fechaVal      = document.getElementById('re-fecha').value;
+  const transcripcion = document.getElementById('re-transcripcion').value.trim();
+  const resumen       = document.getElementById('re-resumen').value.trim();
+  const consentimiento = document.getElementById('re-consentimiento').checked;
+
+  if (!consentimiento) { setErr('Debes confirmar que se registró el consentimiento.'); return; }
+  if (!personaId)      { setErr('Selecciona la persona entrevistada.'); return; }
+  if (!fechaVal)       { setErr('Indica la fecha de la entrevista.'); return; }
+  if (!transcripcion)  { setErr('Pega la transcripción.'); return; }
+
+  const payload = {
+    tipo_persona: tipoPersona,
+    paciente_id:  tipoPersona === 'paciente'  ? personaId : null,
+    psicologo_id: tipoPersona === 'psicologo' ? personaId : null,
+    tipo_entrevista: tipoEntrev,
+    fecha_entrevista: new Date(fechaVal).toISOString(),
+    transcripcion,
+    resumen: resumen || null,
+    consentimiento_registrado: true,
+  };
+
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  feedback.textContent = ''; feedback.className = 'panel-feedback';
+
+  let res;
+  if (entrevistaEditando) {
+    payload.updated_at = new Date().toISOString();
+    res = await dbAdmin.from('entrevistas').update(payload).eq('id', entrevistaEditando.id).select('id');
+  } else {
+    const { data: { user } = {}, error: userErr } = await dbAdmin.auth.getUser();
+    if (userErr || !user) {
+      btn.textContent = 'Guardar entrevista'; actualizarBotonGuardarEntrevista();
+      setErr('Tu sesión de administrador expiró. Vuelve a iniciar sesión.');
+      return;
+    }
+    payload.creado_por = user.id;
+    res = await dbAdmin.from('entrevistas').insert(payload).select('id');
+  }
+
+  btn.textContent = entrevistaEditando ? 'Guardar cambios' : 'Guardar entrevista';
+  actualizarBotonGuardarEntrevista();
+
+  if (res.error || !res.data || res.data.length === 0) {
+    console.error('Error al guardar entrevista:', res.error);
+    setErr('No se pudo guardar la entrevista. Revisa tu sesión de administrador e inténtalo de nuevo.');
+    return;
+  }
+
+  cerrarModalRegistroEntrevista();
+  if (!document.getElementById('view-entrevistas').hidden) cargarEntrevistas();
+  if (!document.getElementById('view-detalle').hidden) renderEntrevistasFicha('paciente');
+  if (!document.getElementById('view-psico-detalle').hidden) renderEntrevistasFicha('psicologo');
 }
 
 // ================================================================
