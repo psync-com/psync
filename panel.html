@@ -29,6 +29,45 @@
 .entrevista-consent input { margin-top: 3px; accent-color: var(--accent); }
 .entrevista-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-soft); margin: -8px 0 16px; }
 .panel-save-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* C-NIP: ítems con polos y escala de 7 posiciones (+3 izq … -3 der) */
+.cnip-dimensiones--polos { grid-template-columns: 1fr; gap: 22px; }
+.cnip-dimensiones--polos .cnip-dim-items { gap: 0; }
+.cnip-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto minmax(0, 1fr) 28px;
+  align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+.cnip-item:last-child { border-bottom: none; }
+.cnip-item-num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-soft); }
+.cnip-polo { font-size: 0.82rem; line-height: 1.35; color: var(--ink); }
+.cnip-polo--izq { text-align: right; }
+.cnip-escala {
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  width: 154px; height: 16px;
+}
+.cnip-escala::before {
+  content: ''; position: absolute; left: 7px; right: 7px; top: 50%;
+  height: 1px; background: var(--line-strong);
+}
+.cnip-pos { position: relative; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
+.cnip-pos::after {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--line-strong); box-sizing: border-box;
+}
+.cnip-pos--centro::after { width: 2px; height: 12px; border-radius: 1px; border: none; background: var(--line-strong); }
+.cnip-pos--sel::after { width: 13px; height: 13px; border: none; border-radius: 50%; background: var(--accent); }
+.cnip-item .cnip-item-val { width: auto; text-align: right; font-size: 0.75rem; font-weight: 500; }
+.cnip-comp .field-lbl { text-transform: none; letter-spacing: normal; }
+@media (max-width: 700px) {
+  .cnip-item { grid-template-columns: 24px 1fr 28px; gap: 4px 10px; }
+  .cnip-item-num { grid-row: 1 / span 3; align-self: start; }
+  .cnip-polo--izq { grid-column: 2; text-align: left; }
+  .cnip-escala { grid-column: 2; }
+  .cnip-polo--der { grid-column: 2; }
+  .cnip-item-val { grid-column: 3; grid-row: 2; }
+}
 @media (max-width: 600px) {
   .entrevista-item { grid-template-columns: 1fr; }
   .entrevista-item-resumen { white-space: normal; }
@@ -947,36 +986,93 @@ function cnipLoginPrompt() {
 // C-NIP — helpers de render compartidos (paciente y psicólogo/a)
 // ================================================================
 const CNIP_DIMENSIONES = [
-  { key: 'dir',  label: 'Dirección',           from: 1,  to: 5  },
+  { key: 'dir',  label: 'Directividad',         from: 1,  to: 5  },
   { key: 'emo',  label: 'Intensidad emocional', from: 6,  to: 10 },
   { key: 'temp', label: 'Temporalidad',         from: 11, to: 13 },
-  { key: 'vinc', label: 'Vínculo',              from: 14, to: 18 },
+  { key: 'vinc', label: 'Vínculo terapéutico',  from: 14, to: 18 },
 ];
 
-function renderCnipItemBar(valor) {
-  const pct = ((valor + 3) / 6) * 100;
-  const signo = valor > 0 ? ('+' + valor) : String(valor);
-  return `<div class="cnip-item-track">
-    <div class="cnip-item-mid"></div>
-    <div class="cnip-item-fill" style="left:${pct}%"></div>
-  </div><span class="cnip-item-val">${signo}</span>`;
+// Polos [izquierdo (+3), derecho (-3)] de cada ítem; índice 0 = ítem 1
+const CNIP_POLOS = {
+  psicologo: [
+    ['Trabajo con objetivos terapéuticos específicos', 'Trabajo sin fijar objetivos específicos'],
+    ['Doy estructura a las sesiones', 'Dejo que las sesiones fluyan sin estructura'],
+    ['Enseño habilidades y herramientas concretas', 'No me enfoco en enseñar habilidades'],
+    ['Asigno tareas o ejercicios entre sesiones', 'No suelo asignar tareas entre sesiones'],
+    ['Tomo la iniciativa y guío la terapia', 'Dejo que el paciente tome la iniciativa'],
+    ['Animo al paciente a adentrarse en emociones difíciles', 'Evito empujar al paciente hacia emociones difíciles'],
+    ['Hablo sobre la relación terapéutica dentro de la sesión', 'Evito hacer de la relación terapéutica un tema de trabajo'],
+    ['Me enfoco en el vínculo entre el paciente y yo', 'No pongo foco en el vínculo terapéutico'],
+    ['Invito al paciente a expresar emociones intensas', 'No empujo al paciente a expresar emociones fuertes'],
+    ['Me enfoco principalmente en las emociones del paciente', 'Me enfoco principalmente en los pensamientos del paciente'],
+    ['Trabajo sobre la vida pasada del paciente', 'Trabajo sobre su vida presente'],
+    ['Ayudo al paciente a reflexionar sobre su infancia', 'Ayudo al paciente a reflexionar sobre su vida adulta actual'],
+    ['Me enfoco en el pasado del paciente', 'Me enfoco en el futuro del paciente'],
+    ['Soy gentil y suave en mi manera de trabajar', 'Soy directo y confrontacional cuando es necesario'],
+    ['Me mantengo en un rol de apoyo constante', 'Confronto al paciente cuando lo considero útil'],
+    ['Escucho sin interrumpir frecuentemente', 'Interrumpo para mantener el foco de la sesión'],
+    ['No desafío las creencias del paciente', 'Desafío las creencias del paciente cuando lo veo necesario'],
+    ['Apoyo incondicionalmente el comportamiento del paciente', 'Confronto comportamientos que considero problemáticos'],
+  ],
+  paciente: [
+    ['Trabajar con objetivos terapéuticos específicos', 'No fijar objetivos específicos'],
+    ['Que el terapeuta dé estructura a las sesiones', 'Que las sesiones fluyan sin estructura'],
+    ['Que el terapeuta me enseñe habilidades concretas', 'Que no me enseñe habilidades'],
+    ['Que me dé tareas para hacer entre sesiones', 'No tener tareas entre sesiones'],
+    ['Que el terapeuta tome la iniciativa y guíe la terapia', 'Tomar yo la iniciativa en la terapia'],
+    ['Que me anime a explorar emociones difíciles', 'Que no me empuje hacia emociones difíciles'],
+    ['Hablar sobre la relación con el terapeuta en sesión', 'No hacer de la relación terapéutica un tema de trabajo'],
+    ['Que el terapeuta se enfoque en el vínculo entre nosotros', 'Que no ponga foco en el vínculo terapéutico'],
+    ['Que me invite a expresar emociones intensas', 'Que no me empuje a expresar emociones fuertes'],
+    ['Que se enfoque principalmente en mis emociones', 'Que se enfoque principalmente en mis pensamientos'],
+    ['Trabajar sobre mi vida en el pasado', 'Trabajar sobre mi vida en el presente'],
+    ['Reflexionar sobre mi infancia', 'Reflexionar sobre mi vida adulta actual'],
+    ['Que el terapeuta se enfoque en mi pasado', 'Que se enfoque en mi futuro'],
+    ['Que el terapeuta sea gentil y suave', 'Que sea directo y confrontacional cuando sea necesario'],
+    ['Que se mantenga en un rol de apoyo constante', 'Que me confronte cuando lo considere útil'],
+    ['Que escuche sin interrumpirme', 'Que me interrumpa para mantener el foco'],
+    ['Que no desafíe mis creencias', 'Que desafíe mis creencias cuando lo vea necesario'],
+    ['Que apoye mi comportamiento incondicionalmente', 'Que confronte comportamientos que considere problemáticos'],
+  ],
+};
+
+// Escala de 7 posiciones: +3 a la izquierda, 0 al centro, -3 a la derecha
+function renderCnipItem(num, valorRaw, polos) {
+  const [izq, der] = polos || ['—', '—'];
+  const valor = (valorRaw == null || valorRaw === '') ? NaN : Number(valorRaw);
+  const valido = Number.isInteger(valor) && valor >= -3 && valor <= 3;
+  const signo = !valido ? '—' : valor > 0 ? '+' + valor : String(valor);
+
+  let pos = '';
+  for (let v = 3; v >= -3; v--) {
+    const cls = 'cnip-pos' + (v === 0 ? ' cnip-pos--centro' : '') + (valido && v === valor ? ' cnip-pos--sel' : '');
+    pos += `<span class="${cls}"></span>`;
+  }
+
+  return `<div class="cnip-item">
+    <span class="cnip-item-num">${num}</span>
+    <span class="cnip-polo cnip-polo--izq">${esc(izq)}</span>
+    <div class="cnip-escala" role="img" aria-label="Ítem ${num}: ${signo}">${pos}</div>
+    <span class="cnip-polo cnip-polo--der">${esc(der)}</span>
+    <span class="cnip-item-val">${signo}</span>
+  </div>`;
 }
 
-function renderCnipDetalleHTML(row) {
+function renderCnipDetalleHTML(row, tipo) {
   if (!row) return '<p class="dash-empty">Aún no completa el C-NIP.</p>';
 
   const fecha = new Date(row.enviado_en).toLocaleDateString('es-CL', {
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
   });
 
-  let html = `<p class="cnip-fecha">Completado el ${fecha}</p><div class="cnip-dimensiones">`;
+  const polos = CNIP_POLOS[tipo || row.tipo] || [];
+  const items = Array.isArray(row.items) ? row.items : [];
+
+  let html = `<p class="cnip-fecha">Completado el ${fecha}</p><div class="cnip-dimensiones cnip-dimensiones--polos">`;
   CNIP_DIMENSIONES.forEach(d => {
-    html += `<div class="cnip-dim"><span class="cnip-dim-title">${esc(d.label)}</span><div class="cnip-dim-items">`;
-    let n = 1;
+    html += `<div class="cnip-dim"><span class="cnip-dim-title">${esc(d.label)} · ítems ${d.from}–${d.to}</span><div class="cnip-dim-items">`;
     for (let i = d.from; i <= d.to; i++) {
-      const valor = row.items[i - 1];
-      html += `<div class="cnip-item-row"><span class="cnip-item-label">Ítem ${n}</span>${renderCnipItemBar(valor)}</div>`;
-      n++;
+      html += renderCnipItem(i, items[i - 1], polos[i - 1]);
     }
     html += '</div></div>';
   });
@@ -1276,7 +1372,7 @@ async function renderCnipPaciente() {
     .limit(1);
 
   if (error) { container.innerHTML = '<p class="dash-empty">Error al cargar el C-NIP.</p>'; console.error(error); return; }
-  container.innerHTML = renderCnipDetalleHTML(data && data[0]);
+  container.innerHTML = renderCnipDetalleHTML(data && data[0], 'paciente');
 }
 
 async function renderMatchCnipAfinidad() {
@@ -1302,7 +1398,7 @@ async function renderMatchCnipAfinidad() {
     <div class="cnip-afinidad-row">
       <span class="cnip-afinidad-nombre">${esc(r.nombre)}</span>
       <span class="cnip-afinidad-total">${r.afinidad}%</span>
-      <span class="cnip-afinidad-dims">Dirección ${r.dir}% · Emocional ${r.emo}% · Temporalidad ${r.temp}% · Vínculo ${r.vinc}%</span>
+      <span class="cnip-afinidad-dims">Directividad ${r.dir}% · Intensidad emocional ${r.emo}% · Temporalidad ${r.temp}% · Vínculo terapéutico ${r.vinc}%</span>
     </div>`).join('');
 
   container.innerHTML =
@@ -2167,7 +2263,7 @@ async function renderCnipPsicologo() {
     .limit(1);
 
   if (error) { container.innerHTML = '<p class="dash-empty">Error al cargar el C-NIP.</p>'; console.error(error); return; }
-  container.innerHTML = renderCnipDetalleHTML(data && data[0]);
+  container.innerHTML = renderCnipDetalleHTML(data && data[0], 'psicologo');
 }
 
 // ================================================================
