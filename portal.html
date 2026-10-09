@@ -837,7 +837,7 @@ body {
 // ─── Datos ────────────────────────────────────────────────────
 const ESTADOS = [
   { key: 'formulario',            label: 'Formulario recibido',     desc: 'Tu solicitud fue recibida por el equipo PSYNC.' },
-  { key: 'sesion_coordinada',     label: 'Sesión de Arquitectura',  desc: 'Conversación de 1 hora con el equipo coordinada.' },
+  { key: 'sesion_coordinada',     label: 'Sesión de Arquitectura',  desc: 'Conversación de 40 minutos con el equipo coordinada.' },
   { key: 'en_diseno',             label: 'Diseño de match',         desc: 'Estamos trabajando para encontrar tu combinación ideal.' },
   { key: 'match_propuesto',       label: 'Match propuesto',         desc: 'Tenemos opciones para presentarte.' },
   { key: 'devolucion_coordinada', label: 'Sesión de Devolución',    desc: 'Te presentaremos tus opciones de psicólogo/a.' },
@@ -1201,8 +1201,8 @@ function renderContent(paciente, sesion, historial = [], feedbacks = []) {
 
   // Próximos pasos
   const PASOS = {
-    formulario:            { titulo: 'Coordinaremos tu Sesión de Arquitectura',   texto: 'El equipo PSYNC revisará tu formulario y se pondrá en contacto contigo en los próximos días para agendar una conversación de 1 hora.' },
-    sesion_coordinada:     { titulo: 'Prepárate para tu Sesión de Arquitectura',  texto: 'Esta conversación de 1 hora es el corazón del proceso. Hablaremos de lo que buscas, de tu historia y de cómo quieres que sea tu terapia.' },
+    formulario:            { titulo: 'Coordinaremos tu Sesión de Arquitectura',   texto: 'El equipo PSYNC revisará tu formulario y se pondrá en contacto contigo en los próximos días para agendar una conversación de 40 minutos.' },
+    sesion_coordinada:     { titulo: 'Prepárate para tu Sesión de Arquitectura',  texto: 'Esta conversación de 40 minutos es el corazón del proceso. Hablaremos de lo que buscas, de tu historia y de cómo quieres que sea tu terapia.' },
     en_diseno:             { titulo: 'Estamos diseñando tu match',                texto: 'Con lo que aprendimos en la Sesión de Arquitectura, estamos cruzando tu perfil con nuestra red para encontrar las opciones que mejor se adaptan a ti.' },
     match_propuesto:       { titulo: 'Coordinaremos tu Sesión de Devolución',     texto: 'Tenemos entre 2 y 3 opciones diseñadas para ti. Pronto agendaremos una reunión breve para presentártelas y responder todas tus preguntas.' },
     devolucion_coordinada: { titulo: 'Prepárate para tu Sesión de Devolución',    texto: 'En esta reunión de 20 minutos te presentaremos tus opciones de psicólogo/a. Puedes elegir la que más resuene contigo y comenzar cuando quieras.' },

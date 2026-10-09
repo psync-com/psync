@@ -101,8 +101,13 @@ exports.handler = async (event) => {
     const off = chileOffsetHours(fecha);
     const absOff = Math.abs(off);
     const offStr = `${off < 0 ? '-' : '+'}${String(absOff).padStart(2, '0')}:00`;
+    // Sesión de Arquitectura: 40 min (los horarios siguen cada 1 hora → 20 min libres entre sesiones).
+    // Entrevista psicólogo/a: 60 min, sin cambios.
+    const duracionMin = tipo === 'arquitectura' ? 40 : 60;
     const startDT = `${fecha}T${String(h).padStart(2, '0')}:00:00${offStr}`;
-    const endDT   = `${fecha}T${String(h + 1).padStart(2, '0')}:00:00${offStr}`;
+    const endH    = h + Math.floor(duracionMin / 60);
+    const endM    = duracionMin % 60;
+    const endDT   = `${fecha}T${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}:00${offStr}`;
 
     const tipoLabel = tipo === 'arquitectura' ? 'Sesión de Arquitectura' : 'Entrevista psicólogo/a';
 
@@ -197,7 +202,7 @@ exports.handler = async (event) => {
   <div style="background:#FDFAF7;padding:32px 40px 36px;border-radius:0 0 12px 12px;border:1px solid #DDD4C8;border-top:none;">
     <p style="margin:0 0 16px;">Hola <strong>${nombre}</strong>,</p>
     <p style="margin:0 0 24px;line-height:1.65;color:#3D2212;">${tipo === 'arquitectura'
-      ? 'Tu Sesión de Arquitectura con el equipo PSYNC quedó agendada. En esta conversación de 1 hora profundizamos en lo que nos contaste y empezamos a diseñar tu match terapéutico.'
+      ? 'Tu Sesión de Arquitectura con el equipo PSYNC quedó agendada. En esta conversación de 40 minutos profundizamos en lo que nos contaste y empezamos a diseñar tu match terapéutico.'
       : 'Tu entrevista de incorporación a la red de psicólogos/as PSYNC quedó agendada.'
     }</p>
 

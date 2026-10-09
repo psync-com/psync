@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PSYNC — Tu psicólogo o psicóloga, diseñado para ti</title>
-<meta name="description" content="PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la Sesión de Arquitectura: una conversación real de 1 hora donde diseñamos a mano tu match terapéutico.">
+<meta name="description" content="PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la Sesión de Arquitectura: una pre-entrevista clínica de 40 minutos con psicólogas de nuestro equipo, después de la cual diseñamos a mano 2 o 3 opciones de psicólogo/a para ti.">
 
 <!-- Open Graph / redes sociales -->
 <meta property="og:title" content="PSYNC — Tu psicólogo o psicóloga, diseñado para ti">
-<meta property="og:description" content="Te escuchamos, entendemos lo que necesitas y te conectamos con 2-3 psicólogos que realmente pueden acompañarte.">
+<meta property="og:description" content="No te damos una lista de psicólogos. Primero te conocemos en una sesión de arquitectura de 40 minutos y después diseñamos a mano 2 o 3 opciones pensadas para ti.">
 <meta property="og:image" content="https://psync.cl/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="es_CL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PSYNC — Tu psicólogo o psicóloga, diseñado para ti">
-<meta name="twitter:description" content="Te escuchamos, entendemos lo que necesitas y te conectamos con 2-3 psicólogos que realmente pueden acompañarte.">
+<meta name="twitter:description" content="No te damos una lista de psicólogos. Primero te conocemos en una sesión de arquitectura de 40 minutos y después diseñamos a mano 2 o 3 opciones pensadas para ti.">
 <meta name="twitter:image" content="https://psync.cl/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -130,12 +130,20 @@
   }
   .hero-circle img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.12); filter: brightness(0) invert(1); }
   .hero-title {
-    font-size: 52px;
+    font-size: 46px;
     color: var(--bg);
-    font-weight: 300;
-    letter-spacing: 4px;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    font-weight: 400;
+    line-height: 1.12;
+    max-width: 760px;
+    margin: 0 auto 18px;
+  }
+  .hero-lead {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(237,224,212,0.8);
+    max-width: 580px;
+    margin: 0 auto 30px;
   }
   .hero-sub {
     font-family: var(--font-body);
@@ -246,6 +254,35 @@
   .step-time { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); margin-top: 10px; }
   .step-title { font-size: 22px; color: var(--ink); line-height: 1.15; margin-bottom: 6px; }
   .step-body { font-family: var(--font-body); font-size: 16px; color: var(--ink-soft); line-height: 1.7; }
+
+  /* ── DIRECTORIO vs PSYNC ──────────────────────────── */
+  .comparacion { padding: 46px 48px; background: var(--bg); }
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .comp-col { padding: 28px 26px; border-radius: 4px; }
+  .comp-col--otro { background: transparent; border: 1px solid var(--line-strong); }
+  .comp-col--psync { background: var(--accent); }
+  .comp-col-title { font-size: 22px; line-height: 1.15; margin-bottom: 14px; color: var(--ink-soft); }
+  .comp-col--psync .comp-col-title { color: var(--bg); }
+  .comp-list { list-style: none; padding: 0; margin: 0; }
+  .comp-list li {
+    font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+    color: var(--ink-soft); padding: 10px 0 10px 26px; position: relative;
+    border-top: 0.5px solid var(--line-strong);
+  }
+  .comp-list li::before { content: '–'; position: absolute; left: 4px; color: var(--ink-soft); }
+  .comp-col--psync .comp-list li { color: var(--bg); border-top-color: rgba(237,224,212,0.25); }
+  .comp-col--psync .comp-list li::before { content: '✓'; color: var(--bg); }
+
+  /* ── SERVICIOS Y VALORES ──────────────────────────── */
+  .valores { padding: 46px 48px; background: var(--surface); }
+  .valores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+  .valor-card { background: var(--bg); padding: 28px 26px; border-radius: 4px; }
+  .valor-precio {
+    font-family: var(--font-display); font-style: italic; font-size: 24px;
+    color: var(--accent); line-height: 1.2; margin-bottom: 10px;
+  }
+  .valor-title { font-size: 19px; color: var(--ink); line-height: 1.2; margin-bottom: 8px; }
+  .valor-body { font-family: var(--font-body); font-size: 15px; color: var(--ink-soft); line-height: 1.7; }
 
   /* ── POR QUÉ PSYNC ────────────────────────────────── */
   .porq { padding: 46px 48px; background: var(--accent-vivid); }
@@ -617,7 +654,12 @@
     .nav-hamburger { display: block; }
 
     .hero { padding: 36px 24px 30px; }
-    .hero-title { font-size: 36px; }
+    .hero-title { font-size: 31px; }
+    .hero-lead { font-size: 16px; }
+    .hero .btn-cta { padding: 14px 22px; letter-spacing: 1.5px; }
+
+    .comparacion, .valores { padding: 36px 24px; }
+    .comp-grid, .valores-grid { grid-template-columns: 1fr; gap: 14px; }
 
     .welcome-statement-wrap { padding: 56px 24px 32px; }
     .welcome-statement { font-size: 32px; }
@@ -699,8 +741,9 @@
   <div class="hero-circle">
     <img src="logo.png" alt="PSYNC">
   </div>
-  <h1 class="hero-title">PSYNC</h1>
-  <p class="hero-sub">NO CUALQUIER PSICÓLOGO. EL TUYO.</p>
+  <h1 class="hero-title">No te damos una lista de psicólogos. Primero te conocemos.</h1>
+  <p class="hero-lead">En la sesión de arquitectura, 40 minutos con psicólogas de nuestro equipo, conversamos sobre lo que de verdad necesitas. Después diseñamos a mano 2 o 3 opciones pensadas para ti.</p>
+  <a href="formulario.html" class="btn-cta">Reservar mi sesión de arquitectura</a>
 </section>
 
 <!-- BIENVENIDA -->
@@ -711,8 +754,32 @@
   </div>
   <div class="welcome-text">
     <p class="section-italic">Estamos aquí para ayudarte.</p>
-    <p class="section-body">PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de una conversación real de 1 hora con nuestro equipo, donde diseñamos a mano las 2 o 3 opciones que mejor se adaptan a ti. Sin algoritmos — todo lo diseña una persona.</p>
+    <p class="section-body">PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la sesión de arquitectura: una pre-entrevista clínica de 40 minutos con las cofundadoras de PSYNC, ambas psicólogas. Después diseñamos a mano las 2 o 3 opciones que mejor se adaptan a ti y te las presentamos en una sesión de devolución. Sin algoritmos — el match lo piensa una persona.</p>
     <a href="formulario.html" class="link-arrow">agendar mi sesión →</a>
+  </div>
+</section>
+
+<!-- DIRECTORIO vs PSYNC -->
+<section class="comparacion">
+  <p class="section-tag">La diferencia</p>
+  <h2 class="section-title">Un directorio no te conoce.</h2>
+  <div class="comp-grid">
+    <div class="comp-col comp-col--otro">
+      <h3 class="comp-col-title">Un directorio</h3>
+      <ul class="comp-list">
+        <li>Buscas solo entre cientos de perfiles</li>
+        <li>Un formulario que te devuelve una lista</li>
+        <li>Eliges sin conocer a nadie</li>
+      </ul>
+    </div>
+    <div class="comp-col comp-col--psync">
+      <h3 class="comp-col-title">PSYNC</h3>
+      <ul class="comp-list">
+        <li>Dos psicólogas te escuchan antes de recomendarte a alguien</li>
+        <li>Una pre-entrevista clínica, no un formulario</li>
+        <li>Te presentamos 2 o 3 opciones pensadas para ti y te explicamos por qué</li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -735,12 +802,11 @@
     <div class="step">
       <div class="step-left">
         <div class="step-num">02</div>
-        <div class="step-time">1 hora</div>
+        <div class="step-time">40 min · $25.000</div>
       </div>
       <div>
         <h3 class="step-title">Sesión de arquitectura</h3>
-        <p class="step-body">Una conversación real con nuestro equipo. Profundizamos en lo que el formulario no alcanza a mostrar.</p>
-        <p class="step-body">La Sesión de Arquitectura es online.</p>
+        <p class="step-body">Una pre-entrevista clínica online con las cofundadoras de PSYNC, psicólogas. Una conversación real, no un formulario: conversamos sobre lo que de verdad necesitas.</p>
       </div>
     </div>
     <div class="step">
@@ -766,13 +832,36 @@
     <div class="step">
       <div class="step-left">
         <div class="step-num">05</div>
-        <div class="step-time">Tarifa preferencial</div>
+        <div class="step-time">15% dcto.</div>
       </div>
       <div>
         <h3 class="step-title">Primera sesión</h3>
-        <p class="step-body">Agendas directo con la persona que elijas, con un 15% de descuento por venir desde PSYNC. El descuento aplica solo a esta primera sesión.</p>
+        <p class="step-body">Agendas directo con la persona que elijas, con un 15% de descuento sobre su tarifa solo en esta primera sesión. Desde la segunda sesión rige su tarifa regular.</p>
         <p class="step-body">Las sesiones siguientes pueden ser presenciales u online, según el psicólogo o psicóloga asignada.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS Y VALORES -->
+<section class="valores">
+  <p class="section-tag">Qué incluye</p>
+  <h2 class="section-title">Servicios y valores</h2>
+  <div class="valores-grid">
+    <div class="valor-card">
+      <p class="valor-precio">$25.000 CLP</p>
+      <h3 class="valor-title">Sesión de arquitectura</h3>
+      <p class="valor-body">Una pre-entrevista clínica de 40 minutos con las psicólogas del equipo PSYNC, para entender lo que de verdad necesitas.</p>
+    </div>
+    <div class="valor-card">
+      <p class="valor-precio">2 o 3 opciones</p>
+      <h3 class="valor-title">Match humano y personalizado</h3>
+      <p class="valor-body">2 o 3 profesionales elegidos a mano para ti, que te presentamos en la sesión de devolución. Lo piensa una persona, no un algoritmo.</p>
+    </div>
+    <div class="valor-card">
+      <p class="valor-precio">15% de descuento</p>
+      <h3 class="valor-title">Primera sesión con quien elijas</h3>
+      <p class="valor-body">15% de descuento sobre su tarifa, solo en la primera sesión. Desde la segunda rige su tarifa regular.</p>
     </div>
   </div>
 </section>
@@ -891,6 +980,30 @@
   <h2 class="section-title">Antes de empezar</h2>
   <div class="faq-list">
     <details class="faq-item" open>
+      <summary>¿PSYNC es un directorio?</summary>
+      <p>No. Un directorio te da una lista y tú eliges solo. En PSYNC primero te conocemos en una sesión de arquitectura y recién después te presentamos 2 o 3 opciones de psicólogo/a diseñadas a mano para ti.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿La sesión de arquitectura es una terapia?</summary>
+      <p>No. Es una pre-entrevista clínica para entender lo que necesitas. La terapia empieza con el psicólogo o psicóloga que elijas entre las opciones que te recomendamos.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Quién me atiende en la sesión de arquitectura?</summary>
+      <p>Las cofundadoras de PSYNC, psicólogas, conversan contigo.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Cuánto dura la sesión de arquitectura?</summary>
+      <p>40 minutos.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Cuánto cuesta?</summary>
+      <p>La sesión de arquitectura vale $25.000 CLP. Tu primera sesión con el psicólogo o psicóloga que elijas tiene un 15% de descuento sobre su tarifa, solo en esa primera sesión.</p>
+    </details>
+    <details class="faq-item">
+      <summary>¿Qué pasa después de la sesión de arquitectura?</summary>
+      <p>Diseñamos a mano 2 o 3 opciones de psicólogo/a para ti y te las presentamos en una Sesión de Devolución (~20 min), donde te explicamos por qué. Luego agendas tu primera sesión con la persona que elijas.</p>
+    </details>
+    <details class="faq-item">
       <summary>¿Mis respuestas son confidenciales?</summary>
       <p>Sí. La información que compartes en el formulario y en la Sesión de Arquitectura se usa exclusivamente para diseñar tu match y se trata de forma confidencial dentro del equipo PSYNC.</p>
     </details>
@@ -913,8 +1026,8 @@
 <section class="cta-final">
   <p class="section-tag">El primer paso</p>
   <h2 class="section-title">Cuéntanos qué te trae a terapia.<br>Lo demás lo diseñamos nosotros.</h2>
-  <p class="section-body">Una conversación de 1 hora con nuestro equipo es todo lo que necesitas para empezar.</p>
-  <a href="formulario.html" class="btn-cta">Agendar mi sesión de arquitectura →</a>
+  <p class="section-body">Una sesión de arquitectura de 40 minutos con psicólogas de nuestro equipo es todo lo que necesitas para empezar. Después diseñamos a mano 2 o 3 opciones para ti y te las presentamos en una sesión de devolución.</p>
+  <a href="formulario.html" class="btn-cta">Reservar mi sesión de arquitectura →</a>
 </section>
 
 <!-- TÉRMINOS Y CONDICIONES -->
@@ -926,7 +1039,7 @@
 
     <div class="terminos-section">
       <h3 class="terminos-subh">1. Qué es PSYNC</h3>
-      <p class="terminos-body">PSYNC es una plataforma chilena que conecta a personas con psicólogos y psicólogas a través de un proceso de matching terapéutico personalizado. Nuestro servicio central es la <strong>Sesión de Arquitectura</strong>: una conversación de 1 hora con el equipo PSYNC donde diseñamos a mano entre 2 y 3 opciones de psicólogo/a adaptadas a tus necesidades, preferencias y objetivos terapéuticos.</p>
+      <p class="terminos-body">PSYNC es una plataforma chilena que conecta a personas con psicólogos y psicólogas a través de un proceso de matching terapéutico personalizado. Nuestro servicio central es la <strong>Sesión de Arquitectura</strong>: una pre-entrevista clínica de 40 minutos con las cofundadoras de PSYNC, ambas psicólogas, después de la cual diseñamos a mano entre 2 y 3 opciones de psicólogo/a adaptadas a tus necesidades, preferencias y objetivos terapéuticos, que te presentamos en una Sesión de Devolución.</p>
     </div>
 
     <div class="expand-hidden" id="terminos-more">
@@ -943,15 +1056,15 @@
             <span>Valor</span>
           </div>
           <div class="terminos-tabla-row terminos-tabla-body">
-            <span>Sesión de Arquitectura (1 hora)</span>
+            <span>Sesión de Arquitectura (40 minutos)</span>
             <span class="terminos-precio">$25.000 CLP</span>
           </div>
           <div class="terminos-tabla-row terminos-tabla-body">
-            <span>Primera sesión terapéutica con psicólogo/a asignado/a</span>
+            <span>Primera sesión terapéutica con psicólogo/a elegido/a</span>
             <span class="terminos-precio">15% de descuento sobre tarifa regular (solo primera sesión)</span>
           </div>
         </div>
-        <p class="terminos-body">El 15% de descuento aplica solo a la primera sesión con el profesional asignado, únicamente para pacientes derivados desde PSYNC, y se coordina directamente entre el paciente y el profesional. Desde la segunda sesión rige la tarifa regular del profesional. PSYNC no cobra comisión adicional por las sesiones posteriores.</p>
+        <p class="terminos-body">El 15% de descuento aplica solo a la primera sesión con el profesional elegido, únicamente para pacientes derivados desde PSYNC, y se coordina directamente entre el paciente y el profesional. Desde la segunda sesión rige la tarifa regular del profesional. PSYNC no cobra comisión adicional por las sesiones posteriores.</p>
       </div>
 
       <div class="terminos-section">
@@ -976,7 +1089,7 @@
       <div class="terminos-section">
         <h3 class="terminos-subh">4. Re-vinculación</h3>
         <p class="terminos-body">Si, una vez iniciado tu proceso terapéutico, sientes que el match no fue el adecuado, PSYNC ofrece hasta <strong>2 instancias de re-vinculación sin costo adicional</strong>. Esto significa que podemos buscar un nuevo profesional para ti dentro de nuestra red, sin cobrar nuevamente la Sesión de Arquitectura.</p>
-        <p class="terminos-body">Las re-vinculaciones están disponibles durante los primeros 90 días desde tu primera sesión con el profesional asignado y están sujetas a disponibilidad en la red de PSYNC.</p>
+        <p class="terminos-body">Las re-vinculaciones están disponibles durante los primeros 90 días desde tu primera sesión con el profesional elegido y están sujetas a disponibilidad en la red de PSYNC.</p>
       </div>
 
       <div class="terminos-section">
