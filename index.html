@@ -3,28 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>PSYNC — Tu psicólogo o psicóloga, diseñado para ti</title>
 <meta name="description" content="PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la Sesión de Arquitectura: una pre-entrevista clínica de 40 minutos con psicólogas de nuestro equipo, después de la cual diseñamos a mano 2 o 3 opciones de psicólogo/a para ti.">
 
 <!-- Open Graph / redes sociales -->
 <meta property="og:title" content="PSYNC — Tu psicólogo o psicóloga, diseñado para ti">
-<meta property="og:description" content="No te damos una lista de psicólogos. Primero te conocemos en una sesión de arquitectura de 40 minutos y después diseñamos a mano 2 o 3 opciones pensadas para ti.">
+<meta property="og:description" content="Primero te conocemos: una pre-entrevista clínica de 40 minutos con las cofundadoras de PSYNC, psicólogas. Después elegimos a mano 2 o 3 opciones de psicólogo/a para ti.">
 <meta property="og:image" content="https://psync.cl/og-image.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="PSYNC">
+<meta property="og:image:alt" content="PSYNC: tu psicólogo o psicóloga, diseñado para ti">
 <meta property="og:url" content="https://psync.cl/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PSYNC">
 <meta property="og:locale" content="es_CL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PSYNC — Tu psicólogo o psicóloga, diseñado para ti">
-<meta name="twitter:description" content="No te damos una lista de psicólogos. Primero te conocemos en una sesión de arquitectura de 40 minutos y después diseñamos a mano 2 o 3 opciones pensadas para ti.">
+<meta name="twitter:description" content="Primero te conocemos: una pre-entrevista clínica de 40 minutos con las cofundadoras de PSYNC, psicólogas. Después elegimos a mano 2 o 3 opciones de psicólogo/a para ti.">
 <meta name="twitter:image" content="https://psync.cl/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #EBDFDB;
@@ -63,7 +67,7 @@
     box-shadow: 0 1px 8px rgba(61,34,18,0.12);
   }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo img { height: 52px; width: auto; content: url(logo-burdeos.png); }
+  .nav-logo img { height: 52px; width: auto; }
   .nav-wordmark {
     font-family: var(--font-body);
     font-size: 15px;
@@ -274,24 +278,6 @@
   .step-time { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); margin-top: 10px; }
   .step-title { font-size: 22px; color: var(--ink); line-height: 1.15; margin-bottom: 6px; }
   .step-body { font-family: var(--font-body); font-size: 16px; color: var(--ink-soft); line-height: 1.7; }
-
-  /* ── DIRECTORIO vs PSYNC ──────────────────────────── */
-  .comparacion { padding: 46px 48px; background: var(--bg); }
-  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
-  .comp-col { padding: 28px 26px; border-radius: 4px; }
-  .comp-col--otro { background: transparent; border: 1px solid var(--line-strong); }
-  .comp-col--psync { background: var(--accent); }
-  .comp-col-title { font-size: 22px; line-height: 1.15; margin-bottom: 14px; color: var(--ink-soft); }
-  .comp-col--psync .comp-col-title { color: var(--bg); }
-  .comp-list { list-style: none; padding: 0; margin: 0; }
-  .comp-list li {
-    font-family: var(--font-body); font-size: 16px; line-height: 1.6;
-    color: var(--ink-soft); padding: 10px 0 10px 26px; position: relative;
-    border-top: 0.5px solid var(--line-strong);
-  }
-  .comp-list li::before { content: '–'; position: absolute; left: 4px; color: var(--ink-soft); }
-  .comp-col--psync .comp-list li { color: var(--bg); border-top-color: rgba(237,224,212,0.25); }
-  .comp-col--psync .comp-list li::before { content: '✓'; color: var(--bg); }
 
   /* ── SERVICIOS Y VALORES ──────────────────────────── */
   .valores { padding: 46px 48px; background: var(--surface); scroll-margin-top: 80px; }
@@ -666,25 +652,109 @@
     border-bottom: none !important;
   }
 
+  /* ── RESERVAR en la barra móvil + botón fijo abajo (solo < 1280px) ── */
+  .nav-reservar, .cta-fija { display: none; }
+
   /* ── BARRA → MENÚ ☰ cuando ya no cabe en una línea (≤1279px) ── */
   @media (max-width: 1279px) {
     nav { flex-wrap: wrap; }
     .nav-links, .nav-actions { display: none; }
     .nav-hamburger { display: block; }
+
+    .nav-reservar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;   /* junto al ☰, a la derecha */
+      margin-right: 6px;
+      min-height: 44px;
+      padding: 0 16px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background: var(--accent-deep);
+      color: var(--bg);
+      border-radius: 3px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-reservar:hover { opacity: 0.82; }
+
+    .cta-fija {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 90;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+      background: var(--surface);
+      border-top: 0.5px solid var(--line);
+      box-shadow: 0 -2px 12px rgba(61,34,18,0.10);
+      transform: translateY(110%);
+      visibility: hidden;
+      transition: transform 0.25s ease, visibility 0s linear 0.25s;
+    }
+    .cta-fija.visible {
+      transform: translateY(0);
+      visibility: visible;
+      transition: transform 0.25s ease, visibility 0s;
+    }
+    .cta-fija-btn {
+      display: block;
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 48px;
+      padding: 15px 16px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--accent-deep);
+      color: var(--bg);
+      border-radius: 3px;
+      text-decoration: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-fija, .cta-fija.visible { transition: none; }
+  }
+  /* Celulares: el texto del botón fijo cabe en una línea */
+  @media (max-width: 420px) {
+    .cta-fija-btn { font-size: 11px; letter-spacing: 1px; padding: 15px 12px; }
+  }
+  /* Celulares muy angostos (≤360px): logo + Reservar + ☰ en una fila sin chocar */
+  @media (max-width: 360px) {
+    nav { padding-left: 16px !important; padding-right: 16px !important; }
+    .nav-logo { gap: 8px; min-height: 44px; }
+    .nav-logo img { height: 40px; }
+    .nav-wordmark { letter-spacing: 2px; font-size: 13px; }
+    .nav-reservar { padding: 0 11px; letter-spacing: 1px; margin-right: 2px; }
+    .nav-hamburger { padding: 4px 6px; }
+    .cta-fija { padding-left: 12px; padding-right: 12px; }
+    .cta-fija-btn { letter-spacing: 0.4px; padding: 15px 8px; }
   }
 
   /* ── RESPONSIVE (≤768px) ──────────────────────────── */
   @media (max-width: 768px) {
-    html, body { overflow-x: hidden; }
+    /* clip (no hidden) para no romper la barra fija (position: sticky) en celular */
+    html, body { overflow-x: hidden; overflow-x: clip; }
 
     nav { padding: 14px 24px; flex-wrap: wrap; }
     .nav-links { display: none; }
     .nav-actions { display: none; }
     .nav-hamburger { display: block; }
 
-    .hero { padding: 36px 24px 30px; }
-    .hero-title { font-size: 28px; line-height: 1.16; }
-    .hero-lead { font-size: 16px; }
+    /* Hero compacto: título, subtítulo y botón dentro de la 1ª pantalla también en teléfonos chicos */
+    .hero { padding: 20px 24px 30px; }
+    .hero-circle { width: 84px; height: 84px; margin-bottom: 16px; }
+    .hero-title { font-size: 28px; line-height: 1.14; margin-bottom: 12px; }
+    .hero-lead { font-size: 15px; line-height: 1.6; margin-bottom: 22px; }
     .hero .btn-cta { padding: 14px 22px; letter-spacing: 1.5px; }
 
     /* Montserrat: etiquetas de los pasos más compactas en la columna angosta */
@@ -701,8 +771,8 @@
     .footer-links { row-gap: 0; column-gap: 20px; }
     .footer-links a { display: inline-block; padding: 15px 0; }
 
-    .comparacion, .valores { padding: 36px 24px; }
-    .comp-grid, .valores-grid { grid-template-columns: 1fr; gap: 14px; }
+    .valores { padding: 36px 24px; }
+    .valores-grid { grid-template-columns: 1fr; gap: 14px; }
 
     .welcome-statement-wrap { padding: 56px 24px 32px; }
     .welcome-statement { font-size: 32px; }
@@ -744,6 +814,13 @@
     .section-title { font-size: 27px; }
     .section-italic { font-size: 19px; }
   }
+  /* Teléfonos muy angostos (≤340px): hero aún más compacto */
+  @media (max-width: 340px) {
+    .hero { padding-top: 16px; }
+    .hero-circle { width: 64px; height: 64px; margin-bottom: 12px; }
+    .hero-title { font-size: 24px; }
+    .hero-lead { font-size: 14px; line-height: 1.55; margin-bottom: 18px; }
+  }
 </style>
 </head>
 <body>
@@ -751,7 +828,7 @@
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="PSYNC">
+    <img src="logo-burdeos-128.webp" alt="PSYNC" width="52" height="52">
     <span class="nav-wordmark">PSYNC</span>
   </a>
   <ul class="nav-links">
@@ -767,6 +844,7 @@
     <a href="portal.html" class="nav-portal">Ingresa aquí</a>
     <a href="formulario.html" class="nav-cta">Reservar sesión →</a>
   </div>
+  <a href="formulario.html" class="nav-reservar">Reservar</a>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menú">☰</button>
   <ul class="nav-mobile-menu" id="navMobileMenu">
     <li><a href="#como-funciona">Cómo funciona</a></li>
@@ -784,7 +862,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-circle">
-    <img src="logo.png" alt="PSYNC">
+    <img src="logo-burdeos-360.webp" alt="PSYNC" width="160" height="160">
   </div>
   <h1 class="hero-title">No te damos una lista de psicólogos. Primero te conocemos.</h1>
   <p class="hero-lead">En la sesión de arquitectura, 40 minutos con psicólogas de nuestro equipo, conversamos sobre lo que de verdad necesitas. Después diseñamos a mano 2 o 3 opciones pensadas para ti.</p>
@@ -801,30 +879,6 @@
     <p class="section-italic">Estamos aquí para ayudarte.</p>
     <p class="section-body">PSYNC conecta a personas con psicólogos y psicólogas en Chile a través de la sesión de arquitectura: una pre-entrevista clínica de 40 minutos con las cofundadoras de PSYNC, ambas psicólogas. Después diseñamos a mano las 2 o 3 opciones que mejor se adaptan a ti y te las presentamos en una sesión de devolución. Sin algoritmos — el match lo piensa una persona.</p>
     <a href="formulario.html" class="link-arrow">agendar mi sesión →</a>
-  </div>
-</section>
-
-<!-- DIRECTORIO vs PSYNC -->
-<section class="comparacion">
-  <p class="section-tag">La diferencia</p>
-  <h2 class="section-title">Un directorio no te conoce.</h2>
-  <div class="comp-grid">
-    <div class="comp-col comp-col--otro">
-      <h3 class="comp-col-title">Un directorio</h3>
-      <ul class="comp-list">
-        <li>Buscas solo entre cientos de perfiles</li>
-        <li>Un formulario que te devuelve una lista</li>
-        <li>Eliges sin conocer a nadie</li>
-      </ul>
-    </div>
-    <div class="comp-col comp-col--psync">
-      <h3 class="comp-col-title">PSYNC</h3>
-      <ul class="comp-list">
-        <li>Dos psicólogas te escuchan antes de recomendarte a alguien</li>
-        <li>Una pre-entrevista clínica, no un formulario</li>
-        <li>Te presentamos 2 o 3 opciones pensadas para ti y te explicamos por qué</li>
-      </ul>
-    </div>
   </div>
 </section>
 
@@ -1025,10 +1079,6 @@
   <h2 class="section-title">Antes de empezar</h2>
   <div class="faq-list">
     <details class="faq-item" open>
-      <summary>¿PSYNC es un directorio?</summary>
-      <p>No. Un directorio te da una lista y tú eliges solo. En PSYNC primero te conocemos en una sesión de arquitectura y recién después te presentamos 2 o 3 opciones de psicólogo/a diseñadas a mano para ti.</p>
-    </details>
-    <details class="faq-item">
       <summary>¿La sesión de arquitectura es una terapia?</summary>
       <p>No. Es una pre-entrevista clínica para entender lo que necesitas. La terapia empieza con el psicólogo o psicóloga que elijas entre las opciones que te recomendamos.</p>
     </details>
@@ -1170,7 +1220,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
-    <img src="logo.png" alt="PSYNC">
+    <img src="logo-96.webp" alt="PSYNC" width="40" height="40" loading="lazy">
     <span class="footer-wordmark">PSYNC</span>
   </div>
   <ul class="footer-links">
@@ -1185,6 +1235,11 @@
   </ul>
   <span class="footer-copy">© 2026 PSYNC</span>
 </footer>
+
+<!-- Botón fijo de reserva (solo < 1280px): aparece al bajar del hero, se oculta en el CTA final -->
+<div class="cta-fija" id="ctaFija">
+  <a href="formulario.html" class="cta-fija-btn">Reservar mi sesión de arquitectura</a>
+</div>
 
 <script>
   // Nav: transparente arriba del todo, sólida al hacer scroll (o con el menú móvil abierto)
@@ -1210,6 +1265,27 @@
       syncNav();
     });
   });
+
+  // Botón fijo de reserva (solo < 1280px): visible después de pasar el botón del hero
+  // y antes de llegar al CTA final; oculto con el menú ☰ abierto.
+  const ctaFija  = document.getElementById('ctaFija');
+  const heroCta  = document.querySelector('.hero .btn-cta');
+  const ctaFinal = document.querySelector('.cta-final');
+  const mqMovil  = window.matchMedia('(max-width: 1279px)');
+  let ctaRaf = 0;
+  const syncCtaFija = () => {
+    ctaRaf = 0;
+    const pasoHero   = heroCta.getBoundingClientRect().bottom < 0;
+    const llegoFinal = ctaFinal.getBoundingClientRect().top < window.innerHeight;
+    const menuAbierto = mobileMenuEl.classList.contains('open');
+    ctaFija.classList.toggle('visible', mqMovil.matches && pasoHero && !llegoFinal && !menuAbierto);
+  };
+  const pedirSyncCta = () => { if (!ctaRaf) ctaRaf = requestAnimationFrame(syncCtaFija); };
+  window.addEventListener('scroll', pedirSyncCta, { passive: true });
+  window.addEventListener('resize', pedirSyncCta);
+  hamburgerBtn.addEventListener('click', pedirSyncCta);
+  mobileMenuEl.querySelectorAll('a').forEach(link => link.addEventListener('click', pedirSyncCta));
+  syncCtaFija();
 
   // Leer más — Quiénes somos
   const quienesMore = document.getElementById('quienes-more');

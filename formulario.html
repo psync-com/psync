@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Formulario de ingreso — PSYNC</title>
 <meta name="description" content="Cuéntanos qué te trae a terapia. Es el primer paso antes de tu Sesión de Arquitectura con el equipo PSYNC.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
   :root {
@@ -30,7 +33,7 @@
 <header>
   <div class="container">
     <nav>
-      <a href="index.html" class="logo" style="text-decoration:none;"><img src="logo.png" class="site-logo" alt="PSYNC"><span class="logo-wordmark">PSYNC</span></a>
+      <a href="index.html" class="logo" style="text-decoration:none;"><img src="logo-burdeos-128.webp" class="site-logo" alt="PSYNC" width="38" height="38"><span class="logo-wordmark">PSYNC</span></a>
       <span class="mono" id="step-indicator" hidden>Paso 1 de 6</span>
       <a href="terminos.html" target="_blank" class="nav-tc-link">Términos y Condiciones</a>
     </nav>
@@ -141,7 +144,7 @@
         <div class="field">
           <label for="motivo">Cuéntanos con tus palabras</label>
           <p class="hint">¿Qué está pasando? ¿Qué te gustaría que fuera distinto?</p>
-          <textarea id="motivo" name="motivo" rows="4"></textarea>
+          <textarea id="motivo" name="motivo" rows="4" autocomplete="off"></textarea>
         </div>
       </div>
     </section>
@@ -157,12 +160,12 @@
           <div class="field">
             <label for="diagnostico">¿Tienes algún diagnóstico de salud mental?</label>
             <p class="hint">Opcional</p>
-            <input type="text" id="diagnostico" name="diagnostico" placeholder="Ej: ninguno, TDAH, trastorno de ansiedad...">
+            <input type="text" id="diagnostico" name="diagnostico" autocomplete="off" placeholder="Ej: ninguno, TDAH, trastorno de ansiedad...">
           </div>
           <div class="field">
             <label for="medicacion">¿Tomas algún medicamento relacionado?</label>
             <p class="hint">Opcional</p>
-            <input type="text" id="medicacion" name="medicacion" placeholder="Ej: ninguno, antidepresivo...">
+            <input type="text" id="medicacion" name="medicacion" autocomplete="off" placeholder="Ej: ninguno, antidepresivo...">
           </div>
         </div>
 
@@ -177,7 +180,7 @@
         <div class="field" id="exp_terapia_wrap" hidden data-conditional>
           <label for="exp_terapia">Cuéntanos brevemente cómo fue esa experiencia</label>
           <p class="hint">¿Qué funcionó y qué no? Esto nos ayuda a no repetir lo que no te sirvió.</p>
-          <textarea id="exp_terapia" name="exp_terapia" rows="3"></textarea>
+          <textarea id="exp_terapia" name="exp_terapia" rows="3" autocomplete="off"></textarea>
         </div>
       </div>
     </section>
@@ -261,7 +264,7 @@
         <div class="field">
           <label for="presupuesto">Presupuesto aproximado por sesión (CLP)</label>
           <p class="hint">Esto nos ayuda a recomendarte opciones que realmente puedas sostener en el tiempo.</p>
-          <input type="number" id="presupuesto" name="presupuesto" min="0" step="1000" placeholder="Ej: 30000">
+          <input type="text" id="presupuesto" name="presupuesto" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 30000" oninput="this.value = this.value.replace(/\D/g, '')">
         </div>
       </div>
     </section>
@@ -445,7 +448,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-logo">
-    <img src="logo.png" alt="PSYNC">
+    <img src="logo-96.webp" alt="PSYNC" width="40" height="40" loading="lazy">
     <span class="site-footer-wordmark">PSYNC</span>
   </div>
   <ul class="site-footer-links">

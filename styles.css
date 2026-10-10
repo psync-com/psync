@@ -90,8 +90,8 @@
     flex-shrink: 0;
   }
 
-  /* Marca en la barra de navegación: símbolo en burdeos (no el celeste original), un poco más grande */
-  header .site-logo { content: url(logo-burdeos.png); height: 38px; }
+  /* Marca en la barra de navegación: el <img> ya apunta a logo-burdeos-128.webp, un poco más grande */
+  header .site-logo { height: 38px; }
 
   .logo-wordmark {
     font-family: var(--font-body);
@@ -1622,6 +1622,7 @@ input[type="range"] {
   gap: 10px;
 }
 .time-btn {
+  min-height: 44px; /* área de toque mínima en celular */
   padding: 10px 20px;
   border: 1px solid var(--line);
   border-radius: 999px;
