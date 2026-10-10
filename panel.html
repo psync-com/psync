@@ -6,9 +6,43 @@
 <title>Panel interno — PSYNC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
+/* Tipografía del panel: Montserrat, igual que el sitio público (IBM Plex Mono se mantiene para etiquetas técnicas) */
+:root {
+  --font-base: 'Montserrat', sans-serif;
+  --font-display: var(--font-base);
+  --font-body: var(--font-base);
+}
+
+/* Montserrat es más ancha: emails y nombres largos pueden partirse en vez de ensanchar
+   tablas y encabezados (la tabla de pacientes cabe a 1280px) */
+@media (min-width: 641px) { .panel-table .td-mono { overflow-wrap: anywhere; } }
+.panel-table td.td-mono:last-child { white-space: nowrap; } /* fecha siempre en una línea */
+.detalle-header-info { min-width: 0; }
+.detalle-nombre, .detalle-sub, .field-val { overflow-wrap: anywhere; }
+
+/* Celular (≤640px): barra superior en filas y contenido sin scroll horizontal */
+@media (max-width: 640px) {
+  .panel-sidebar { flex-wrap: wrap; overflow: visible; row-gap: 0; }
+  .sidebar-logo { order: 0; }
+  .sidebar-user { order: 1; }
+  .sidebar-nav {
+    order: 2; flex: 1 0 100%; min-width: 0;
+    overflow-x: auto; scrollbar-width: none; gap: 2px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
+  .sidebar-nav li { flex: none; }
+  .sidebar-nav-btn { width: auto; white-space: nowrap; min-height: 40px; }
+  .sidebar-admin { order: 3; flex: 1 0 100%; padding: 8px 0 10px; }
+  .detalle-topbar { flex-wrap: wrap; gap: 12px; padding: 16px 20px; }
+  .detalle-header-info { flex: 1 1 100%; }
+  .dash-alert-item, .dash-recent-item { flex-wrap: wrap; }
+  .dash-alert-info, .dash-recent-info { min-width: 0; flex: 1 1 calc(100% - 56px); }
+}
+
 /* Entrevistas (solo admins) */
 .entrevista-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
 .entrevista-item {
