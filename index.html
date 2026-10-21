@@ -751,6 +751,78 @@
     .cta-fija-btn { letter-spacing: 0.4px; padding: 15px 8px; }
   }
 
+  /* ── PUERTAS DE ENTRADA (Busco / Soy psicólogo/a) + PASOS ── */
+  .caminos { scroll-margin-top: 90px; }
+  .puertas {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .puerta {
+    flex: 1 1 0;
+    min-height: 68px;
+    padding: 18px 24px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: transparent;
+    border: 1px solid rgba(235,223,219,0.55);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .puerta:hover { border-color: var(--bg); background: rgba(235,223,219,0.08); }
+  .puerta[aria-pressed="true"] { background: var(--bg); color: var(--accent); border-color: var(--bg); }
+  .puerta:focus-visible { outline: 2px solid var(--bg); outline-offset: 3px; }
+
+  .camino-panel { max-width: 1080px; margin: 40px auto 0; text-align: center; }
+  .camino-panel:not([hidden]) { animation: caminoIn 0.3s ease; }
+  @keyframes caminoIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .camino-pasos {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+  .camino-paso {
+    padding: 22px 20px;
+    border: 1px solid rgba(235,223,219,0.22);
+    border-radius: 4px;
+    background: rgba(235,223,219,0.05);
+  }
+  .camino-num {
+    display: block;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+    color: rgba(235,223,219,0.55);
+    margin-bottom: 14px;
+  }
+  .camino-titulo {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--bg);
+    margin-bottom: 8px;
+  }
+  .camino-texto {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(237,224,212,0.72);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .camino-panel:not([hidden]) { animation: none; }
+  }
+
   /* ── RESPONSIVE (≤768px) ──────────────────────────── */
   @media (max-width: 768px) {
     /* clip (no hidden) para no romper la barra fija (position: sticky) en celular */
@@ -768,6 +840,12 @@
     .hero-title { font-size: 23px; line-height: 1.14; margin-bottom: 12px; }
     .hero-lead { font-size: 15px; line-height: 1.6; margin-bottom: 22px; }
     .hero .btn-cta { padding: 14px 22px; letter-spacing: 1.5px; }
+    .puertas { flex-direction: column; gap: 10px; max-width: 360px; }
+    .puerta { min-height: 56px; padding: 14px 18px; font-size: 13px; letter-spacing: 1.5px; }
+    .camino-panel { margin-top: 26px; }
+    .camino-pasos { grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+    .camino-paso { display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; padding: 16px; }
+    .camino-num { grid-row: span 2; font-size: 24px; margin-bottom: 0; }
 
     /* Montserrat: etiquetas de los pasos más compactas en la columna angosta */
     .step { grid-template-columns: 62px 1fr; }
@@ -849,12 +927,12 @@
     <li><a href="#sesiones-y-valores">Sesiones y valores</a></li>
     <li><a href="#mas-informacion">Más información</a></li>
     <li><a href="#quienes-somos">Quiénes somos</a></li>
-    <li><a href="#para-psicologos">Para psicólogos/as</a></li>
     <li><a href="#preguntas-frecuentes">Preguntas frecuentes</a></li>
     <li><a href="#terminos">Términos y Condiciones</a></li>
   </ul>
   <div class="nav-actions">
     <a href="portal.html" class="nav-portal">Ingresa aquí</a>
+    <a href="#caminos" class="nav-portal" data-abrir-camino="psicologo">Soy psicólogo/a</a>
     <a href="formulario.html" class="nav-cta">Reservar sesión →</a>
   </div>
   <a href="formulario.html" class="nav-reservar">Reservar</a>
@@ -868,6 +946,7 @@
     <li><a href="#preguntas-frecuentes">Preguntas frecuentes</a></li>
     <li><a href="#terminos">Términos y Condiciones</a></li>
     <li><a href="portal.html">Ingresa aquí</a></li>
+    <li><a href="#caminos" data-abrir-camino="psicologo">Soy psicólogo/a</a></li>
     <li><a href="formulario.html" class="nav-mobile-cta">Reservar sesión →</a></li>
   </ul>
 </nav>
@@ -880,7 +959,33 @@
   <p class="hero-wordmark">psync</p>
   <h1 class="hero-title">No te damos una lista de psicólogos. Primero te conocemos.</h1>
   <p class="hero-lead">En la sesión de arquitectura, 40 minutos con psicólogas de nuestro equipo, conversamos sobre lo que de verdad necesitas. Después diseñamos a mano 2 o 3 opciones pensadas para ti.</p>
-  <a href="formulario.html" class="btn-cta">Reservar mi sesión de arquitectura</a>
+  <div class="caminos" id="caminos">
+    <div class="puertas">
+      <button type="button" class="puerta" data-camino="paciente" aria-pressed="false" aria-controls="camino-paciente">Busco psicólogo/a</button>
+      <button type="button" class="puerta" data-camino="psicologo" aria-pressed="false" aria-controls="camino-psicologo">Soy psicólogo/a</button>
+    </div>
+
+    <div class="camino-panel" id="camino-paciente" hidden>
+      <ol class="camino-pasos">
+        <li class="camino-paso"><span class="camino-num">1</span><h3 class="camino-titulo">Reservas tu Sesión de Arquitectura</h3><p class="camino-texto">Eliges día y hora en línea y completas un breve formulario.</p></li>
+        <li class="camino-paso"><span class="camino-num">2</span><h3 class="camino-titulo">Conversas 40 minutos con nuestro equipo</h3><p class="camino-texto">Una pre-entrevista clínica sobre lo que de verdad necesitas.</p></li>
+        <li class="camino-paso"><span class="camino-num">3</span><h3 class="camino-titulo">En la sesión de devolución te presentamos 2 o 3 opciones</h3><p class="camino-texto">Psicólogos/as elegidos a mano para ti, y te contamos por qué.</p></li>
+        <li class="camino-paso"><span class="camino-num">4</span><h3 class="camino-titulo">Eliges y agendas tu primera sesión con 15% de descuento</h3><p class="camino-texto">Agendas directo con quien elijas; el descuento es solo para esa primera sesión.</p></li>
+      </ol>
+      <a href="formulario.html" class="btn-cta">Reservar mi sesión de arquitectura</a>
+    </div>
+
+    <div class="camino-panel" id="camino-psicologo" hidden>
+      <ol class="camino-pasos">
+        <li class="camino-paso"><span class="camino-num">1</span><h3 class="camino-titulo">Postulas con el formulario</h3><p class="camino-texto">Nos cuentas tu formación, tu enfoque y tu experiencia clínica.</p></li>
+        <li class="camino-paso"><span class="camino-num">2</span><h3 class="camino-titulo">Revisamos tu perfil</h3><p class="camino-texto">Verificamos tu título, tu enfoque terapéutico y tu experiencia.</p></li>
+        <li class="camino-paso"><span class="camino-num">3</span><h3 class="camino-titulo">Entrevista con nuestro equipo</h3><p class="camino-texto">Conversamos contigo para conocer cómo trabajas.</p></li>
+        <li class="camino-paso"><span class="camino-num">4</span><h3 class="camino-titulo">Completas el C-NIP</h3><p class="camino-texto">Un cuestionario sobre tu estilo terapéutico que usamos para el match.</p></li>
+        <li class="camino-paso"><span class="camino-num">5</span><h3 class="camino-titulo">Entras a la red</h3><p class="camino-texto">Empezamos a acercarte pacientes que calzan contigo.</p></li>
+      </ol>
+      <a href="postulacion-psicologo.html" class="btn-cta">Postular a la red</a>
+    </div>
+  </div>
 </section>
 
 <!-- BIENVENIDA -->
@@ -1283,7 +1388,7 @@
   // Botón fijo de reserva (solo < 1280px): visible después de pasar el botón del hero
   // y antes de llegar al CTA final; oculto con el menú ☰ abierto.
   const ctaFija  = document.getElementById('ctaFija');
-  const heroCta  = document.querySelector('.hero .btn-cta');
+  const heroCta  = document.getElementById('caminos');
   const ctaFinal = document.querySelector('.cta-final');
   const mqMovil  = window.matchMedia('(max-width: 1279px)');
   let ctaRaf = 0;
@@ -1300,6 +1405,22 @@
   hamburgerBtn.addEventListener('click', pedirSyncCta);
   mobileMenuEl.querySelectorAll('a').forEach(link => link.addEventListener('click', pedirSyncCta));
   syncCtaFija();
+
+  // Puertas de entrada: muestran los pasos de cada camino sin cambiar de página
+  const puertas = document.querySelectorAll('.puerta');
+  const abrirCamino = (camino) => {
+    puertas.forEach(btn => {
+      const activo = btn.dataset.camino === camino;
+      btn.setAttribute('aria-pressed', activo);
+      document.getElementById('camino-' + btn.dataset.camino).hidden = !activo;
+    });
+    pedirSyncCta();
+  };
+  puertas.forEach(btn => btn.addEventListener('click', () => abrirCamino(btn.dataset.camino)));
+  document.querySelectorAll('[data-abrir-camino]').forEach(link => {
+    link.addEventListener('click', () => abrirCamino(link.dataset.abrirCamino));
+  });
+  if (location.hash === '#caminos') abrirCamino('psicologo');
 
   // Leer más — Quiénes somos
   const quienesMore = document.getElementById('quienes-more');
